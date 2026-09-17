@@ -1,11 +1,14 @@
 ---
 title: "Rojina Adhikari"
 ---
-![](headshot.jpeg){width="200px"}
+![](headshot.jpg){width=200px style="float:left; margin-right:20px; margin-bottom:10px;"}
+
 
 ## About Me ##
 
-I am a Master's student in the **MSIS – Data Analytics** program at Baruch College.
+I am a Master's student in the **MSIS – Data Analytics** program at Baruch College, expecting to graduate in **December 2026**. I'm building skills in **Python, R, SQL, dbt, MS Access, and VS Code**, with coursework covering **data warehousing, data mining techniques, statistical modeling, and data visualization**.
+
+I'm an aspiring data analyst looking to apply my skills into solving real-world problems.
 
 Connect with me on [LinkedIn](https://www.linkedin.com/in/rojina-adhikari-506b01144/).
 
