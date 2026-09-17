@@ -1,6 +1,7 @@
 ---
 title: "Rojina Adhikari"
 ---
+![My headshot](headshot.jpeg)
 ## About Me ##
 
 I am a Master's student in the **MSIS – Data Analytics** program at Baruch College.
