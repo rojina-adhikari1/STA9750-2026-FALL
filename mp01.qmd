@@ -73,7 +73,7 @@ load_netflix_data <- function(){
            Title = str_remove(Title, " // .*"), 
            Title = str_remove(Title, "[^[:ascii:]].*"), 
            Title = str_trim(Title)) |>
-    filter_out(Title == "") |>
+    filter(Title != "") |>
     select(year, 
            period, 
            period_start, 
@@ -85,7 +85,7 @@ load_netflix_data <- function(){
            `Hours Viewed`, 
            `Release Date`,
            `Available Globally?`, 
-           live_event)
+           live_event) |>
     rename(                 ## Task 2: Fix Column Titles
           title = Title,
           runtime = Runtime,
@@ -93,10 +93,14 @@ load_netflix_data <- function(){
           hours_viewed = `Hours Viewed`,
           release_date = `Release Date`,
           available_globally = `Available Globally?`
-          )
+          )|>                                           # <- pipe added and task 3:Fix column types
+    mutate(
+      year = as.integer(year),
+      available_globally = available_globally == "Yes"
+    )
   }
   
-NETFLIX_DATA <- load_netflix_data()
+  NETFLIX_DATA <- load_netflix_data()
 
   
 ```
