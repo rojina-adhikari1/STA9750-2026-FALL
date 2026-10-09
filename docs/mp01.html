@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Rojina Adhikari">
 
-<title>mp01 – STA 9750 Submission Material</title>
+<title>Mini-Project #01: What We Watched – STA 9750 Submission Material</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -134,24 +135,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Mini-Project #01: What We Watched</h1>
+</div>
 
 
 
+<div class="quarto-title-meta">
 
-<table class="caption-top table">
-<colgroup>
-<col style="width: 5%">
-</colgroup>
-<tbody>
-<tr class="odd">
-<td>title: “Mini-Project 01: What We Watched” author: “Rojina Adhikari” format: html</td>
-</tr>
-</tbody>
-</table>
-<p>## Introduction</p>
-<p><em>(2-3 sentences: what this report does, what data, what the reader will get out of it)</em></p>
-<p>## Data Acquisition</p>
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Rojina Adhikari </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Netflix publishes its <em>What We Watched (WWW)</em> report every six months, beginning in 2023. This report analyzes <em>Netflix’s What We Watched</em> data to explore patterns in viewership data, identify the type of content, understand which content captures the most attention and who are the audiences in order to make informed decision making.</p>
+<p>The goal is not just to analyze and provide practical recommendations for Netflix’s 2027 content budget but also to help Netflix unlock broader patterns to make more informed decisions about their future investment decisions.</p>
+</section>
+<section id="data-acquisition" class="level2">
+<h2 class="anchored" data-anchor-id="data-acquisition">Data Acquisition</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -242,9 +259,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>  NETFLIX_DATA <span class="ot">&lt;-</span> <span class="fu">load_netflix_data</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p>## Data Cleaning and preparation Before analysis, the raw data needed two fixes: messy column names and incorrect data types. Both were added directly to the <code>load_netflix_data()</code> function above — column names were converted to lowercase with underscores (e.g.&nbsp;<code>Hours Viewed</code> → <code>hours_viewed</code>), <code>year</code> was converted to an integer, and <code>available_globally</code> was converted from <code>"Yes"</code>/<code>"No"</code> text to <code>TRUE</code>/<code>FALSE</code> logical values.</p>
+</section>
+<section id="data-cleaning-and-preparation" class="level2">
+<h2 class="anchored" data-anchor-id="data-cleaning-and-preparation">Data Cleaning and preparation</h2>
+<p>Before analysis, the raw data needed two fixes: messy column names and incorrect data types. Both were added directly to the <code>load_netflix_data()</code> function above — column names were converted to lowercase with underscores (e.g.&nbsp;<code>Hours Viewed</code> → <code>hours_viewed</code>), <code>year</code> was converted to an integer, and <code>available_globally</code> was converted from <code>"Yes"</code>/<code>"No"</code> text to <code>TRUE</code>/<code>FALSE</code> logical values.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(NETFLIX_DATA)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 61,892
 Columns: 11
@@ -261,12 +284,19 @@ $ available_globally &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, FALSE, TRUE
 $ live_event         &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FA…</code></pre>
 </div>
 </div>
-<p>## Initial Data Exploration<br>
-Before answering any questions, I ran two basic checks on the cleaned data: one for column types and one for summary statistics.</p>
-<section id="check-1-column-types" class="level3">
-<h3 class="anchored" data-anchor-id="check-1-column-types">Check 1: Column types</h3>
+</section>
+<section id="exploratory-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="exploratory-analysis">Exploratory Analysis</h2>
+<section id="initial-data-exploration" class="level3">
+<h3 class="anchored" data-anchor-id="initial-data-exploration">Initial Data Exploration</h3>
+<p>Before answering any questions, I ran two basic checks on the cleaned data: one for column types and one for summary statistics.</p>
+<section id="check-1-column-types" class="level4">
+<h4 class="anchored" data-anchor-id="check-1-column-types">Check 1: Column types</h4>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(NETFLIX_DATA)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 61,892
 Columns: 11
@@ -285,11 +315,14 @@ $ live_event         &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE
 </div>
 <p>[2-3 sentences: Are the types what you expect? Mention that <code>year</code> is now an integer, <code>available_globally</code> and <code>live_event</code> are logical, and the three date columns are dates.]</p>
 </section>
-<section id="check-2-summary-statistics" class="level3">
-<h3 class="anchored" data-anchor-id="check-2-summary-statistics">Check 2: Summary Statistics</h3>
+<section id="check-2-summary-statistics" class="level4">
+<h4 class="anchored" data-anchor-id="check-2-summary-statistics">Check 2: Summary Statistics</h4>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a> <span class="fu">library</span>(skimr)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">skim</span>(NETFLIX_DATA)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <caption>Data summary</caption>
@@ -565,59 +598,101 @@ $ live_event         &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE
 <p>Tips for the description:</p>
 <p>Write about what the numbers imply for your analysis, not just what they are. “views is missing for most titles, so I use hours_viewed as the main measure” shows more thinking than “views has missing values.” Take the numbers from your skim() output, such as n_missing and p50 versus p100. Mention the data limitations the assignment itself notes, such as hours being rounded to the nearest 100,000.</p>
 </section>
-<section id="task-5--exploratory-questions" class="level2">
-<h2 class="anchored" data-anchor-id="task-5--exploratory-questions">Task 5- Exploratory questions</h2>
+</section>
+<section id="task-5--exploratory-questions" class="level3">
+<h3 class="anchored" data-anchor-id="task-5--exploratory-questions">Task 5- Exploratory questions</h3>
 <p>[1-2 sentences of your own: what these six questions are for, e.g.&nbsp;getting a sense of the data’s scale and where viewing is concentrated.]</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Q1: date range (period_end has a scaffold quirk for H1, so derive the end)</span></span>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Q1: date range (period_end is off for H1 periods, so derive the end date)</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>first_date <span class="ot">&lt;-</span> <span class="fu">min</span>(NETFLIX_DATA<span class="sc">$</span>period_start)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>last_date  <span class="ot">&lt;-</span> <span class="fu">max</span>(NETFLIX_DATA<span class="sc">$</span>period_start) <span class="sc">+</span> <span class="fu">months</span>(<span class="dv">6</span>) <span class="sc">-</span> <span class="fu">days</span>(<span class="dv">1</span>)</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># I derived the end date because period_end shows July 30 for first-half periods in the scaffold.</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Q2: distinct titles</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>n_titles <span class="ot">&lt;-</span> <span class="fu">n_distinct</span>(NETFLIX_DATA<span class="sc">$</span>title)</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Q3: Bridgerton universe</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>bridgerton_hours <span class="ot">&lt;-</span> NETFLIX_DATA <span class="sc">|&gt;</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(title, <span class="st">"Bridgerton"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total =</span> <span class="fu">sum</span>(hours_viewed)) <span class="sc">|&gt;</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(total)</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Q4: Stranger Things, excluding the companion titles</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>stranger_hours <span class="ot">&lt;-</span> NETFLIX_DATA <span class="sc">|&gt;</span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(title, <span class="st">"Stranger Things"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter_out</span>(<span class="fu">str_detect</span>(title, <span class="st">"Beyond Stranger Things"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter_out</span>(<span class="fu">str_detect</span>(title, <span class="st">"Tales from"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter_out</span>(<span class="fu">str_detect</span>(title, <span class="st">"Fireplace"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total =</span> <span class="fu">sum</span>(hours_viewed)) <span class="sc">|&gt;</span></span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(total)</span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Q5: top 10 share of 2026H1 watch time</span></span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>h1_2026 <span class="ot">&lt;-</span> NETFLIX_DATA <span class="sc">|&gt;</span> <span class="fu">filter</span>(period <span class="sc">==</span> <span class="st">"2026H1"</span>)</span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>top10_share <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">slice_max</span>(h1_2026, hours_viewed, <span class="at">n =</span> <span class="dv">10</span>, <span class="at">with_ties =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>hours_viewed) <span class="sc">/</span></span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(h1_2026<span class="sc">$</span>hours_viewed)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Q2: number of distinct shows and movies (seasons count separately)</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>n_titles <span class="ot">&lt;-</span> <span class="fu">n_distinct</span>(NETFLIX_DATA<span class="sc">$</span>title)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Q3: total hours for the Bridgerton universe</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>bridgerton_hours <span class="ot">&lt;-</span> NETFLIX_DATA <span class="sc">|&gt;</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(title, <span class="st">"Bridgerton"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total =</span> <span class="fu">sum</span>(hours_viewed)) <span class="sc">|&gt;</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(total)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Q4: total hours for the five Stranger Things seasons</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>stranger_hours <span class="ot">&lt;-</span> NETFLIX_DATA <span class="sc">|&gt;</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(title, <span class="st">"Stranger Things"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter_out</span>(<span class="fu">str_detect</span>(title, <span class="st">"Beyond Stranger Things"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter_out</span>(<span class="fu">str_detect</span>(title, <span class="fu">regex</span>(<span class="st">"Tales from"</span>, <span class="at">ignore_case =</span> <span class="cn">TRUE</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter_out</span>(<span class="fu">str_detect</span>(title, <span class="st">"Fireplace"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total =</span> <span class="fu">sum</span>(hours_viewed)) <span class="sc">|&gt;</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(total)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Q5: share of 2026H1 watch time spent on that period's ten biggest titles</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>h1_2026 <span class="ot">&lt;-</span> NETFLIX_DATA <span class="sc">|&gt;</span> <span class="fu">filter</span>(period <span class="sc">==</span> <span class="st">"2026H1"</span>)</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>top10_share <span class="ot">&lt;-</span> h1_2026 <span class="sc">|&gt;</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(hours_viewed, <span class="at">n =</span> <span class="dv">10</span>, <span class="at">with_ties =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">top10 =</span> <span class="fu">sum</span>(hours_viewed)) <span class="sc">|&gt;</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(top10) <span class="sc">/</span> <span class="fu">sum</span>(h1_2026<span class="sc">$</span>hours_viewed)</span>
 <span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Q6: global availability, by title and weighted by hours</span></span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>global_by_title <span class="ot">&lt;-</span> <span class="fu">mean</span>(NETFLIX_DATA<span class="sc">$</span>available_globally, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>global_by_hours <span class="ot">&lt;-</span> <span class="fu">weighted.mean</span>(NETFLIX_DATA<span class="sc">$</span>available_globally,</span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>                                 NETFLIX_DATA<span class="sc">$</span>hours_viewed, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Q6: share of catalog that is globally available</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Q6: share of the catalog that is globally available</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a><span class="co"># By title: every title-period listing counts once</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>global_by_title <span class="ot">&lt;-</span> <span class="fu">mean</span>(NETFLIX_DATA<span class="sc">$</span>available_globally, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Weighted by hours viewed</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>global_by_hours <span class="ot">&lt;-</span> <span class="fu">weighted.mean</span>(</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>  NETFLIX_DATA<span class="sc">$</span>available_globally,</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>  NETFLIX_DATA<span class="sc">$</span>hours_viewed,</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.rm =</span> <span class="cn">TRUE</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 </section>
-<section id="exploratory-questions" class="level2">
-<h2 class="anchored" data-anchor-id="exploratory-questions">Exploratory Questions</h2>
-<p>[Your 1-2 sentences introducing what these six questions check.]</p>
-<ol type="1">
-<li><p><strong>Date range.</strong> [Your words: the period covered, and how many half-year reports that spans.] The data runs from January 01, 2023 to June 30, 2026. [Your words: optional note that you derived the end date because <code>period_end</code> is off for first-half periods.]</p></li>
-<li><p><strong>Number of titles.</strong> [Your words: what the count measures.] The data contains 24,427 distinct shows and movies. [Your words: note that seasons are counted separately.]</p></li>
-<li><p><strong>Bridgerton.</strong> [Your words: what you included, e.g.&nbsp;spin-offs.] Titles in the <em>Bridgerton</em> universe account for 4,862,800,000 total hours viewed. [Your words: one clause on how large that is.]</p></li>
-<li><p><strong>Stranger Things.</strong> [Your words: which companion titles you excluded.] The five seasons of <em>Stranger Things</em> account for 5,588,900,000 total hours viewed. [Your words: one clause comparing it to Bridgerton.]</p></li>
-<li><p><strong>Top 10 in 2026H1.</strong> [Your words: how you read “top 10”.] The ten most-watched titles of 2026H1 captured 6.7% of that period’s total watch time. [Your words: what that implies about concentration.]</p></li>
-<li><p><strong>Global availability.</strong> [Your words: how you counted titles.] 35.1% of titles are available globally, but they make up 52.1% of hours viewed. [Your words: what the gap between the two numbers means.]</p></li>
-</ol>
-<p>[Your 2-3 sentences tying the answers together: what stands out, and what it suggests for the analysis ahead.]</p>
+<section id="exploratory-questions-inline-values" class="level3">
+<h3 class="anchored" data-anchor-id="exploratory-questions-inline-values">Exploratory Questions-Inline Values</h3>
+<p>[Your 1-2 sentences: what these six questions check and why.]</p>
+<p>(chunk above goes here)</p>
+<p>[Paragraph 1, Q1 and Q2: the period covered and the number of titles. Inline code: January 01, 2023, June 30, 2026, 24,427. Note that seasons are counted separately.]</p>
+<p>[Paragraph 2, Q3 and Q4: hours for each franchise. Inline code: 4,862,800,000, 5,548,500,000. State what you included in Bridgerton and which three Stranger Things companion titles you excluded.]</p>
+<p>[Paragraph 3, Q5 and Q6: concentration and availability. Inline code: 6.7%, 35.1%, 52.1%. State how you read “top 10”, and say what the gap between the two availability numbers means.]</p>
+<p>[Your 1-2 closing sentences tying the answers together.]</p>
+</section>
+<section id="task-6-exploratory-questions---table-answers" class="level3">
+<h3 class="anchored" data-anchor-id="task-6-exploratory-questions---table-answers">Task 6: Exploratory Questions - Table Answers</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<section id="what-was-the-top-show-by-total-hours-viewed-in-each-period-and-what-fraction-of-total-viewership-did-it-capture" class="level4">
+<h4 class="anchored" data-anchor-id="what-was-the-top-show-by-total-hours-viewed-in-each-period-and-what-fraction-of-total-viewership-did-it-capture">1. What was the top show (by total hours viewed) in each period and what fraction of total viewership did it capture?</h4>
+<p>top_by_period &lt;- NETFLIX_DATA |&gt; mutate(period_total = sum(hours_viewed), .by = period) |&gt; slice_max(hours_viewed, n = 1, by = period, with_ties = FALSE) |&gt; mutate(share = hours_viewed / period_total) |&gt; select(period, title, hours_viewed, share) |&gt; arrange(period)</p>
+<p>top_by_period |&gt; gt() |&gt; cols_label(period = “Period”, title = “Top Title”, hours_viewed = “Hours Viewed”, share = “Share of Period Viewing”) |&gt; fmt_number(hours_viewed, decimals = 1, suffixing = TRUE) |&gt; fmt_percent(share, decimals = 1) |&gt; tab_header(title = “[Your one-line takeaway]”) |&gt; tab_source_note(“Source: Netflix What We Watched reports”)</p>
+</section>
+<section id="state-show-means-one-title-row-so-each-season-counts-separately.-the-share-is-out-of-the-hours-that-netflix-reports-for-that-period-since-low-viewership-titles-are-omitted." class="level4">
+<h4 class="anchored" data-anchor-id="state-show-means-one-title-row-so-each-season-counts-separately.-the-share-is-out-of-the-hours-that-netflix-reports-for-that-period-since-low-viewership-titles-are-omitted.">State: “Show” means one title row, so each season counts separately. The share is out of the hours that Netflix reports for that period, since low-viewership titles are omitted.</h4>
+</section>
+<section id="how-has-netflixs-catalog-changed-in-size-over-the-periods-for-which-we-have-questions-you-should-consider-both-the-number-of-titles-and-the-total-runtime-of-content." class="level4">
+<h4 class="anchored" data-anchor-id="how-has-netflixs-catalog-changed-in-size-over-the-periods-for-which-we-have-questions-you-should-consider-both-the-number-of-titles-and-the-total-runtime-of-content.">How has Netflix’s catalog changed in size over the periods for which we have questions? You should consider both the number of titles and the total runtime of content.</h4>
+<p>catalog_size &lt;- NETFLIX_DATA |&gt; summarise(n_titles = n(), total_runtime_hours = sum(runtime, na.rm = TRUE) / 60, .by = period) |&gt; arrange(period)</p>
+<p>catalog_size |&gt; gt() |&gt; cols_label(period = “Period”, n_titles = “Titles Reported”, total_runtime_hours = “Total Runtime (hours)”) |&gt; fmt_number(c(n_titles, total_runtime_hours), decimals = 0) |&gt; tab_header(title = “[Your one-line takeaway]”) |&gt; tab_source_note(“Source: Netflix What We Watched reports”)</p>
+</section>
+<section id="state-this-counts-titles-that-appear-in-the-reports-not-netflixs-full-library-because-titles-under-the-viewing-threshold-are-left-out.-runtime-is-missing-for-some-titles-and-is-excluded-from-the-sum." class="level4">
+<h4 class="anchored" data-anchor-id="state-this-counts-titles-that-appear-in-the-reports-not-netflixs-full-library-because-titles-under-the-viewing-threshold-are-left-out.-runtime-is-missing-for-some-titles-and-is-excluded-from-the-sum.">State: This counts titles that appear in the reports, not Netflix’s full library, because titles under the viewing threshold are left out. Runtime is missing for some titles and is excluded from the sum.</h4>
+</section>
+<section id="which-shows-have-had-the-most-consistently-high-viewership-across-all-periods-these-shows-are-likely-to-be-staples-that-viewers-fall-back-on-as-comfort-food-e.g.-re-runs-of-friends." class="level4">
+<h4 class="anchored" data-anchor-id="which-shows-have-had-the-most-consistently-high-viewership-across-all-periods-these-shows-are-likely-to-be-staples-that-viewers-fall-back-on-as-comfort-food-e.g.-re-runs-of-friends.">Which shows have had the most consistently high viewership across all periods? These shows are likely to be ‘staples’ that viewers fall back on as ‘comfort food’, e.g., re-runs of Friends.</h4>
+</section>
+<section id="within-each-period-what-fraction-of-time-was-spent-on-shows-vs-movies" class="level4">
+<h4 class="anchored" data-anchor-id="within-each-period-what-fraction-of-time-was-spent-on-shows-vs-movies">Within each period, what fraction of time was spent on ‘shows’ vs movies?</h4>
+</section>
+<section id="how-does-the-performance-of-live-events-compare-to-pre-taped-content-does-the-average-live-event-draw-more-viewership-than-an-average-piece-of-pre-taped-content-how-about-a-top-tier-live-event-vs-top-tier-pre-taped-content" class="level4">
+<h4 class="anchored" data-anchor-id="how-does-the-performance-of-live-events-compare-to-pre-taped-content-does-the-average-live-event-draw-more-viewership-than-an-average-piece-of-pre-taped-content-how-about-a-top-tier-live-event-vs-top-tier-pre-taped-content">How does the performance of live events compare to pre-taped content? Does the average live event draw more viewership than an average piece of pre-taped content? How about a ‘top tier’ live event vs ‘top tier’ pre-taped content?</h4>
 
 
+</section>
+</section>
 </section>
 
 </main> <!-- /main -->

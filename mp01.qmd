@@ -1,19 +1,22 @@
 
-  ---
-  title: "Mini-Project 01: What We Watched"
-  author: "Rojina Adhikari"
-  format: html 
- 
-  ---
+---
+title: "Mini-Project #01: What We Watched"
+author: "Rojina Adhikari"
+format:
+  html:
+    code-fold: true
+---
   
-  ## Introduction
+## Introduction
   
-  *(2-3 sentences: what this report does, what data, what the reader will get out of it)*
+  Netflix publishes its *What We Watched (WWW)* report every six months, beginning in 2023. This report analyzes  *Netflix's What We Watched* data to explore patterns in viewership data, identify the type of content, understand which content captures the most attention and who are the audiences in order to make informed decision making.
   
-  ## Data Acquisition
+  The goal is not just to analyze and provide  practical recommendations for Netflix's 2027 content budget but also to help Netflix unlock broader patterns to make more informed decisions about their future investment decisions. 
+  
+## Data Acquisition
+  
 ```{r}
 #| label: load-data
-#| code-fold: true
 #| message: false
 #| warning: false
 load_netflix_data <- function(){
@@ -105,7 +108,7 @@ load_netflix_data <- function(){
   
 ```
   
- ## Data Cleaning and preparation
+## Data Cleaning and preparation
  Before analysis, the raw data needed two fixes: messy column names 
 and incorrect data types. Both were added directly to the 
 `load_netflix_data()` function above — column names were converted to 
@@ -119,11 +122,13 @@ converted from `"Yes"`/`"No"` text to `TRUE`/`FALSE` logical values.
 glimpse(NETFLIX_DATA)
 ```
  
- ## Initial Data Exploration  
+## Exploratory Analysis
+
+### Initial Data Exploration  
  Before answering any questions, I ran two basic checks on the cleaned
 data: one for column types and one for summary statistics.
 
-### Check 1: Column types
+#### Check 1: Column types
 
 ```{r}
 #| label: Data_Exploration_glimpse
@@ -134,7 +139,7 @@ glimpse(NETFLIX_DATA)
 now an integer, `available_globally` and `live_event` are logical, and
 the three date columns are dates.]
 
-### Check 2: Summary Statistics
+#### Check 2: Summary Statistics
 
 ```{r}
 #| label: Data_Exploration_skim
@@ -154,7 +159,8 @@ Write about what the numbers imply for your analysis, not just what they are. "v
 Take the numbers from your skim() output, such as n_missing and p50 versus p100.
 Mention the data limitations the assignment itself notes, such as hours being rounded to the nearest 100,000.
 
-## Task 5- Exploratory questions
+
+### Task 5- Exploratory questions
 
 [1-2 sentences of your own: what these six questions are for, e.g. getting
 a sense of the data's scale and where viewing is concentrated.]
@@ -162,76 +168,130 @@ a sense of the data's scale and where viewing is concentrated.]
 ```{r}
 #| label: task5-values
 
-# Q1: date range (period_end has a scaffold quirk for H1, so derive the end)
+# Q1: date range (period_end is off for H1 periods, so derive the end date)
 first_date <- min(NETFLIX_DATA$period_start)
 last_date  <- max(NETFLIX_DATA$period_start) + months(6) - days(1)
 
-# I derived the end date because period_end shows July 30 for first-half periods in the scaffold.
-
-# Q2: distinct titles
+# Q2: number of distinct shows and movies (seasons count separately)
 n_titles <- n_distinct(NETFLIX_DATA$title)
 
-# Q3: Bridgerton universe
+# Q3: total hours for the Bridgerton universe
 bridgerton_hours <- NETFLIX_DATA |>
   filter(str_detect(title, "Bridgerton")) |>
   summarise(total = sum(hours_viewed)) |>
   pull(total)
 
-# Q4: Stranger Things, excluding the companion titles
+# Q4: total hours for the five Stranger Things seasons
 stranger_hours <- NETFLIX_DATA |>
   filter(str_detect(title, "Stranger Things")) |>
   filter_out(str_detect(title, "Beyond Stranger Things")) |>
-  filter_out(str_detect(title, "Tales from")) |>
+  filter_out(str_detect(title, regex("Tales from", ignore_case = TRUE))) |>
   filter_out(str_detect(title, "Fireplace")) |>
   summarise(total = sum(hours_viewed)) |>
   pull(total)
 
-# Q5: top 10 share of 2026H1 watch time
+# Q5: share of 2026H1 watch time spent on that period's ten biggest titles
 h1_2026 <- NETFLIX_DATA |> filter(period == "2026H1")
-top10_share <- sum(slice_max(h1_2026, hours_viewed, n = 10, with_ties = FALSE)$hours_viewed) /
-  sum(h1_2026$hours_viewed)
+top10_share <- h1_2026 |>
+  slice_max(hours_viewed, n = 10, with_ties = FALSE) |>
+  summarise(top10 = sum(hours_viewed)) |>
+  pull(top10) / sum(h1_2026$hours_viewed)
 
-# Q6: global availability, by title and weighted by hours
+# Q6: share of catalog that is globally available
+# Q6: share of the catalog that is globally available
+# By title: every title-period listing counts once
 global_by_title <- mean(NETFLIX_DATA$available_globally, na.rm = TRUE)
-global_by_hours <- weighted.mean(NETFLIX_DATA$available_globally,
-                                 NETFLIX_DATA$hours_viewed, na.rm = TRUE)
+
+# Weighted by hours viewed
+global_by_hours <- weighted.mean(
+  NETFLIX_DATA$available_globally,
+  NETFLIX_DATA$hours_viewed,
+  na.rm = TRUE
+)
 ```
 
 
-## Exploratory Questions
+### Exploratory Questions-Inline Values
 
-[Your 1-2 sentences introducing what these six questions check.]
+[Your 1-2 sentences: what these six questions check and why.]
 
-1. **Date range.** [Your words: the period covered, and how many half-year
-   reports that spans.] The data runs from
-   `r format(first_date, "%B %d, %Y")` to
-   `r format(last_date, "%B %d, %Y")`. [Your words: optional note that you
-   derived the end date because `period_end` is off for first-half periods.]
+(chunk above goes here)
 
-2. **Number of titles.** [Your words: what the count measures.] The data
-   contains `r scales::comma(n_titles)` distinct shows and movies.
-   [Your words: note that seasons are counted separately.]
+[Paragraph 1, Q1 and Q2: the period covered and the number of titles.
+Inline code: `r format(first_date, "%B %d, %Y")`,
+`r format(last_date, "%B %d, %Y")`, `r scales::comma(n_titles)`.
+Note that seasons are counted separately.]
 
-3. **Bridgerton.** [Your words: what you included, e.g. spin-offs.] Titles
-   in the *Bridgerton* universe account for
-   `r scales::comma(bridgerton_hours)` total hours viewed.
-   [Your words: one clause on how large that is.]
+[Paragraph 2, Q3 and Q4: hours for each franchise.
+Inline code: `r scales::comma(bridgerton_hours)`,
+`r scales::comma(stranger_hours)`.
+State what you included in Bridgerton and which three Stranger Things
+companion titles you excluded.]
 
-4. **Stranger Things.** [Your words: which companion titles you excluded.]
-   The five seasons of *Stranger Things* account for
-   `r scales::comma(stranger_hours)` total hours viewed.
-   [Your words: one clause comparing it to Bridgerton.]
+[Paragraph 3, Q5 and Q6: concentration and availability.
+Inline code: `r scales::percent(top10_share, accuracy = 0.1)`,
+`r scales::percent(global_by_title, accuracy = 0.1)`,
+`r scales::percent(global_by_hours, accuracy = 0.1)`.
+State how you read "top 10", and say what the gap between the two
+availability numbers means.]
 
-5. **Top 10 in 2026H1.** [Your words: how you read "top 10".] The ten
-   most-watched titles of 2026H1 captured
-   `r scales::percent(top10_share, accuracy = 0.1)` of that period's total
-   watch time. [Your words: what that implies about concentration.]
+[Your 1-2 closing sentences tying the answers together.]
 
-6. **Global availability.** [Your words: how you counted titles.]
-   `r scales::percent(global_by_title, accuracy = 0.1)` of titles are
-   available globally, but they make up
-   `r scales::percent(global_by_hours, accuracy = 0.1)` of hours viewed.
-   [Your words: what the gap between the two numbers means.]
+### Task 6: Exploratory Questions - Table Answers
 
-[Your 2-3 sentences tying the answers together: what stands out, and what it
-suggests for the analysis ahead.]
+```{r}
+#| label: load-gt
+#| message: false
+
+library(gt)
+```
+#### 1. What was the top show (by total hours viewed) in each period and what fraction of total viewership did it capture?
+
+```{r}
+#| label: task6-catalog
+top_by_period <- NETFLIX_DATA |>
+  mutate(period_total = sum(hours_viewed), .by = period) |>
+  slice_max(hours_viewed, n = 1, by = period, with_ties = FALSE) |>
+  mutate(share = hours_viewed / period_total) |>
+  select(period, title, hours_viewed, share) |>
+  arrange(period)
+
+top_by_period |>
+  gt() |>
+  cols_label(period = "Period", title = "Top Title",
+             hours_viewed = "Hours Viewed", share = "Share of Period Viewing") |>
+  fmt_number(hours_viewed, decimals = 1, suffixing = TRUE) |>
+  fmt_percent(share, decimals = 1) |>
+  tab_header(title = "[Your one-line takeaway]") |>
+  tab_source_note("Source: Netflix What We Watched reports")
+```
+
+  
+#### State: "Show" means one title row, so each season counts separately. The share is out of the hours that Netflix reports for that period, since low-viewership titles are omitted.
+
+#### How has Netflix’s catalog changed in size over the periods for which we have questions? You should consider both the number of titles and the total runtime of content.
+
+```{r}
+#| label: task6-catalog
+catalog_size <- NETFLIX_DATA |>
+  summarise(n_titles = n(),
+            total_runtime_hours = sum(runtime, na.rm = TRUE) / 60,
+            .by = period) |>
+  arrange(period)
+
+catalog_size |>
+  gt() |>
+  cols_label(period = "Period", n_titles = "Titles Reported",
+             total_runtime_hours = "Total Runtime (hours)") |>
+  fmt_number(c(n_titles, total_runtime_hours), decimals = 0) |>
+  tab_header(title = "[Your one-line takeaway]") |>
+  tab_source_note("Source: Netflix What We Watched reports")
+```
+
+#### State: This counts titles that appear in the reports, not Netflix's full library, because titles under the viewing threshold are left out. Runtime is missing for some titles and is excluded from the sum.
+
+#### Which shows have had the most consistently high viewership across all periods? These shows are likely to be ‘staples’ that viewers fall back on as ‘comfort food’, e.g., re-runs of Friends.
+
+#### Within each period, what fraction of time was spent on ‘shows’ vs movies?
+
+#### How does the performance of live events compare to pre-taped content? Does the average live event draw more viewership than an average piece of pre-taped content? How about a ‘top tier’ live event vs ‘top tier’ pre-taped content?
