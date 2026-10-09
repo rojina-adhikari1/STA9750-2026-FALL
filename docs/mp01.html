@@ -283,6 +283,10 @@ $ available_globally &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, FALSE, TRUE
 $ live_event         &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FA…</code></pre>
 </div>
 </div>
+<p>[2-3 sentences: Are the types what you expect? Mention that <code>year</code> is now an integer, <code>available_globally</code> and <code>live_event</code> are logical, and the three date columns are dates.]</p>
+</section>
+<section id="check-2-summary-statistics" class="level3">
+<h3 class="anchored" data-anchor-id="check-2-summary-statistics">Check 2: Summary Statistics</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a> <span class="fu">library</span>(skimr)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">skim</span>(NETFLIX_DATA)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -557,6 +561,7 @@ $ live_event         &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE
 </table>
 </div>
 </div>
+<p>[3-5 sentences: What stands out? Cover: - how many rows, and the date range covered - which columns have missing values (<code>views</code>, <code>runtime</code>) and roughly how many - how skewed <code>hours_viewed</code> is (compare the median to the max) - what this means for the analysis, for example that <code>views</code> can’t be relied on because it’s mostly missing]</p>
 
 
 </section>
