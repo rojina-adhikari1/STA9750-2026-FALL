@@ -120,3 +120,18 @@ glimpse(NETFLIX_DATA)
 ```
  
  ## Initial Data Exploration  
+ Before answering any questions, I ran two basic checks on the cleaned
+data: one for column types and one for summary statistics.
+
+### Check 1: Column types
+
+```{r}
+#| label: Data_Exploration_glimpse
+
+glimpse(NETFLIX_DATA)
+```
+```{r}
+#| label: Data_Exploration_skim
+ library(skimr)
+ skim(NETFLIX_DATA)
+``` 
