@@ -562,6 +562,8 @@ $ live_event         &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE
 </div>
 </div>
 <p>[3-5 sentences: What stands out? Cover: - how many rows, and the date range covered - which columns have missing values (<code>views</code>, <code>runtime</code>) and roughly how many - how skewed <code>hours_viewed</code> is (compare the median to the max) - what this means for the analysis, for example that <code>views</code> can’t be relied on because it’s mostly missing]</p>
+<p>Tips for the description:</p>
+<p>Write about what the numbers imply for your analysis, not just what they are. “views is missing for most titles, so I use hours_viewed as the main measure” shows more thinking than “views has missing values.” Take the numbers from your skim() output, such as n_missing and p50 versus p100. Mention the data limitations the assignment itself notes, such as hours being rounded to the nearest 100,000.</p>
 
 
 </section>

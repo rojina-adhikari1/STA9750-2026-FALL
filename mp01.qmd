@@ -153,3 +153,46 @@ the three date columns are dates.]
 Write about what the numbers imply for your analysis, not just what they are. "views is missing for most titles, so I use hours_viewed as the main measure" shows more thinking than "views has missing values."
 Take the numbers from your skim() output, such as n_missing and p50 versus p100.
 Mention the data limitations the assignment itself notes, such as hours being rounded to the nearest 100,000.
+
+## Task 5- Exploratory questions
+
+[1-2 sentences of your own: what these six questions are for, e.g. getting
+a sense of the data's scale and where viewing is concentrated.]
+
+```{r}
+#| label: task5-values
+
+# Q1: date range (period_end has a scaffold quirk for H1, so derive the end)
+first_date <- min(NETFLIX_DATA$period_start)
+last_date  <- max(NETFLIX_DATA$period_start) + months(6) - days(1)
+
+# I derived the end date because period_end shows July 30 for first-half periods in the scaffold.
+
+# Q2: distinct titles
+n_titles <- n_distinct(NETFLIX_DATA$title)
+
+# Q3: Bridgerton universe
+bridgerton_hours <- NETFLIX_DATA |>
+  filter(str_detect(title, "Bridgerton")) |>
+  summarise(total = sum(hours_viewed)) |>
+  pull(total)
+
+# Q4: Stranger Things, excluding the companion titles
+stranger_hours <- NETFLIX_DATA |>
+  filter(str_detect(title, "Stranger Things")) |>
+  filter_out(str_detect(title, "Beyond Stranger Things")) |>
+  filter_out(str_detect(title, "Tales from")) |>
+  filter_out(str_detect(title, "Fireplace")) |>
+  summarise(total = sum(hours_viewed)) |>
+  pull(total)
+
+# Q5: top 10 share of 2026H1 watch time
+h1_2026 <- NETFLIX_DATA |> filter(period == "2026H1")
+top10_share <- sum(slice_max(h1_2026, hours_viewed, n = 10, with_ties = FALSE)$hours_viewed) /
+  sum(h1_2026$hours_viewed)
+
+# Q6: global availability, by title and weighted by hours
+global_by_title <- mean(NETFLIX_DATA$available_globally, na.rm = TRUE)
+global_by_hours <- weighted.mean(NETFLIX_DATA$available_globally,
+                                 NETFLIX_DATA$hours_viewed, na.rm = TRUE)
+```
