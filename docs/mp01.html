@@ -603,9 +603,19 @@ $ live_event         &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE
 <span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>global_by_hours <span class="ot">&lt;-</span> <span class="fu">weighted.mean</span>(NETFLIX_DATA<span class="sc">$</span>available_globally,</span>
 <span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>                                 NETFLIX_DATA<span class="sc">$</span>hours_viewed, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+</section>
+<section id="exploratory-questions" class="level2">
+<h2 class="anchored" data-anchor-id="exploratory-questions">Exploratory Questions</h2>
+<p>[Your 1-2 sentences introducing what these six questions check.]</p>
 <ol type="1">
-<li><strong>Date range.</strong> The data covers January 01, 2023 to June 30, 2026.</li>
+<li><p><strong>Date range.</strong> [Your words: the period covered, and how many half-year reports that spans.] The data runs from January 01, 2023 to June 30, 2026. [Your words: optional note that you derived the end date because <code>period_end</code> is off for first-half periods.]</p></li>
+<li><p><strong>Number of titles.</strong> [Your words: what the count measures.] The data contains 24,427 distinct shows and movies. [Your words: note that seasons are counted separately.]</p></li>
+<li><p><strong>Bridgerton.</strong> [Your words: what you included, e.g.&nbsp;spin-offs.] Titles in the <em>Bridgerton</em> universe account for 4,862,800,000 total hours viewed. [Your words: one clause on how large that is.]</p></li>
+<li><p><strong>Stranger Things.</strong> [Your words: which companion titles you excluded.] The five seasons of <em>Stranger Things</em> account for 5,588,900,000 total hours viewed. [Your words: one clause comparing it to Bridgerton.]</p></li>
+<li><p><strong>Top 10 in 2026H1.</strong> [Your words: how you read “top 10”.] The ten most-watched titles of 2026H1 captured 6.7% of that period’s total watch time. [Your words: what that implies about concentration.]</p></li>
+<li><p><strong>Global availability.</strong> [Your words: how you counted titles.] 35.1% of titles are available globally, but they make up 52.1% of hours viewed. [Your words: what the gap between the two numbers means.]</p></li>
 </ol>
+<p>[Your 2-3 sentences tying the answers together: what stands out, and what it suggests for the analysis ahead.]</p>
 
 
 </section>
