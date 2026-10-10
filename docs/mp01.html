@@ -667,30 +667,2717 @@ $ live_event         &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE
 </div>
 <section id="what-was-the-top-show-by-total-hours-viewed-in-each-period-and-what-fraction-of-total-viewership-did-it-capture" class="level4">
 <h4 class="anchored" data-anchor-id="what-was-the-top-show-by-total-hours-viewed-in-each-period-and-what-fraction-of-total-viewership-did-it-capture">1. What was the top show (by total hours viewed) in each period and what fraction of total viewership did it capture?</h4>
-<p>top_by_period &lt;- NETFLIX_DATA |&gt; mutate(period_total = sum(hours_viewed), .by = period) |&gt; slice_max(hours_viewed, n = 1, by = period, with_ties = FALSE) |&gt; mutate(share = hours_viewed / period_total) |&gt; select(period, title, hours_viewed, share) |&gt; arrange(period)</p>
-<p>top_by_period |&gt; gt() |&gt; cols_label(period = “Period”, title = “Top Title”, hours_viewed = “Hours Viewed”, share = “Share of Period Viewing”) |&gt; fmt_number(hours_viewed, decimals = 1, suffixing = TRUE) |&gt; fmt_percent(share, decimals = 1) |&gt; tab_header(title = “[Your one-line takeaway]”) |&gt; tab_source_note(“Source: Netflix What We Watched reports”)</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>top_by_period <span class="ot">&lt;-</span> NETFLIX_DATA <span class="sc">|&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">period_total =</span> <span class="fu">sum</span>(hours_viewed), <span class="at">.by =</span> period) <span class="sc">|&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(hours_viewed, <span class="at">n =</span> <span class="dv">1</span>, <span class="at">by =</span> period, <span class="at">with_ties =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">share =</span> hours_viewed <span class="sc">/</span> period_total) <span class="sc">|&gt;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(period, title, hours_viewed, share) <span class="sc">|&gt;</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(period)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>top_by_period <span class="sc">|&gt;</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(<span class="at">period =</span> <span class="st">"Period"</span>, <span class="at">title =</span> <span class="st">"Top Title"</span>,</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">hours_viewed =</span> <span class="st">"Hours Viewed"</span>, <span class="at">share =</span> <span class="st">"Share of Period Viewing"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(hours_viewed, <span class="at">decimals =</span> <span class="dv">1</span>, <span class="at">suffixing =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_percent</span>(share, <span class="at">decimals =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"[Top title per period and its share]"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source: Netflix What We Watched reports"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="pauvcyvvsv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#pauvcyvvsv table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#pauvcyvvsv thead, #pauvcyvvsv tbody, #pauvcyvvsv tfoot, #pauvcyvvsv tr, #pauvcyvvsv td, #pauvcyvvsv th {
+  border-style: none;
+}
+
+#pauvcyvvsv p {
+  margin: 0;
+  padding: 0;
+}
+
+#pauvcyvvsv .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#pauvcyvvsv .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#pauvcyvvsv .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#pauvcyvvsv .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#pauvcyvvsv .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#pauvcyvvsv .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pauvcyvvsv .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#pauvcyvvsv .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#pauvcyvvsv .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#pauvcyvvsv .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#pauvcyvvsv .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#pauvcyvvsv .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#pauvcyvvsv .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#pauvcyvvsv .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#pauvcyvvsv .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#pauvcyvvsv .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#pauvcyvvsv .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#pauvcyvvsv .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#pauvcyvvsv .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pauvcyvvsv .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#pauvcyvvsv .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#pauvcyvvsv .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#pauvcyvvsv .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pauvcyvvsv .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#pauvcyvvsv .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#pauvcyvvsv .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pauvcyvvsv .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pauvcyvvsv .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#pauvcyvvsv .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pauvcyvvsv .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#pauvcyvvsv .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pauvcyvvsv .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#pauvcyvvsv .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pauvcyvvsv .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#pauvcyvvsv .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pauvcyvvsv .gt_left {
+  text-align: left;
+}
+
+#pauvcyvvsv .gt_center {
+  text-align: center;
+}
+
+#pauvcyvvsv .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#pauvcyvvsv .gt_font_normal {
+  font-weight: normal;
+}
+
+#pauvcyvvsv .gt_font_bold {
+  font-weight: bold;
+}
+
+#pauvcyvvsv .gt_font_italic {
+  font-style: italic;
+}
+
+#pauvcyvvsv .gt_super {
+  font-size: 65%;
+}
+
+#pauvcyvvsv .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#pauvcyvvsv .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#pauvcyvvsv .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#pauvcyvvsv .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#pauvcyvvsv .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#pauvcyvvsv .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#pauvcyvvsv .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#pauvcyvvsv .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#pauvcyvvsv div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<td colspan="4" class="gt_heading gt_title gt_font_normal gt_bottom_border">[Top title per period and its share]</td>
+</tr>
+<tr class="gt_col_headings even">
+<th id="period" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Period</th>
+<th id="title" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Top Title</th>
+<th id="hours_viewed" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Hours Viewed</th>
+<th id="share" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Share of Period Viewing</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="period">2023H1</td>
+<td class="gt_row gt_left" headers="title">The Night Agent: Season 1</td>
+<td class="gt_row gt_right" headers="hours_viewed">812.1M</td>
+<td class="gt_row gt_right" headers="share">0.9%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="period">2023H2</td>
+<td class="gt_row gt_left" headers="title">King the Land: Limited Series</td>
+<td class="gt_row gt_right" headers="hours_viewed">630.2M</td>
+<td class="gt_row gt_right" headers="share">1.0%</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="period">2024H1</td>
+<td class="gt_row gt_left" headers="title">Bridgerton: Season 3</td>
+<td class="gt_row gt_right" headers="hours_viewed">733.8M</td>
+<td class="gt_row gt_right" headers="share">1.1%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="period">2024H2</td>
+<td class="gt_row gt_left" headers="title">Squid Game: Season 2</td>
+<td class="gt_row gt_right" headers="hours_viewed">619.9M</td>
+<td class="gt_row gt_right" headers="share">0.9%</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="period">2025H1</td>
+<td class="gt_row gt_left" headers="title">Squid Game: Season 2</td>
+<td class="gt_row gt_right" headers="hours_viewed">840.3M</td>
+<td class="gt_row gt_right" headers="share">1.2%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="period">2025H2</td>
+<td class="gt_row gt_left" headers="title">Wednesday: Season 2</td>
+<td class="gt_row gt_right" headers="hours_viewed">964.1M</td>
+<td class="gt_row gt_right" headers="share">1.4%</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="period">2026H1</td>
+<td class="gt_row gt_left" headers="title">Bridgerton: Season 4</td>
+<td class="gt_row gt_right" headers="hours_viewed">889.8M</td>
+<td class="gt_row gt_right" headers="share">1.2%</td>
+</tr>
+</tbody><tfoot>
+<tr class="gt_sourcenotes odd">
+<td colspan="4" class="gt_sourcenote">Source: Netflix What We Watched reports</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
 </section>
 <section id="state-show-means-one-title-row-so-each-season-counts-separately.-the-share-is-out-of-the-hours-that-netflix-reports-for-that-period-since-low-viewership-titles-are-omitted." class="level4">
 <h4 class="anchored" data-anchor-id="state-show-means-one-title-row-so-each-season-counts-separately.-the-share-is-out-of-the-hours-that-netflix-reports-for-that-period-since-low-viewership-titles-are-omitted.">State: “Show” means one title row, so each season counts separately. The share is out of the hours that Netflix reports for that period, since low-viewership titles are omitted.</h4>
 </section>
 <section id="how-has-netflixs-catalog-changed-in-size-over-the-periods-for-which-we-have-questions-you-should-consider-both-the-number-of-titles-and-the-total-runtime-of-content." class="level4">
-<h4 class="anchored" data-anchor-id="how-has-netflixs-catalog-changed-in-size-over-the-periods-for-which-we-have-questions-you-should-consider-both-the-number-of-titles-and-the-total-runtime-of-content.">How has Netflix’s catalog changed in size over the periods for which we have questions? You should consider both the number of titles and the total runtime of content.</h4>
-<p>catalog_size &lt;- NETFLIX_DATA |&gt; summarise(n_titles = n(), total_runtime_hours = sum(runtime, na.rm = TRUE) / 60, .by = period) |&gt; arrange(period)</p>
-<p>catalog_size |&gt; gt() |&gt; cols_label(period = “Period”, n_titles = “Titles Reported”, total_runtime_hours = “Total Runtime (hours)”) |&gt; fmt_number(c(n_titles, total_runtime_hours), decimals = 0) |&gt; tab_header(title = “[Your one-line takeaway]”) |&gt; tab_source_note(“Source: Netflix What We Watched reports”)</p>
+<h4 class="anchored" data-anchor-id="how-has-netflixs-catalog-changed-in-size-over-the-periods-for-which-we-have-questions-you-should-consider-both-the-number-of-titles-and-the-total-runtime-of-content.">2. How has Netflix’s catalog changed in size over the periods for which we have questions? You should consider both the number of titles and the total runtime of content.</h4>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>catalog_size <span class="ot">&lt;-</span> NETFLIX_DATA <span class="sc">|&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n_titles =</span> <span class="fu">n</span>(),</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">total_runtime_hours =</span> <span class="fu">sum</span>(runtime, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">/</span> <span class="dv">60</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by =</span> period) <span class="sc">|&gt;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(period)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>catalog_size <span class="sc">|&gt;</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(<span class="at">period =</span> <span class="st">"Period"</span>, <span class="at">n_titles =</span> <span class="st">"Titles Reported"</span>,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">total_runtime_hours =</span> <span class="st">"Total Runtime (hours)"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="fu">c</span>(n_titles, total_runtime_hours), <span class="at">decimals =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"[Catalog size over time]"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source: Netflix What We Watched reports"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="bjdndoixqj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#bjdndoixqj table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#bjdndoixqj thead, #bjdndoixqj tbody, #bjdndoixqj tfoot, #bjdndoixqj tr, #bjdndoixqj td, #bjdndoixqj th {
+  border-style: none;
+}
+
+#bjdndoixqj p {
+  margin: 0;
+  padding: 0;
+}
+
+#bjdndoixqj .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#bjdndoixqj .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#bjdndoixqj .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#bjdndoixqj .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#bjdndoixqj .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#bjdndoixqj .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bjdndoixqj .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#bjdndoixqj .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#bjdndoixqj .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#bjdndoixqj .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#bjdndoixqj .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#bjdndoixqj .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#bjdndoixqj .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#bjdndoixqj .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#bjdndoixqj .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#bjdndoixqj .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#bjdndoixqj .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#bjdndoixqj .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#bjdndoixqj .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bjdndoixqj .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#bjdndoixqj .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#bjdndoixqj .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#bjdndoixqj .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bjdndoixqj .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#bjdndoixqj .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#bjdndoixqj .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bjdndoixqj .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bjdndoixqj .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#bjdndoixqj .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bjdndoixqj .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#bjdndoixqj .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#bjdndoixqj .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#bjdndoixqj .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bjdndoixqj .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#bjdndoixqj .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#bjdndoixqj .gt_left {
+  text-align: left;
+}
+
+#bjdndoixqj .gt_center {
+  text-align: center;
+}
+
+#bjdndoixqj .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#bjdndoixqj .gt_font_normal {
+  font-weight: normal;
+}
+
+#bjdndoixqj .gt_font_bold {
+  font-weight: bold;
+}
+
+#bjdndoixqj .gt_font_italic {
+  font-style: italic;
+}
+
+#bjdndoixqj .gt_super {
+  font-size: 65%;
+}
+
+#bjdndoixqj .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#bjdndoixqj .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#bjdndoixqj .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#bjdndoixqj .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#bjdndoixqj .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#bjdndoixqj .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#bjdndoixqj .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#bjdndoixqj .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#bjdndoixqj div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<td colspan="3" class="gt_heading gt_title gt_font_normal gt_bottom_border">[Catalog size over time]</td>
+</tr>
+<tr class="gt_col_headings even">
+<th id="period" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Period</th>
+<th id="n_titles" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Titles Reported</th>
+<th id="total_runtime_hours" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Total Runtime (hours)</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="period">2023H1</td>
+<td class="gt_row gt_right" headers="n_titles">18,196</td>
+<td class="gt_row gt_right" headers="total_runtime_hours">43,717</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="period">2023H2</td>
+<td class="gt_row gt_right" headers="n_titles">6,595</td>
+<td class="gt_row gt_right" headers="total_runtime_hours">50,117</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="period">2024H1</td>
+<td class="gt_row gt_right" headers="n_titles">6,797</td>
+<td class="gt_row gt_right" headers="total_runtime_hours">51,774</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="period">2024H2</td>
+<td class="gt_row gt_right" headers="n_titles">6,877</td>
+<td class="gt_row gt_right" headers="total_runtime_hours">53,615</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="period">2025H1</td>
+<td class="gt_row gt_right" headers="n_titles">7,502</td>
+<td class="gt_row gt_right" headers="total_runtime_hours">58,374</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="period">2025H2</td>
+<td class="gt_row gt_right" headers="n_titles">7,738</td>
+<td class="gt_row gt_right" headers="total_runtime_hours">59,714</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="period">2026H1</td>
+<td class="gt_row gt_right" headers="n_titles">8,187</td>
+<td class="gt_row gt_right" headers="total_runtime_hours">62,855</td>
+</tr>
+</tbody><tfoot>
+<tr class="gt_sourcenotes odd">
+<td colspan="3" class="gt_sourcenote">Source: Netflix What We Watched reports</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
 </section>
 <section id="state-this-counts-titles-that-appear-in-the-reports-not-netflixs-full-library-because-titles-under-the-viewing-threshold-are-left-out.-runtime-is-missing-for-some-titles-and-is-excluded-from-the-sum." class="level4">
 <h4 class="anchored" data-anchor-id="state-this-counts-titles-that-appear-in-the-reports-not-netflixs-full-library-because-titles-under-the-viewing-threshold-are-left-out.-runtime-is-missing-for-some-titles-and-is-excluded-from-the-sum.">State: This counts titles that appear in the reports, not Netflix’s full library, because titles under the viewing threshold are left out. Runtime is missing for some titles and is excluded from the sum.</h4>
 </section>
 <section id="which-shows-have-had-the-most-consistently-high-viewership-across-all-periods-these-shows-are-likely-to-be-staples-that-viewers-fall-back-on-as-comfort-food-e.g.-re-runs-of-friends." class="level4">
-<h4 class="anchored" data-anchor-id="which-shows-have-had-the-most-consistently-high-viewership-across-all-periods-these-shows-are-likely-to-be-staples-that-viewers-fall-back-on-as-comfort-food-e.g.-re-runs-of-friends.">Which shows have had the most consistently high viewership across all periods? These shows are likely to be ‘staples’ that viewers fall back on as ‘comfort food’, e.g., re-runs of Friends.</h4>
+<h4 class="anchored" data-anchor-id="which-shows-have-had-the-most-consistently-high-viewership-across-all-periods-these-shows-are-likely-to-be-staples-that-viewers-fall-back-on-as-comfort-food-e.g.-re-runs-of-friends.">3. Which shows have had the most consistently high viewership across all periods? These shows are likely to be ‘staples’ that viewers fall back on as ‘comfort food’, e.g., re-runs of Friends.</h4>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>n_periods <span class="ot">&lt;-</span> <span class="fu">n_distinct</span>(NETFLIX_DATA<span class="sc">$</span>period)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>staples <span class="ot">&lt;-</span> NETFLIX_DATA <span class="sc">|&gt;</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">periods_present =</span> <span class="fu">n_distinct</span>(period),</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">avg_hours =</span> <span class="fu">mean</span>(hours_viewed),</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">min_hours =</span> <span class="fu">min</span>(hours_viewed),</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd_hours =</span> <span class="fu">sd</span>(hours_viewed),</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by =</span> title) <span class="sc">|&gt;</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(periods_present <span class="sc">==</span> n_periods) <span class="sc">|&gt;</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cv =</span> sd_hours <span class="sc">/</span> avg_hours) <span class="sc">|&gt;</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(min_hours, <span class="at">n =</span> <span class="dv">10</span>)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>staples <span class="sc">|&gt;</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(title, avg_hours, min_hours, cv) <span class="sc">|&gt;</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(<span class="at">title =</span> <span class="st">"Title"</span>, <span class="at">avg_hours =</span> <span class="st">"Average Hours"</span>,</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">min_hours =</span> <span class="st">"Lowest Period"</span>, <span class="at">cv =</span> <span class="st">"Variation (SD / Mean)"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="fu">c</span>(avg_hours, min_hours), <span class="at">decimals =</span> <span class="dv">1</span>, <span class="at">suffixing =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(cv, <span class="at">decimals =</span> <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"[Comfort-food staples]"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source: Netflix What We Watched reports"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="lgmbveehkz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#lgmbveehkz table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#lgmbveehkz thead, #lgmbveehkz tbody, #lgmbveehkz tfoot, #lgmbveehkz tr, #lgmbveehkz td, #lgmbveehkz th {
+  border-style: none;
+}
+
+#lgmbveehkz p {
+  margin: 0;
+  padding: 0;
+}
+
+#lgmbveehkz .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#lgmbveehkz .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#lgmbveehkz .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#lgmbveehkz .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#lgmbveehkz .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#lgmbveehkz .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#lgmbveehkz .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#lgmbveehkz .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#lgmbveehkz .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#lgmbveehkz .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#lgmbveehkz .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#lgmbveehkz .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#lgmbveehkz .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#lgmbveehkz .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#lgmbveehkz .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#lgmbveehkz .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#lgmbveehkz .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#lgmbveehkz .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#lgmbveehkz .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#lgmbveehkz .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#lgmbveehkz .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#lgmbveehkz .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#lgmbveehkz .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#lgmbveehkz .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#lgmbveehkz .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#lgmbveehkz .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#lgmbveehkz .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#lgmbveehkz .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#lgmbveehkz .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#lgmbveehkz .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#lgmbveehkz .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#lgmbveehkz .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#lgmbveehkz .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#lgmbveehkz .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#lgmbveehkz .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#lgmbveehkz .gt_left {
+  text-align: left;
+}
+
+#lgmbveehkz .gt_center {
+  text-align: center;
+}
+
+#lgmbveehkz .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#lgmbveehkz .gt_font_normal {
+  font-weight: normal;
+}
+
+#lgmbveehkz .gt_font_bold {
+  font-weight: bold;
+}
+
+#lgmbveehkz .gt_font_italic {
+  font-style: italic;
+}
+
+#lgmbveehkz .gt_super {
+  font-size: 65%;
+}
+
+#lgmbveehkz .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#lgmbveehkz .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#lgmbveehkz .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#lgmbveehkz .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#lgmbveehkz .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#lgmbveehkz .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#lgmbveehkz .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#lgmbveehkz .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#lgmbveehkz div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<td colspan="4" class="gt_heading gt_title gt_font_normal gt_bottom_border">[Comfort-food staples]</td>
+</tr>
+<tr class="gt_col_headings even">
+<th id="title" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Title</th>
+<th id="avg_hours" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Average Hours</th>
+<th id="min_hours" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Lowest Period</th>
+<th id="cv" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Variation (SD / Mean)</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="title">Pablo Escobar, el patron del mal: Season 1</td>
+<td class="gt_row gt_right" headers="avg_hours">136.2M</td>
+<td class="gt_row gt_right" headers="min_hours">105.5M</td>
+<td class="gt_row gt_right" headers="cv">0.17</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="title">Chiquititas (2013)</td>
+<td class="gt_row gt_right" headers="avg_hours">120.0M</td>
+<td class="gt_row gt_right" headers="min_hours">105.0M</td>
+<td class="gt_row gt_right" headers="cv">0.16</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="title">Stranger Things 4</td>
+<td class="gt_row gt_right" headers="avg_hours">207.4M</td>
+<td class="gt_row gt_right" headers="min_hours">97.1M</td>
+<td class="gt_row gt_right" headers="cv">0.83</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="title">Suits (2011): Season 1</td>
+<td class="gt_row gt_right" headers="avg_hours">126.9M</td>
+<td class="gt_row gt_right" headers="min_hours">80.9M</td>
+<td class="gt_row gt_right" headers="cv">0.47</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="title">Breaking Bad: Season 2</td>
+<td class="gt_row gt_right" headers="avg_hours">91.6M</td>
+<td class="gt_row gt_right" headers="min_hours">78.5M</td>
+<td class="gt_row gt_right" headers="cv">0.13</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="title">Suits (2011): Season 2</td>
+<td class="gt_row gt_right" headers="avg_hours">120.3M</td>
+<td class="gt_row gt_right" headers="min_hours">76.1M</td>
+<td class="gt_row gt_right" headers="cv">0.51</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="title">Sam &amp; Cat: Season 1</td>
+<td class="gt_row gt_right" headers="avg_hours">91.2M</td>
+<td class="gt_row gt_right" headers="min_hours">75.7M</td>
+<td class="gt_row gt_right" headers="cv">0.15</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="title">Breaking Bad: Season 5</td>
+<td class="gt_row gt_right" headers="avg_hours">84.1M</td>
+<td class="gt_row gt_right" headers="min_hours">74.9M</td>
+<td class="gt_row gt_right" headers="cv">0.13</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="title">Money Heist: Part 1</td>
+<td class="gt_row gt_right" headers="avg_hours">80.6M</td>
+<td class="gt_row gt_right" headers="min_hours">73.1M</td>
+<td class="gt_row gt_right" headers="cv">0.12</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="title">Breaking Bad: Season 3</td>
+<td class="gt_row gt_right" headers="avg_hours">82.0M</td>
+<td class="gt_row gt_right" headers="min_hours">70.9M</td>
+<td class="gt_row gt_right" headers="cv">0.13</td>
+</tr>
+</tbody><tfoot>
+<tr class="gt_sourcenotes odd">
+<td colspan="4" class="gt_sourcenote">Source: Netflix What We Watched reports</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+<section id="state-your-rule-in-plain-words.-mine-is-present-in-all-periods-ranked-by-the-weakest-period-because-a-title-with-a-high-minimum-never-dipped.-the-variation-column-shows-consistency.-requiring-all-periods-is-strict-because-a-title-just-under-the-reporting-threshold-would-drop-out." class="level5">
+<h5 class="anchored" data-anchor-id="state-your-rule-in-plain-words.-mine-is-present-in-all-periods-ranked-by-the-weakest-period-because-a-title-with-a-high-minimum-never-dipped.-the-variation-column-shows-consistency.-requiring-all-periods-is-strict-because-a-title-just-under-the-reporting-threshold-would-drop-out.">State: Your rule in plain words. Mine is “present in all periods, ranked by the weakest period,” because a title with a high minimum never dipped. The variation column shows consistency. Requiring all periods is strict, because a title just under the reporting threshold would drop out.</h5>
+</section>
 </section>
 <section id="within-each-period-what-fraction-of-time-was-spent-on-shows-vs-movies" class="level4">
-<h4 class="anchored" data-anchor-id="within-each-period-what-fraction-of-time-was-spent-on-shows-vs-movies">Within each period, what fraction of time was spent on ‘shows’ vs movies?</h4>
+<h4 class="anchored" data-anchor-id="within-each-period-what-fraction-of-time-was-spent-on-shows-vs-movies">4. Within each period, what fraction of time was spent on ‘shows’ vs movies?</h4>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>typed <span class="ot">&lt;-</span> NETFLIX_DATA <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">content_type =</span> <span class="fu">case_when</span>(</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    live_event <span class="sc">~</span> <span class="st">"Live event"</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_detect</span>(title, <span class="st">"Season"</span>) <span class="sc">~</span> <span class="st">"TV show"</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    runtime <span class="sc">&gt;</span> <span class="dv">240</span> <span class="sc">~</span> <span class="st">"TV show"</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">.default =</span> <span class="st">"Movie"</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>type_share <span class="ot">&lt;-</span> typed <span class="sc">|&gt;</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">hours =</span> <span class="fu">sum</span>(hours_viewed), <span class="at">.by =</span> <span class="fu">c</span>(period, content_type)) <span class="sc">|&gt;</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">share =</span> hours <span class="sc">/</span> <span class="fu">sum</span>(hours), <span class="at">.by =</span> period) <span class="sc">|&gt;</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(period, content_type, share) <span class="sc">|&gt;</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> content_type, <span class="at">values_from =</span> share, <span class="at">values_fill =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(period)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>type_share <span class="sc">|&gt;</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(<span class="at">period =</span> <span class="st">"Period"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_percent</span>(<span class="sc">-</span>period, <span class="at">decimals =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"[Shows versus movies]"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source: Netflix What We Watched reports"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="vdzzpyeyxy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#vdzzpyeyxy table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#vdzzpyeyxy thead, #vdzzpyeyxy tbody, #vdzzpyeyxy tfoot, #vdzzpyeyxy tr, #vdzzpyeyxy td, #vdzzpyeyxy th {
+  border-style: none;
+}
+
+#vdzzpyeyxy p {
+  margin: 0;
+  padding: 0;
+}
+
+#vdzzpyeyxy .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#vdzzpyeyxy .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#vdzzpyeyxy .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#vdzzpyeyxy .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#vdzzpyeyxy .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#vdzzpyeyxy .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vdzzpyeyxy .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#vdzzpyeyxy .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#vdzzpyeyxy .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#vdzzpyeyxy .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#vdzzpyeyxy .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#vdzzpyeyxy .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#vdzzpyeyxy .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#vdzzpyeyxy .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#vdzzpyeyxy .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#vdzzpyeyxy .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#vdzzpyeyxy .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#vdzzpyeyxy .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#vdzzpyeyxy .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vdzzpyeyxy .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#vdzzpyeyxy .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#vdzzpyeyxy .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#vdzzpyeyxy .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vdzzpyeyxy .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#vdzzpyeyxy .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#vdzzpyeyxy .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vdzzpyeyxy .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vdzzpyeyxy .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#vdzzpyeyxy .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vdzzpyeyxy .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#vdzzpyeyxy .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vdzzpyeyxy .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#vdzzpyeyxy .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vdzzpyeyxy .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#vdzzpyeyxy .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vdzzpyeyxy .gt_left {
+  text-align: left;
+}
+
+#vdzzpyeyxy .gt_center {
+  text-align: center;
+}
+
+#vdzzpyeyxy .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#vdzzpyeyxy .gt_font_normal {
+  font-weight: normal;
+}
+
+#vdzzpyeyxy .gt_font_bold {
+  font-weight: bold;
+}
+
+#vdzzpyeyxy .gt_font_italic {
+  font-style: italic;
+}
+
+#vdzzpyeyxy .gt_super {
+  font-size: 65%;
+}
+
+#vdzzpyeyxy .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#vdzzpyeyxy .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#vdzzpyeyxy .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#vdzzpyeyxy .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#vdzzpyeyxy .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#vdzzpyeyxy .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#vdzzpyeyxy .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#vdzzpyeyxy .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#vdzzpyeyxy div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<td colspan="4" class="gt_heading gt_title gt_font_normal gt_bottom_border">[Shows versus movies]</td>
+</tr>
+<tr class="gt_col_headings even">
+<th id="period" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Period</th>
+<th id="TV-show" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">TV show</th>
+<th id="Movie" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Movie</th>
+<th id="Live-event" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Live event</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="period">2023H1</td>
+<td class="gt_row gt_right" headers="TV show">69.2%</td>
+<td class="gt_row gt_right" headers="Movie">30.8%</td>
+<td class="gt_row gt_right" headers="Live event">0.0%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="period">2023H2</td>
+<td class="gt_row gt_right" headers="TV show">95.8%</td>
+<td class="gt_row gt_right" headers="Movie">4.2%</td>
+<td class="gt_row gt_right" headers="Live event">0.0%</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="period">2024H1</td>
+<td class="gt_row gt_right" headers="TV show">95.7%</td>
+<td class="gt_row gt_right" headers="Movie">4.3%</td>
+<td class="gt_row gt_right" headers="Live event">0.0%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="period">2024H2</td>
+<td class="gt_row gt_right" headers="TV show">96.1%</td>
+<td class="gt_row gt_right" headers="Movie">3.5%</td>
+<td class="gt_row gt_right" headers="Live event">0.3%</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="period">2025H1</td>
+<td class="gt_row gt_right" headers="TV show">95.1%</td>
+<td class="gt_row gt_right" headers="Movie">4.5%</td>
+<td class="gt_row gt_right" headers="Live event">0.4%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="period">2025H2</td>
+<td class="gt_row gt_right" headers="TV show">94.8%</td>
+<td class="gt_row gt_right" headers="Movie">4.9%</td>
+<td class="gt_row gt_right" headers="Live event">0.3%</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="period">2026H1</td>
+<td class="gt_row gt_right" headers="TV show">94.7%</td>
+<td class="gt_row gt_right" headers="Movie">4.8%</td>
+<td class="gt_row gt_right" headers="Live event">0.5%</td>
+</tr>
+</tbody><tfoot>
+<tr class="gt_sourcenotes odd">
+<td colspan="4" class="gt_sourcenote">Source: Netflix What We Watched reports</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+<section id="state" class="level5">
+<h5 class="anchored" data-anchor-id="state">State:</h5>
+<p>The heuristic: “Season” in the title, or runtime over 240 minutes, means TV show. Live events get their own category so they don’t distort the movie share. “Fraction of time” means share of hours viewed, not runtime. Rows with missing runtime and no “Season” land in “Movie”. Check how many that is with typed |&gt; filter(is.na(runtime)) |&gt; count(content_type). Shows like “Stranger Things 4” have no “Season” in the title and are caught only by the runtime rule.</p>
+</section>
 </section>
 <section id="how-does-the-performance-of-live-events-compare-to-pre-taped-content-does-the-average-live-event-draw-more-viewership-than-an-average-piece-of-pre-taped-content-how-about-a-top-tier-live-event-vs-top-tier-pre-taped-content" class="level4">
-<h4 class="anchored" data-anchor-id="how-does-the-performance-of-live-events-compare-to-pre-taped-content-does-the-average-live-event-draw-more-viewership-than-an-average-piece-of-pre-taped-content-how-about-a-top-tier-live-event-vs-top-tier-pre-taped-content">How does the performance of live events compare to pre-taped content? Does the average live event draw more viewership than an average piece of pre-taped content? How about a ‘top tier’ live event vs ‘top tier’ pre-taped content?</h4>
+<h4 class="anchored" data-anchor-id="how-does-the-performance-of-live-events-compare-to-pre-taped-content-does-the-average-live-event-draw-more-viewership-than-an-average-piece-of-pre-taped-content-how-about-a-top-tier-live-event-vs-top-tier-pre-taped-content">5. How does the performance of live events compare to pre-taped content? Does the average live event draw more viewership than an average piece of pre-taped content? How about a ‘top tier’ live event vs ‘top tier’ pre-taped content?</h4>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>live_compare <span class="ot">&lt;-</span> NETFLIX_DATA <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">type =</span> <span class="fu">if_else</span>(live_event, <span class="st">"Live event"</span>, <span class="st">"Pre-taped"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n_titles =</span> <span class="fu">n</span>(),</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">avg_hours =</span> <span class="fu">mean</span>(hours_viewed),</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">median_hours =</span> <span class="fu">median</span>(hours_viewed),</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">top10pct_hours =</span> <span class="fu">quantile</span>(hours_viewed, <span class="fl">0.9</span>),</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">best_title_hours =</span> <span class="fu">max</span>(hours_viewed),</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by =</span> type)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>live_compare <span class="sc">|&gt;</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(<span class="at">type =</span> <span class="st">"Type"</span>, <span class="at">n_titles =</span> <span class="st">"Titles"</span>, <span class="at">avg_hours =</span> <span class="st">"Average Hours"</span>,</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">median_hours =</span> <span class="st">"Median Hours"</span>, <span class="at">top10pct_hours =</span> <span class="st">"90th Percentile"</span>,</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>             <span class="at">best_title_hours =</span> <span class="st">"Best Title"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(n_titles, <span class="at">decimals =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="fu">c</span>(avg_hours, median_hours, top10pct_hours, best_title_hours),</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>             <span class="at">decimals =</span> <span class="dv">1</span>, <span class="at">suffixing =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"[Live events versus pre-taped content]"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_source_note</span>(<span class="st">"Source: Netflix What We Watched reports"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="tatazcjcza" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#tatazcjcza table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#tatazcjcza thead, #tatazcjcza tbody, #tatazcjcza tfoot, #tatazcjcza tr, #tatazcjcza td, #tatazcjcza th {
+  border-style: none;
+}
+
+#tatazcjcza p {
+  margin: 0;
+  padding: 0;
+}
+
+#tatazcjcza .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#tatazcjcza .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#tatazcjcza .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#tatazcjcza .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#tatazcjcza .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#tatazcjcza .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tatazcjcza .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#tatazcjcza .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#tatazcjcza .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#tatazcjcza .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#tatazcjcza .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#tatazcjcza .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#tatazcjcza .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#tatazcjcza .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#tatazcjcza .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#tatazcjcza .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#tatazcjcza .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#tatazcjcza .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#tatazcjcza .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tatazcjcza .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#tatazcjcza .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#tatazcjcza .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#tatazcjcza .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tatazcjcza .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#tatazcjcza .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#tatazcjcza .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tatazcjcza .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tatazcjcza .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#tatazcjcza .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tatazcjcza .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#tatazcjcza .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tatazcjcza .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#tatazcjcza .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tatazcjcza .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#tatazcjcza .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tatazcjcza .gt_left {
+  text-align: left;
+}
+
+#tatazcjcza .gt_center {
+  text-align: center;
+}
+
+#tatazcjcza .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#tatazcjcza .gt_font_normal {
+  font-weight: normal;
+}
+
+#tatazcjcza .gt_font_bold {
+  font-weight: bold;
+}
+
+#tatazcjcza .gt_font_italic {
+  font-style: italic;
+}
+
+#tatazcjcza .gt_super {
+  font-size: 65%;
+}
+
+#tatazcjcza .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#tatazcjcza .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#tatazcjcza .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#tatazcjcza .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#tatazcjcza .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#tatazcjcza .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#tatazcjcza .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#tatazcjcza .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#tatazcjcza div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<td colspan="6" class="gt_heading gt_title gt_font_normal gt_bottom_border">[Live events versus pre-taped content]</td>
+</tr>
+<tr class="gt_col_headings even">
+<th id="type" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Type</th>
+<th id="n_titles" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Titles</th>
+<th id="avg_hours" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Average Hours</th>
+<th id="median_hours" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Median Hours</th>
+<th id="top10pct_hours" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">90th Percentile</th>
+<th id="best_title_hours" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Best Title</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="type">Pre-taped</td>
+<td class="gt_row gt_right" headers="n_titles">61,582</td>
+<td class="gt_row gt_right" headers="avg_hours">8.3M</td>
+<td class="gt_row gt_right" headers="median_hours">1.8M</td>
+<td class="gt_row gt_right" headers="top10pct_hours">20.0M</td>
+<td class="gt_row gt_right" headers="best_title_hours">964.1M</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="type">Live event</td>
+<td class="gt_row gt_right" headers="n_titles">310</td>
+<td class="gt_row gt_right" headers="avg_hours">3.6M</td>
+<td class="gt_row gt_right" headers="median_hours">1.7M</td>
+<td class="gt_row gt_right" headers="top10pct_hours">6.5M</td>
+<td class="gt_row gt_right" headers="best_title_hours">235.7M</td>
+</tr>
+</tbody><tfoot>
+<tr class="gt_sourcenotes odd">
+<td colspan="6" class="gt_sourcenote">Source: Netflix What We Watched reports</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+<section id="state-1" class="level5">
+<h5 class="anchored" data-anchor-id="state-1">State:</h5>
+<p>How you defined “top tier”: I used the 90th percentile and the single best title. Say which you chose. How many live events there are. If it’s only a handful, the averages are noisy. Live events are single sittings, while shows add up many hours of runtime, so raw hours favor long content.</p>
 
 
+</section>
 </section>
 </section>
 </section>
