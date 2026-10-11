@@ -110,7 +110,8 @@ load_netflix_data <- function(){
   
 ## Data Cleaning and preparation
 
- Before we actually start our analysis,the raw data needed some clean-up or fixes. The column names look quite messy and some date types are incorrect. To get valid `R`column names, column names were converted to lowercase with underscores (e.g. `Hours Viewed` = `hours_viewed`). Similarly, data type for `year`was converted to integer, and `available_globally` was converted from `"Yes"`/`"No"` string values to `TRUE`/`FALSE` logical values. All of these changes were made  directly into `load_netflix_data()` function above. 
+ Before starting analysis,the raw data needed some clean-up or fixes. The column names look quite messy and some date types are incorrect. To get valid `R`column names, column names were converted to lowercase with underscores (e.g. `Hours Viewed` = `hours_viewed`). Similarly, data type for `year`was converted to integer, and `available_globally` was converted from `"Yes"`/`"No"` string values to `TRUE`/`FALSE` logical values. All of these changes were made  directly into `load_netflix_data()` function above. 
+ 
 ```{r}
 #| label: verify-cleaning
 
@@ -122,6 +123,8 @@ glimpse(NETFLIX_DATA)
 ### Initial Data Exploration  
  Before answering any questions, I ran two basic checks on the cleaned
 data: one for column types and one for summary statistics.
+
+Perform the two checks described above on the Netflix data you loaded and processed above. Include the code to perform the checks, the output of the checks, and describe what you see.
 
 #### Check 1: Column types
 
@@ -209,13 +212,10 @@ global_by_hours <- weighted.mean(
 ### Exploratory Questions-Inline Values
 
 [Your 1-2 sentences: what these six questions check and why.]
-
 (chunk above goes here)
 
-[Paragraph 1, Q1 and Q2: the period covered and the number of titles.
-Inline code: `r format(first_date, "%B %d, %Y")`,
-`r format(last_date, "%B %d, %Y")`, `r scales::comma(n_titles)`.
-Note that seasons are counted separately.]
+The period covered by this *WWW* data set is from *`r format(first_date, "%B %d, %Y")`*, to
+*`r format(last_date, "%B %d, %Y")`* and contains *`r scales::comma(n_titles)`* different shows and movies across seven periods, with each season counted individually.
 
 [Paragraph 2, Q3 and Q4: hours for each franchise.
 Inline code: `r scales::comma(bridgerton_hours)`,
