@@ -109,13 +109,8 @@ load_netflix_data <- function(){
 ```
   
 ## Data Cleaning and preparation
- Before analysis, the raw data needed two fixes: messy column names 
-and incorrect data types. Both were added directly to the 
-`load_netflix_data()` function above — column names were converted to 
-lowercase with underscores (e.g. `Hours Viewed` → `hours_viewed`), 
-`year` was converted to an integer, and `available_globally` was 
-converted from `"Yes"`/`"No"` text to `TRUE`/`FALSE` logical values.
 
+ Before we actually start our analysis,the raw data needed some clean-up or fixes. The column names look quite messy and some date types are incorrect. To get valid `R`column names, column names were converted to lowercase with underscores (e.g. `Hours Viewed` = `hours_viewed`). Similarly, data type for `year`was converted to integer, and `available_globally` was converted from `"Yes"`/`"No"` string values to `TRUE`/`FALSE` logical values. All these changes were made  directly into `load_netflix_data()` function above. 
 ```{r}
 #| label: verify-cleaning
 
