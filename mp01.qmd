@@ -207,7 +207,7 @@ global_by_hours <- weighted.mean(
 )
 ```
 
-The analysis shows that the *WWW* dataset covers the period from **`r format(first_date, "%B %d, %Y")`**, to**`r format(last_date, "%B %d, %Y")`** and contains **`r scales::comma(n_titles)`** different shows and movies across given seven periods, with each season counted individually.
+The analysis shows that the *WWW* dataset covers the period from **`r format(first_date, "%B %d, %Y")`**, to **`r format(last_date, "%B %d, %Y")`** and contains **`r scales::comma(n_titles)`** different shows and movies across given seven periods, with each season counted individually.
 
 Similarly, the *Bridgerton* franchise recorded **`r scales::comma(bridgerton_hours)`** hours of viewing, including all titles containing "Briderton". Whereas, the five main seasons of  *Stranger Things* recorded **`r scales::comma(stranger_hours)`** hours, excluding the companion titles *Beyond Stranger Things: Beyond 2*, *Stranger Things: Tales From '85: Season 1*, and *Stranger Things: Fireplace*.
 
