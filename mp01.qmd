@@ -160,7 +160,7 @@ Mention the data limitations the assignment itself notes, such as hours being ro
 
 ### Task 5- Exploratory questions
 
-The given six exploratory questions provide quick overview of Netflix's viewing data distributed across titles. They helps to explore the time frame of data set, the number of titles, the popularity of two popular franchises, the share of total viewing hours of the top 10 most watched titles, and the worldwide reach of the Netflix's titles. 
+The given six exploratory questions provide quick overview of Netflix's viewing data across titles. The R code below calculates Netflix's summary statistics to examine the dataset's time frame, the number of titles, the popularity of two popular franchises, the share of total viewing hours of the top 10 most watched titles, and the worldwide reach of the Netflix's titles. 
 
 ```{r}
 #| label: task5-values
@@ -207,23 +207,13 @@ global_by_hours <- weighted.mean(
 )
 ```
 
-The period covered by this *WWW* data set is from **`r format(first_date, "%B %d, %Y")`**, to
-**`r format(last_date, "%B %d, %Y")`** and contains **`r scales::comma(n_titles)`** different shows and movies across given seven periods, with each season counted individually.
+The analysis showa that the *WWW* dataset covers the period from **`r format(first_date, "%B %d, %Y")`**, to**`r format(last_date, "%B %d, %Y")`** and contains **`r scales::comma(n_titles)`** different shows and movies across given seven periods, with each season counted individually.
 
-[Paragraph 2, Q3 and Q4: hours for each franchise.
-Inline code: `r scales::comma(bridgerton_hours)`,
-`r scales::comma(stranger_hours)`.
-State what you included in Bridgerton and which three Stranger Things
-companion titles you excluded.]
+Similarly, the **Bridgerton** franchise recorded **`r scales::comma(bridgerton_hours)`** hours of viewing, including all titles containing "Briderton". Whereas, the five main seasons of  **Stranger Things** recorded **`r scales::comma(stranger_hours)`** hours, excluding the companion titles *Beyond Stranger Things: Beyond 2*, *Stranger Things: Tales From '85: Season 1*, and *Stranger Things: Fireplace*.
 
-[Paragraph 3, Q5 and Q6: concentration and availability.
-Inline code: `r scales::percent(top10_share, accuracy = 0.1)`,
-`r scales::percent(global_by_title, accuracy = 0.1)`,
-`r scales::percent(global_by_hours, accuracy = 0.1)`.
-State how you read "top 10", and say what the gap between the two
-availability numbers means.]
+In terms of viewing concentration, the top 10 titles accounted for **`r scales::percent(top10_share, accuracy = 0.1)`** of total viewing hours in the first half of 2026. globally available titles recorded **`r scales::percent(global_by_title, accuracy = 0.1)`** of all title listings but represented **`r scales::percent(global_by_hours, accuracy = 0.1)`** of viewing hours. This indicated that globally available titles attract a larger share of viewing hours than of the total titles in the dataset.
 
-[Your 1-2 closing sentences tying the answers together.]
+Overall, this summary provide a general picture of Netflix's catalog, viewing trends, and the global content availability. 
 
 ### Task 6: Exploratory Questions - Table Answers
 
