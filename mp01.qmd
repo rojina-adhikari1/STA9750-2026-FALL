@@ -121,10 +121,7 @@ glimpse(NETFLIX_DATA)
 ## Exploratory Analysis
 
 ### Initial Data Exploration  
- Before answering any questions, I ran two basic checks on the cleaned
-data: one for column types and one for summary statistics.
-
-Perform the two checks described above on the Netflix data you loaded and processed above. Include the code to perform the checks, the output of the checks, and describe what you see.
+ Before answering any questions, as a part of exploratory analysis, I wanted to get the sense of data and ran two basic checks on the cleaned data: one for column types and one for summary statistics.
 
 #### Check 1: Column types
 
@@ -133,9 +130,7 @@ Perform the two checks described above on the Netflix data you loaded and proces
 
 glimpse(NETFLIX_DATA)
 ```
-[2-3 sentences: Are the types what you expect? Mention that `year` is
-now an integer, `available_globally` and `live_event` are logical, and
-the three date columns are dates.]
+Absolutely, the data types are now as expected. The `year` column is now an integer, `available_globally` and `live_event` are logical, and  `period_start` and `period_end` are dates.
 
 #### Check 2: Summary Statistics
 
@@ -144,18 +139,12 @@ the three date columns are dates.]
  library(skimr)
  skim(NETFLIX_DATA)
 ``` 
-[3-5 sentences: What stands out? Cover:
-- how many rows, and the date range covered
-- which columns have missing values (`views`, `runtime`) and roughly how many
-- how skewed `hours_viewed` is (compare the median to the max)
-- what this means for the analysis, for example that `views` can't be
-  relied on because it's mostly missing]
-  
-  Tips for the description:
 
-Write about what the numbers imply for your analysis, not just what they are. "views is missing for most titles, so I use hours_viewed as the main measure" shows more thinking than "views has missing values."
-Take the numbers from your skim() output, such as n_missing and p50 versus p100.
-Mention the data limitations the assignment itself notes, such as hours being rounded to the nearest 100,000.
+From the summary statistics we can see that cleaned Netflix dataset is comprised of four variable data types: **character variables** (`period` and `title`), ** date variables** (`period_start`, `period_end`, and `release_date`), **logical variables** (`available_globally` and `live_event`) and **numeric variables** (`year`, `runtime`, `views`, and `hours_viewed`). 
+
+The major finding here is missing data: `release_date` has 35,251 values missing, `views` has 18,198, and `runtime` has 13,085 values missing which might limit analysis to some extent. Thus, `hours_viewed` has no missing values which can be used as a most reliable key measure for measuring titles popularity.
+
+Moreover, it is important to know that `hours_viewed` is rounded to 100,000 and is highly right skewed with median of 1.8 million hours, meaning half of the titles has viewing hours below this value and half has above this value, although very few popular titles have significantly high viewing hours of 964.1 million hours, much higher than the median. Hence, using median in the analysis prevents the popular titles from affecting the results too much. 
 
 
 ### Task 5- Exploratory questions
@@ -363,4 +352,27 @@ live_compare |>
 How you defined "top tier": I used the 90th percentile and the single best title. Say which you chose.
 How many live events there are. If it's only a handful, the averages are noisy.
 Live events are single sittings, while shows add up many hours of runtime, so raw hours favor long content.
+
+## Memo calculations
+These are supporting calculations for the memo preparation.
+
+###  Burstiness calculation
+
+## Corporate Strategy Memo: Netflix Content Strategy for 2027 and beyond
+To: Netflix leadership
+
+From: Strategy Analyst
+
+Date: October 2026
+
+Subject: Improving New Releases and Live Programs
+
+### Recommendation
+Netflix can use viewing data in order to make better decisions about its content. This report prioritizes two critical sections: how quickly new releases attract viewers and how many audiences watch live programs? Netflix should prioritize on promoting new titles when they are first released and carefully evaluate its live programs. 
+
+### 1. Prioritize new releases
+
+
+
+
 
