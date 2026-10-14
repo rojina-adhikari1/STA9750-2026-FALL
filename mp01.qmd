@@ -226,6 +226,12 @@ library(gt)
 ```{r}
 #| label: task6-Question1
 
+top_repeat <- top_by_period |> count(title, sort = TRUE) |> slice(1)
+top_repeat_periods <- top_by_period |>
+  filter(title == top_repeat$title[[1]]) |>
+  pull(period)
+top_max <- top_by_period |> slice_max(share, n = 1, with_ties = FALSE)
+n_top_titles <- n_distinct(top_by_period$title)
 top_by_period <- NETFLIX_DATA |>
   mutate(period_total = sum(hours_viewed), .by = period) |>
   slice_max(hours_viewed, n = 1, by = period, with_ties = FALSE) |>
@@ -243,7 +249,7 @@ top_by_period |>
   tab_source_note("Source: Netflix What We Watched reports")
 ```
 
-The table shows that the most-watched title varied across different reporting period with Squid Game:Season 2 leading across two reporting period 2024H2 and 2025H1. Wednesday:Season 2 recorded the highest share accounting 1.4%  in 2025H2. Since no top-watched title exceeded 1.4% of viewing hours, it suggest that viewership was distributed across different reporting period rather than being concentrated throughout the periods. Note: Low-viewership titles are omitted in the analysis.
+The table shows that the most-watched title varied across different reporting period with `r top_repeat$title[[1]]` leading across two reporting period `r paste(top_repeat_periods, collapse = " and ")`. `r top_max$title[[1]]` recorded the highest share accounting `r scales::percent(top_max$share[[1]], accuracy = 0.1)` in `r top_max$period[[1]]`. Since no top-watched title exceeded 1.4% of viewing hours, it suggest that viewership was distributed across different reporting period rather than being concentrated throughout the periods. Note: Low-viewership titles are omitted in the analysis.
 
 
 #### 2. How has Netflix’s catalog changed in size over the periods for which we have questions? You should consider both the number of titles and the total runtime of content.
