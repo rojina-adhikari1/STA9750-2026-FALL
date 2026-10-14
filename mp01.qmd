@@ -388,29 +388,39 @@ Live events contributed to `r scales::percent(ts_first[["Live event"]][[1]], acc
 
 live_compare <- NETFLIX_DATA |>
   mutate(type = if_else(live_event, "Live event", "Pre-taped")) |>
-  summarise(n_titles = n(),
+  summarise(n_rows = n(),
+            n_titles = n_distinct(title),
             avg_hours = mean(hours_viewed),
             median_hours = median(hours_viewed),
             top10pct_hours = quantile(hours_viewed, 0.9),
             best_title_hours = max(hours_viewed),
             .by = type)
 
+# Helper values for inline use
+lv <- live_compare |> filter(type == "Live event")
+pt <- live_compare |> filter(type == "Pre-taped")
+avg_ratio <- pt$avg_hours[[1]] / lv$avg_hours[[1]]
+p90_ratio <- pt$top10pct_hours[[1]] / lv$top10pct_hours[[1]]
+
 live_compare |>
   gt() |>
-  cols_label(type = "Type", n_titles = "Titles", avg_hours = "Average Hours",
-             median_hours = "Median Hours", top10pct_hours = "90th Percentile",
-             best_title_hours = "Best Title") |>
-  fmt_number(n_titles, decimals = 0) |>
+  cols_label(type = "Type", n_rows = "Title-Period Rows", n_titles = "Distinct Titles",
+             avg_hours = "Average Hours", median_hours = "Median Hours",
+             top10pct_hours = "90th Percentile", best_title_hours = "Best Title") |>
+  fmt_number(c(n_rows, n_titles), decimals = 0) |>
   fmt_number(c(avg_hours, median_hours, top10pct_hours, best_title_hours),
              decimals = 1, suffixing = TRUE) |>
-  tab_header(title = "[Live events versus pre-taped content]") |>
+  tab_header(title = "Comparing Viewership of Live Programs and Pre-Taped Titles") |>
   tab_source_note("Source: Netflix What We Watched reports")
 ```
 
-##### State:
-How you defined "top tier": I used the 90th percentile and the single best title. Say which you chose.
-How many live events there are. If it's only a handful, the averages are noisy.
-Live events are single sittings, while shows add up many hours of runtime, so raw hours favor long content.
+##### Interpretation
+The data showed that Pre-taped titles had higher average viewing hours `r scales::comma(pt$avg_hours[[1]] / 1e6, accuracy = 0.1)` million versus live events `r scales::comma(lv$avg_hours[[1]] / 1e6, accuracy = 0.1)` million. However, their median viewing hours were almost similar, at `r scales::comma(pt$median_hours[[1]] / 1e6, accuracy = 0.1)` million and `r scales::comma(lv$median_hours[[1]] / 1e6, accuracy = 0.1)` million, respectively. 
+
+At the 90th percentile, pre-taped titles reached `r scales::comma(pt$top10pct_hours[[1]] / 1e6, accuracy = 0.1)` million hours, compared with `r scales::comma(lv$top10pct_hours[[1]] / 1e6, accuracy = 0.1)` million for live events. The most-watched pre-taped title also had more viewing hours than the top live event (`r scales::comma(pt$best_title_hours[[1]] / 1e6, accuracy = 0.1)` million versus `r scales::comma(lv$best_title_hours[[1]] / 1e6, accuracy = 0.1)` million). This suggests that few very popular pre-taped content increased the overall average. 
+
+One important thing to note that pre-taped titles and live programs falls under different categories and are not of same size and runtime which might not give the fair picture. 
+
 
 ## Memo calculations
 These are supporting calculations for the memo preparation.
