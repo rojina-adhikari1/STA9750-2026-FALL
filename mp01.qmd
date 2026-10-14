@@ -243,8 +243,8 @@ top_by_period |>
   tab_source_note("Source: Netflix What We Watched reports")
 ```
 
-The table shows that the most-watched title varied across different reporting period with Squid Game:Season 2 leading across two reporting period 2024H2 and 2025H1. Wednesday:Season 2 recorded the highest share accounting 1.4% among other titles in 2025H2. Since no top title exceeded 1.4% of viewing hours, it suggest that viwership was distributed across different reporting period rather than being concentrated throughout the periods. 
-#### State: "Show" means one title row, so each season counts separately. The share is out of the hours that Netflix reports for that period, since low-viewership titles are omitted.
+The table shows that the most-watched title varied across different reporting period with Squid Game:Season 2 leading across two reporting period 2024H2 and 2025H1. Wednesday:Season 2 recorded the highest share accounting 1.4%  in 2025H2. Since no top-watched title exceeded 1.4% of viewing hours, it suggest that viewership was distributed across different reporting period rather than being concentrated throughout the periods. Note: Low-viewership titles are omitted in the analysis.
+
 
 #### 2. How has Netflix’s catalog changed in size over the periods for which we have questions? You should consider both the number of titles and the total runtime of content.
 
@@ -262,7 +262,7 @@ catalog_size |>
   cols_label(period = "Period", n_titles = "Titles Reported",
              total_runtime_hours = "Total Runtime (hours)") |>
   fmt_number(c(n_titles, total_runtime_hours), decimals = 0) |>
-  tab_header(title = "[Catalog size over time]") |>
+  tab_header(title = "[Catalog size and Runtime Over Time]") |>
   tab_source_note("Source: Netflix What We Watched reports")
 ```
 
@@ -368,10 +368,102 @@ These are supporting calculations for the memo preparation.
 
 ###  Burstiness calculation
 
+```{r}
+#| label: memo-burstiness
+
+# period_end is off for H1 in the scaffold, so rebuild it
+burstiness_data <- NETFLIX_DATA |>
+  mutate(period_end_fixed = period_start + months(6) - days(1)) |>
+  filter(
+    !is.na(release_date),
+    release_date >= period_start,
+    release_date <= period_end_fixed
+  ) |>
+  mutate(
+    days_available = as.integer(period_end_fixed - release_date) + 1,
+    availability_group = case_when(
+      days_available <= 14 ~ "0-14 days",
+      days_available <= 30 ~ "15-30 days",
+      days_available <= 90 ~ "31-90 days",
+      .default = "91+ days"
+    ),
+    availability_group = factor(
+      availability_group,
+      levels = c("0-14 days", "15-30 days", "31-90 days", "91+ days")
+    ),
+    hours_per_day = hours_viewed / days_available
+  )
+
+burst_summary <- burstiness_data |>
+  summarise(
+    n_titles = n(),
+    median_total_hours = median(hours_viewed),
+    median_hours_per_day = median(hours_per_day),
+    .by = availability_group
+  ) |>
+  arrange(availability_group)
+
+burst_new  <- burst_summary |> filter(availability_group == "0-14 days")
+burst_mid1 <- burst_summary |> filter(availability_group == "15-30 days")
+burst_mid2 <- burst_summary |> filter(availability_group == "31-90 days")
+burst_old  <- burst_summary |> filter(availability_group == "91+ days")
+
+burstiness_ratio <- burst_new$median_hours_per_day[[1]] /
+  burst_old$median_hours_per_day[[1]]
+
+total_share_new_vs_old <- burst_new$median_total_hours[[1]] /
+  burst_old$median_total_hours[[1]]
+
+n_burst_rows   <- nrow(burstiness_data)
+pct_burst_rows <- n_burst_rows / nrow(NETFLIX_DATA)
+```
 
 
+### Live Event values
+
+```{r}
+#| label: memo-live
+
+# Live-flagged titles and their share of viewing, per period
+live_by_period <- NETFLIX_DATA |>
+  summarise(
+    n_live = sum(live_event),
+    live_share = sum(hours_viewed[live_event]) / sum(hours_viewed),
+    .by = period
+  ) |>
+  arrange(period)
+
+first_live <- live_by_period |> filter(n_live > 0) |> slice(1)
+last_live  <- live_by_period |> slice_tail(n = 1)
+
+# One row per live-flagged title, across all periods
+live_titles <- NETFLIX_DATA |>
+  filter(live_event) |>
+  summarise(hours = sum(hours_viewed), .by = title) |>
+  arrange(desc(hours))
+
+top_live_title <- live_titles$title[[1]]
+top_live_hours <- live_titles$hours[[1]]
+next14_hours   <- sum(live_titles$hours[2:15])
+
+# WWE grouping is a keyword rule on title names
+wwe_pattern       <- "Raw|WrestleMania|Royal Rumble|WWE|SmackDown"
+wwe_titles        <- live_titles |> filter(str_detect(title, wwe_pattern))
+wwe_share_of_live <- sum(wwe_titles$hours) / sum(live_titles$hours)
+wwe_title_share   <- nrow(wwe_titles) / nrow(live_titles)
+n_wwe_in_next14   <- sum(str_detect(live_titles$title[2:15], wwe_pattern))
+
+# First period: how much of it is one fight?
+live_2024h2        <- NETFLIX_DATA |> filter(live_event, period == "2024H2")
+tyson_share_2024h2 <- max(live_2024h2$hours_viewed) / sum(live_2024h2$hours_viewed)
+
+# defining live_share_min and live_share_max
+live_share_min <- min(live_by_period$live_share[live_by_period$n_live > 0])
+live_share_max <- max(live_by_period$live_share[live_by_period$n_live > 0])
+```
 
 ## Corporate Strategy Memo: Netflix Content Strategy for 2027 and beyond
+
 To: Netflix leadership
 
 From: Strategy Analyst
@@ -381,10 +473,20 @@ Date: October 2026
 Subject: Improving New Releases and Live Programs
 
 ### Recommendation
+
 Netflix may rely on viewing data to make better decisions about its content. This report prioritizes two critical sections: how quickly new releases attract viewers and how many audiences watch live programs? Netflix should prioritize on promoting new titles when they are first released and carefully evaluate its live programs. 
 
 ### 1. Prioritize new releases
 
+The data show that titles released for 0-14 days has a median of `r scales::comma(burst_new$median_hours_per_day[[1]], accuracy = 1000)` viewing hours per day while the titles released for 91 days and more received a median of `r scales::comma(burst_old$median_hours_per_day[[1]], accuracy = 1000)` hours per day, meaning new titles received about `r round(burstiness_ratio, 1)` times more viewing hours per day. In simple terms, the newest title tends to get more attention shortly after release but it doesnot necessarily support that the title's popularity degrade over time. 
+
+However, titles available longer tend to have higher total viewing hours which suggest that although new titles attract viewers more quickly, older titles continue to accumulate viewing hours over a longer period.
+
+**Action**: Netflix should invest heavily on promotional activities for selected titles during first two weeks of releases and see the performance before applying the same strategy for rest of the releases. However, it is important to consider the fact that release date information has missing values which may not accurately represent the true picture.
+
+### 2. Carefully Evaluate Live Events
+
+Netflix should continue exploring different live events separately before drawing conclusion on where to invest in 2027. The data show that live-flagged titles have increased from `r first_live$n_live[[1]]` in `r first_live$period[[1]]`to `r last_live$n_live[[1]]` in `r last_live$period[[1]]`. However, their share of total viewing hours remained within `r scales::percent(live_share_min, accuracy = 0.01)` to `r scales::percent(live_share_max, accuracy = 0.01)`. The data showed that Jake Paul vs, Mike Tyson show had 235.7M viewing hours more than the rest of the combined top-titles in the list. 
 
 
 
