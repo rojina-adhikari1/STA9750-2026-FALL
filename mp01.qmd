@@ -14,7 +14,8 @@ format:
   The goal is not just to analyze and provide  practical recommendations for Netflix's 2027 content budget but also to help Netflix unlock broader patterns to make more informed decisions about their future investment decisions. 
   
 ## Data Acquisition
-  To begin the analysis, data were loaded from seven *WWW* reports published on *Netflix's  official website* through the code provided by the instructor where these seven reports were  downloaded and saved in a folder `data/mp01` preventing from downloading repeatedly to save processing time. Then, the provided code combines the seven reports into a single data frame called `NETFLIX_DATA` that has **61892** rows and **11** columns which will be used for rest of this mini project. 
+  To begin the analysis, data were loaded from seven *WWW* reports published on *Netflix's  official website* through the code provided by the instructor where these seven reports were  downloaded and saved in a folder `data/mp01` preventing from downloading repeatedly to save processing time. 
+  
 ```{r}
 #| label: load-data
 #| message: false
@@ -107,6 +108,8 @@ load_netflix_data <- function(){
 
   
 ```
+ 
+ Then, the provided code combines the seven reports into a single data frame called `NETFLIX_DATA` that has **`r scales::comma(nrow(NETFLIX_DATA))`**  rows and **`r ncol(NETFLIX_DATA)`** columns which will be used for rest of this mini project. 
   
 ## Data Cleaning and preparation
 
@@ -138,13 +141,19 @@ Absolutely, the data types are now as expected. The `year` column is now an inte
 #| label: Data_Exploration_skim
  library(skimr)
  skim(NETFLIX_DATA)
+ 
+ miss <- sapply(NETFLIX_DATA, function(x) sum(is.na(x)))
+ print(miss)
+print(exists("miss"))
+med_hours <- median(NETFLIX_DATA$hours_viewed, na.rm = TRUE)
+max_hours <- max(NETFLIX_DATA$hours_viewed, na.rm = TRUE)
 ``` 
 
-From the summary statistics we can see that cleaned Netflix dataset is comprised of four variable data types: **character variables** (`period` and `title`), ** date variables** (`period_start`, `period_end`, and `release_date`), **logical variables** (`available_globally` and `live_event`) and **numeric variables** (`year`, `runtime`, `views`, and `hours_viewed`). 
+From the summary statistics we can see that cleaned Netflix dataset is comprised of four variable data types: **character variables** (`period` and `title`), **date variables** (`period_start`, `period_end`, and `release_date`), **logical variables** (`available_globally` and `live_event`) and **numeric variables** (`year`, `runtime`, `views`, and `hours_viewed`). 
 
-The major finding here is missing data: `release_date` has 35,251 values missing, `views` has 18,198, and `runtime` has 13,085 values missing which might limit analysis to some extent. Thus, `hours_viewed` has no missing values which can be used as a most reliable key measure for measuring titles popularity.
+The major finding here is missing data: `release_date` has **`r scales::comma(miss[["release_date"]])`** values missing, `views` has **`r scales::comma(miss[["views"]])`**, and `runtime` has **`r scales::comma(miss[["runtime"]])`** values missing which might limit analysis to some extent. Thus, `hours_viewed` has no missing values which can be used as a most reliable key measure for measuring titles popularity.
 
-Moreover, it is important to know that `hours_viewed` is rounded to 100,000 and is highly right skewed with median of 1.8 million hours, meaning half of the titles has viewing hours below this value and half has above this value, although very few popular titles have significantly high viewing hours of 964.1 million hours, much higher than the median. Hence, using median in the analysis prevents the popular titles from affecting the results too much. 
+Moreover, it is important to know that `hours_viewed` is rounded and is highly right skewed with median of **`r scales::number(med_hours / 1000000, accuracy = 0.1)` million hours** hours, meaning half of the titles has viewing hours below this value and half has above this value, although very few popular titles have significantly high viewing hours of **`r scales::number(max_hours / 1000000, accuracy = 0.1)` million hours** hours, much higher than the median. Hence, using median in the analysis prevents the popular titles from affecting the results too much. 
 
 
 ### Task 5- Exploratory questions
