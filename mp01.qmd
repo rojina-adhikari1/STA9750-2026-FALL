@@ -253,7 +253,9 @@ top_by_period |>
 
 ##### Interpretation
 
-The table shows that the most-watched title varied across different reporting period with `r top_repeat$title[[1]]` leading across two reporting period `r paste(top_repeat_periods, collapse = " and ")`. `r top_max$title[[1]]` recorded the highest share accounting `r scales::percent(top_max$share[[1]], accuracy = 0.1)` in `r top_max$period[[1]]`. Since no top-watched title exceeded 1.4% of viewing hours, it suggest that viewership was distributed across different reporting period rather than being concentrated throughout the periods. Note: Low-viewership titles are omitted in the analysis.
+The table shows that the most-watched title varied across different reporting period with `r top_repeat$title[[1]]` leading across two reporting period `r paste(top_repeat_periods, collapse = " and ")`. `r top_max$title[[1]]` recorded the highest share accounting `r scales::percent(top_max$share[[1]], accuracy = 0.1)` in `r top_max$period[[1]]`. 
+
+Since no top-watched title exceeded 1.4% of viewing hours, it suggest that viewership was distributed across different reporting period rather than being concentrated throughout the periods. Note: Low-viewership titles are omitted in the analysis.
 
 
 #### 2. How has Netflix’s catalog changed in size over the periods for which we have questions? You should consider both the number of titles and the total runtime of content.
@@ -284,9 +286,12 @@ catalog_size |>
 ```
 
 ##### Interpretation
-The data show that Netflix's reported catalog showed different patterns in terms of title counts and total runtime. Titles fell sharply from `r scales::comma(cat_first$n_titles[[1]])` to `r scales::comma(cat_second$n_titles[[1]])` in `r cat_first$period[[1]]`, then rose steadily to `r scales::comma(cat_last$n_titles[[1]])` (`r cat_last$period[[1]]`). In contrast, Runtime slightly increased from `r scales::comma(cat_first$total_runtime_hours[[1]], accuracy = 1)` to `r scales::comma(cat_second$total_runtime_hours[[1]], accuracy = 1)` hours, then kept growing to `r scales::comma(cat_last$total_runtime_hours[[1]], accuracy = 1)`until the reporting period. These tends show that the number of titles does not alone reflect the total amount of content available. The data may not accurately represent the complete catalog size because some runtime values are missing and some titles that do not meet Netflix's reporting threshold are omitted. 
+The data show that Netflix's reported catalog showed different patterns in terms of title counts and total runtime. Titles fell sharply from `r scales::comma(cat_first$n_titles[[1]])` to `r scales::comma(cat_second$n_titles[[1]])` in `r cat_first$period[[1]]`, then rose steadily to `r scales::comma(cat_last$n_titles[[1]])` (`r cat_last$period[[1]]`). 
 
-#### State: This counts titles that appear in the reports, not Netflix's full library, because titles under the viewing threshold are left out. Runtime is missing for some titles and is excluded from the sum.
+In contrast, Runtime slightly increased from `r scales::comma(cat_first$total_runtime_hours[[1]], accuracy = 1)` to `r scales::comma(cat_second$total_runtime_hours[[1]], accuracy = 1)` hours, then kept growing to `r scales::comma(cat_last$total_runtime_hours[[1]], accuracy = 1)`until the reporting period. 
+
+These tends show that the number of titles does not alone reflect the total amount of content available. The data may not accurately represent the complete catalog size because some runtime values are missing and some titles that do not meet Netflix's reporting threshold are omitted. 
+
 
 #### 3. Which shows have had the most consistently high viewership across all periods? These shows are likely to be ‘staples’ that viewers fall back on as ‘comfort food’, e.g., re-runs of Friends.
 
@@ -303,7 +308,15 @@ staples <- NETFLIX_DATA |>
             .by = title) |>
   filter(periods_present == n_periods) |>
   mutate(cv = sd_hours / avg_hours) |>
-  slice_max(min_hours, n = 10)
+  slice_max(min_hours, n = 10, with_ties = FALSE)
+
+# Helper values for inline use (titles copied exactly from the table)
+st_top1 <- staples |> slice(1)
+st_top2 <- staples |> slice(2)
+st_st4  <- staples |> filter(title == "Stranger Things 4")
+st_bb   <- staples |> filter(str_detect(title, "Breaking Bad"))
+st_mh   <- staples |> filter(title == "Money Heist: Part 1")
+st_su   <- staples |> filter(str_detect(title, "Suits"))
 
 staples |>
   select(title, avg_hours, min_hours, cv) |>
@@ -312,11 +325,16 @@ staples |>
              min_hours = "Lowest Period", cv = "Variation (SD / Mean)") |>
   fmt_number(c(avg_hours, min_hours), decimals = 1, suffixing = TRUE) |>
   fmt_number(cv, decimals = 2) |>
-  tab_header(title = "[Comfort-food staples]") |>
+  tab_header(title = "Your own finding here") |>
   tab_source_note("Source: Netflix What We Watched reports")
 ```
 
-##### State: Your rule in plain words. Mine is "present in all periods, ranked by the weakest period," because a title with a high minimum never dipped. The variation column shows consistency. Requiring all periods is strict, because a title just under the reporting threshold would drop out.
+Pablo Escobar, el patron del mal: Season 1 and Chiquititas (2013) had the highest minimum  viewership across all reported periods with `r scales::comma(st_top1$min_hours[[1]] / 1e6, accuracy = 0.1)` million hours and `r scales::comma(st_top2$min_hours[[1]] / 1e6, accuracy = 0.1)`million hours, and variation  of `r round(st_top1$cv[[1]], 2)` and `r round(st_top2$cv[[1]], 2)`, respectively. Similarly, breaking bad several seasons also had steady viewership, with minor variation of `r round(mean(st_bb$cv), 2)` across reporting periods. 
+
+In contrast, Stranger  Things 4 had the highest average hours of `r scales::comma(st_st4$avg_hours[[1]] / 1e6, accuracy = 0.1)` million hours among all titles during reporting periods, but had greater variation `r round(st_st4$cv[[1]], 2)`, meaning its viewership changed overtime. 
+
+Thus, we can see that some titles maintained steady viewership while some titles had moved up and down across all 7 periods.
+
 
 #### 4. Within each period, what fraction of time was spent on ‘shows’ vs movies?
 
