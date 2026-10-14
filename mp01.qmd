@@ -478,15 +478,23 @@ Netflix may rely on viewing data to make better decisions about its content. Thi
 
 ### 1. Prioritize new releases
 
-The data show that titles released for 0-14 days has a median of `r scales::comma(burst_new$median_hours_per_day[[1]], accuracy = 1000)` viewing hours per day while the titles released for 91 days and more received a median of `r scales::comma(burst_old$median_hours_per_day[[1]], accuracy = 1000)` hours per day, meaning new titles received about `r round(burstiness_ratio, 1)` times more viewing hours per day. In simple terms, the newest title tends to get more attention shortly after release but it doesnot necessarily support that the title's popularity degrade over time. 
+The data show that titles available for 0-14 days has a median of `r scales::comma(burst_new$median_hours_per_day[[1]], accuracy = 1000)` viewing hours per day while the titles released for 91 days and more received a median of `r scales::comma(burst_old$median_hours_per_day[[1]], accuracy = 1000)` hours per day, meaning new titles received about `r round(burstiness_ratio, 1)` times more viewing hours per day. In simple terms, the newest title tends to get more attention shortly after release but it does not necessarily support that the title's popularity degrade over time. 
 
 However, titles available longer tend to have higher total viewing hours which suggest that although new titles attract viewers more quickly, older titles continue to accumulate viewing hours over a longer period.
 
-**Action**: Netflix should invest heavily on promotional activities for selected titles during first two weeks of releases and see the performance before applying the same strategy for rest of the releases. However, it is important to consider the fact that release date information has missing values which may not accurately represent the true picture.
+**Strategic Actions**: Netflix should invest heavily on promotional activities for selected titles during first two weeks of releases and see the performance before applying the same strategy for rest of the releases. However, it is important to consider the fact that release date information has missing values which may not accurately represent the true picture.
 
-### 2. Carefully Evaluate Live Events
+### 2. Carefully Evaluate Live Programming
 
-Netflix should continue exploring different live events separately before drawing conclusion on where to invest in 2027. The data show that live-flagged titles have increased from `r first_live$n_live[[1]]` in `r first_live$period[[1]]`to `r last_live$n_live[[1]]` in `r last_live$period[[1]]`. However, their share of total viewing hours remained within `r scales::percent(live_share_min, accuracy = 0.01)` to `r scales::percent(live_share_max, accuracy = 0.01)`. The data showed that Jake Paul vs, Mike Tyson show had 235.7M viewing hours more than the rest of the combined top-titles in the list. 
+Netflix should continue exploring different live events separately before drawing conclusion on where to invest in 2027. The data show that live-flagged titles have increased from `r first_live$n_live[[1]]` in `r first_live$period[[1]]` to `r last_live$n_live[[1]]` in `r last_live$period[[1]]`. However, their share of total viewing hours remained within `r scales::percent(live_share_min, accuracy = 0.01)` to `r scales::percent(live_share_max, accuracy = 0.01)`. This means overall share of viewing hours remained quite small although the number of flagged titles increased.
+
+The data also showed that Jake Paul vs. Mike Tyson show had `r scales::comma(top_live_hours, accuracy = 100000)` viewing hours more than the rest of the combined top-titles in the list `r scales::comma(next14_hours, accuracy = 100000)`)” (next 14 live-flagged titles combined). WWE programs also accounted for `r scales::percent(wwe_title_share, accuracy = 1)` of live flagged titles and `r scales::percent(wwe_share_of_live, accuracy = 1)` of live flagged viewing hours suggests that WWE is important part of Netflix's content and worth evaluating for the upcoming investment plan
+
+**Strategic Actions:** Netflix should not mix one-time live event with recurring  programs because comparing these measures can help Netflix identify the most viewing and identify consistent audience interest before making investment decisions. Netflix should consider that viewing hours data has limitations as it cannot alone measure profitability as the dataset does not include revenue, costs or subscriber details. 
+
+## Conclusion
+
+For 2027 and beyond, Netflix should find ways to attract more viewers when new titles are released and strategically plan its promotional activities for content investments. Alongside, it should use performance data to evaluate live programs while also considering cost and revenue data (which is currently unavailable) before Netflix actually decides whether further investment is worthwhile. 
 
 
 
