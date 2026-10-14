@@ -153,7 +153,7 @@ From the summary statistics we can see that cleaned Netflix dataset is comprised
 
 The major finding here is missing data: `release_date` has **`r scales::comma(miss[["release_date"]])`** values missing, `views` has **`r scales::comma(miss[["views"]])`**, and `runtime` has **`r scales::comma(miss[["runtime"]])`** values missing which might limit analysis to some extent. Thus, `hours_viewed` has no missing values which can be used as a most reliable key measure for measuring titles popularity.
 
-Moreover, it is important to know that `hours_viewed` is rounded and is highly right skewed with median of **`r scales::number(med_hours / 1000000, accuracy = 0.1)` million hours** hours, meaning half of the titles has viewing hours below this value and half has above this value, although very few popular titles have significantly high viewing hours of **`r scales::number(max_hours / 1000000, accuracy = 0.1)` million hours** hours, much higher than the median. Hence, using median in the analysis prevents the popular titles from affecting the results too much. 
+Moreover, it is important to know that `hours_viewed` is rounded and is highly right skewed with median of **`r scales::number(med_hours / 1000000, accuracy = 0.1)` million hours**, meaning half of the titles has viewing hours below this value and half has above this value, although very few popular titles have significantly high viewing hours of **`r scales::number(max_hours / 1000000, accuracy = 0.1)` million hours**, much higher than the median. Hence, using median in the analysis prevents the popular titles from affecting the results too much. 
 
 
 ### Task 5- Exploratory questions
