@@ -251,6 +251,8 @@ top_by_period |>
   tab_source_note("Source: Netflix What We Watched reports")
 ```
 
+##### Interpretation
+
 The table shows that the most-watched title varied across different reporting period with `r top_repeat$title[[1]]` leading across two reporting period `r paste(top_repeat_periods, collapse = " and ")`. `r top_max$title[[1]]` recorded the highest share accounting `r scales::percent(top_max$share[[1]], accuracy = 0.1)` in `r top_max$period[[1]]`. Since no top-watched title exceeded 1.4% of viewing hours, it suggest that viewership was distributed across different reporting period rather than being concentrated throughout the periods. Note: Low-viewership titles are omitted in the analysis.
 
 
@@ -262,17 +264,27 @@ The table shows that the most-watched title varied across different reporting pe
 catalog_size <- NETFLIX_DATA |>
   summarise(n_titles = n(),
             total_runtime_hours = sum(runtime, na.rm = TRUE) / 60,
+            n_missing_runtime = sum(is.na(runtime)),
             .by = period) |>
   arrange(period)
 
+# Helper values for inline use (must come AFTER catalog_size is created)
+cat_first  <- catalog_size |> slice(1)
+cat_second <- catalog_size |> slice(2)
+cat_last   <- catalog_size |> slice_tail(n = 1)
+
 catalog_size |>
+  select(period, n_titles, total_runtime_hours) |>
   gt() |>
   cols_label(period = "Period", n_titles = "Titles Reported",
              total_runtime_hours = "Total Runtime (hours)") |>
   fmt_number(c(n_titles, total_runtime_hours), decimals = 0) |>
-  tab_header(title = "[Catalog size and Runtime Over Time]") |>
+  tab_header(title = "Catalog Size and Runtime Over Time") |>
   tab_source_note("Source: Netflix What We Watched reports")
 ```
+
+##### Interpretation
+The data show that Netflix's reported catalog showed different patterns in terms of title counts and total runtime. Titles fell sharply from `r scales::comma(cat_first$n_titles[[1]])` to `r scales::comma(cat_second$n_titles[[1]])` in `r cat_first$period[[1]]`, then rose steadily to `r scales::comma(cat_last$n_titles[[1]])` (`r cat_last$period[[1]]`). In contrast, Runtime slightly increased from `r scales::comma(cat_first$total_runtime_hours[[1]], accuracy = 1)` to `r scales::comma(cat_second$total_runtime_hours[[1]], accuracy = 1)` hours, then kept growing to `r scales::comma(cat_last$total_runtime_hours[[1]], accuracy = 1)`until the reporting period. These tends show that the number of titles does not alone reflect the total amount of content available. The data may not accurately represent the complete catalog size because some runtime values are missing and some titles that do not meet Netflix's reporting threshold are omitted. 
 
 #### State: This counts titles that appear in the reports, not Netflix's full library, because titles under the viewing threshold are left out. Runtime is missing for some titles and is excluded from the sum.
 
