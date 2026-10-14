@@ -226,18 +226,20 @@ library(gt)
 ```{r}
 #| label: task6-Question1
 
-top_repeat <- top_by_period |> count(title, sort = TRUE) |> slice(1)
-top_repeat_periods <- top_by_period |>
-  filter(title == top_repeat$title[[1]]) |>
-  pull(period)
-top_max <- top_by_period |> slice_max(share, n = 1, with_ties = FALSE)
-n_top_titles <- n_distinct(top_by_period$title)
 top_by_period <- NETFLIX_DATA |>
   mutate(period_total = sum(hours_viewed), .by = period) |>
   slice_max(hours_viewed, n = 1, by = period, with_ties = FALSE) |>
   mutate(share = hours_viewed / period_total) |>
   select(period, title, hours_viewed, share) |>
   arrange(period)
+
+# Helper values 
+top_repeat <- top_by_period |> count(title, sort = TRUE) |> slice(1)
+top_repeat_periods <- top_by_period |>
+  filter(title == top_repeat$title[[1]]) |>
+  pull(period)
+top_max <- top_by_period |> slice_max(share, n = 1, with_ties = FALSE)
+n_top_titles <- n_distinct(top_by_period$title)
 
 top_by_period |>
   gt() |>
