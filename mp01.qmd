@@ -325,7 +325,7 @@ staples |>
              min_hours = "Lowest Period", cv = "Variation (SD / Mean)") |>
   fmt_number(c(avg_hours, min_hours), decimals = 1, suffixing = TRUE) |>
   fmt_number(cv, decimals = 2) |>
-  tab_header(title = "Your own finding here") |>
+  tab_header(title = "Netflix’s Most Consistent Viewership Staples Across All Periods") |>
   tab_source_note("Source: Netflix What We Watched reports")
 ```
 
@@ -356,19 +356,30 @@ type_share <- typed |>
   pivot_wider(names_from = content_type, values_from = share, values_fill = 0) |>
   arrange(period)
 
+# Helper values for inline use
+ts_first <- type_share |> slice(1)
+ts_last  <- type_share |> slice_tail(n = 1)
+ts_later <- type_share |> filter(period != ts_first$period[[1]])
+
+# Share of 2023H1 rows with no runtime (these default to "Movie")
+pct_na_runtime_first <- NETFLIX_DATA |>
+  filter(period == ts_first$period[[1]]) |>
+  summarise(p = mean(is.na(runtime))) |>
+  pull(p)
+
 type_share |>
   gt() |>
   cols_label(period = "Period") |>
   fmt_percent(-period, decimals = 1) |>
-  tab_header(title = "[Shows versus movies]") |>
+  tab_header(title = "Share of Viewing Hours by Content Type and Period") |>
   tab_source_note("Source: Netflix What We Watched reports")
 ```
 
-##### State:
-The heuristic: "Season" in the title, or runtime over 240 minutes, means TV show. Live events get their own category so they don't distort the movie share.
-"Fraction of time" means share of hours viewed, not runtime.
-Rows with missing runtime and no "Season" land in "Movie". Check how many that is with typed |> filter(is.na(runtime)) |> count(content_type).
-Shows like "Stranger Things 4" have no "Season" in the title and are caught only by the runtime rule.
+##### Interpretation
+
+TV shows share kept rising from `r scales::percent(ts_first[["TV show"]][[1]], accuracy = 0.1)` in 	`r ts_first$period[[1]]` to `r scales::percent(min(ts_later[["TV show"]]), accuracy = 0.1)` until the end of reporting period `r ts_last$period[[1]]`. In other hand, movies accounted for only period	`r scales::percent(ts_first[["Movie"]][[1]], accuracy = 0.1)` in the first period which gradually lowered during the subsequent periods until last period to `r scales::percent(ts_last[["Movie"]][[1]], accuracy = 0.1)`. This shows that TV shows accounted for the largest share of reported viewing hours in every period.
+
+Live events contributed to `r scales::percent(ts_first[["Live event"]][[1]], accuracy = 0.1)` at the initial period which slightly rose to only `r scales::percent(ts_last[["Live event"]][[1]],)` in the period end. `r scales::percent(ts_first[["Live event"]][[1]], accuracy = 0.1)` means that no title was flagged live in first three initial periods. It should not be confused with Netflix had no live content. 
 
 #### 5. How does the performance of live events compare to pre-taped content? Does the average live event draw more viewership than an average piece of pre-taped content? How about a ‘top tier’ live event vs ‘top tier’ pre-taped content?
 
