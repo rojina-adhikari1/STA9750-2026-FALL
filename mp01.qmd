@@ -270,7 +270,7 @@ catalog_size <- NETFLIX_DATA |>
             .by = period) |>
   arrange(period)
 
-# Helper values for inline use (must come AFTER catalog_size is created)
+# Helper values for inline use 
 cat_first  <- catalog_size |> slice(1)
 cat_second <- catalog_size |> slice(2)
 cat_last   <- catalog_size |> slice_tail(n = 1)
@@ -310,7 +310,7 @@ staples <- NETFLIX_DATA |>
   mutate(cv = sd_hours / avg_hours) |>
   slice_max(min_hours, n = 10, with_ties = FALSE)
 
-# Helper values for inline use (titles copied exactly from the table)
+# Helper values for inline use 
 st_top1 <- staples |> slice(1)
 st_top2 <- staples |> slice(2)
 st_st4  <- staples |> filter(title == "Stranger Things 4")
@@ -555,6 +555,12 @@ The data also showed that Jake Paul vs. Mike Tyson show had `r scales::comma(top
 
 For 2027 and beyond, Netflix should find ways to attract more viewers when new titles are released and strategically plan its promotional activities for content investments. Alongside, it should use performance data to evaluate live programs while also considering cost and revenue data (which is currently unavailable) before Netflix actually decides whether further investment is worthwhile. 
 
+## AI Usage Statement
 
+::: {.callout-note title="AI Usage Statement" collapse="true"}
+
+Claude (Anthropic) was used to complete this mini-project. I relied heavily to write and debug code, including the data-cleaning steps, the calculations for Tasks 5 and 6, the supporting calculation chunks for the memo, and the inline code used to insert computed values into the text. Claude is also used to understand basic concepts of R, Quarto and `gt` concepts. As the error occurs, error syntax is sent to claude to help diagnose the errors and fixing. Some of the writing part was complex so I used Claude and chat GPT to get some hints/ideas on how to structure the answers and what to include as a part of writing. When some concepts or code genereated results were not clear to me, i used AI to simplify for me to get a good insight of the output and brainstrom ideas to improve my writing part. AI was also used to check my written interpretations and feedback was incorporated as suggested by AI.  
+
+:::
 
 
