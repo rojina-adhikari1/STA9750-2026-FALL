@@ -1,6 +1,6 @@
 
  ---
-title: "Green Transit Alliance Announces 2026 Greenest Transit Agency Awards"
+title: " 2026 Greenest Transit Agency Awards announced by Green Transit Alliance "
 subtitle: "STA 9750 Mini-Project #02"
 format:
   html:
@@ -22,15 +22,14 @@ execute:
 
 ```{r}
 #| label: eia-sep-download
-
+library(tidyverse)
+library(stringr)
+library(httr2)
+library(rvest)
+library(fs)
+library(gt)
 
 get_eia_sep <- function(state, abbr){
-    library(tidyverse)
-    library(stringr)
-    library(httr2)
-    library(rvest)
-    library(fs)
-    library(gt)
   
     state_formatted <- str_to_lower(state) |> str_replace_all("\\s", "")
     
@@ -318,6 +317,21 @@ EIA_SEP_REPORT |>
 ```
 
 #### National Average Emissions
+
+##### The Calculation
+
+```{r}
+#| label: us-avg-co2
+# Weight each state's emissions rate by how much electricity it generates
+us_avg_co2 <- EIA_SEP_REPORT |>
+  summarize(avg = weighted.mean(CO2_MWh, w = generation_MWh)) |>
+  pull(avg)
+
+# Unweighted average, for comparison
+us_simple_avg_co2 <- mean(EIA_SEP_REPORT$CO2_MWh)
+```
+
+The average CO₂ emissions rate from US electricity generation, weighted by how much electricity each state produces, was `r scales::comma(us_avg_co2, accuracy = 1)` pounds of CO₂ per MWh. This means that the average emissions rate reflects the electricity generated across the country rather than treating every state equally. Compared with the cleanest and dirtiest states in the dataset, this national average provides a useful benchmark for understanding differences in electricity-related emissions.
 
 #### Rarest Energy Sources
 
