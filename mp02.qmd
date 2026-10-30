@@ -22,10 +22,7 @@ execute:
 
 ```{r}
 #| label: eia-sep-download
-library(tidyverse)
-library(stringr)
-library(httr2)
-library(rvest)
+
 
 get_eia_sep <- function(state, abbr){
     library(tidyverse)
@@ -33,6 +30,7 @@ get_eia_sep <- function(state, abbr){
     library(httr2)
     library(rvest)
     library(fs)
+    library(gt)
   
     state_formatted <- str_to_lower(state) |> str_replace_all("\\s", "")
     
@@ -298,6 +296,26 @@ EIA_SEP_REPORT |>
 ```
 
 #### Dirtiest Electricity Mix
+
+```{r}
+#| label: tbl-dirtiest-states
+EIA_SEP_REPORT |>
+  slice_max(CO2_MWh, n = 5) |>
+  select(state, primary_source, CO2_MWh) |>
+  gt() |>
+  cols_label(
+    state          = "State",
+    primary_source = "Primary Source",
+    CO2_MWh        = "CO\u2082 Emitted (lbs per MWh)"
+  ) |>
+  fmt_number(columns = CO2_MWh, decimals = 0) |>
+  data_color(
+    columns = CO2_MWh,
+    palette = c("#fcbba1", "#a50f15")
+  ) |>
+  tab_header(title = "Five States with the Dirtiest Electricity") |>
+  tab_source_note("Source: US Energy Information Administration, State Electricity Profiles")
+```
 
 #### National Average Emissions
 
