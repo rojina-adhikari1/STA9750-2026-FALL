@@ -216,3 +216,45 @@ load_ntd_service <- function(){
 NTD_SERVICE <- load_ntd_service()
 ```
 
+## Data Cleaning and Preparation
+
+### Recoding Transit Modes
+
+```{r}
+#| label: recode-mode
+# Translate NTD two-letter mode codes into readable names.
+# Defined once as a function so both NTD tables are recoded identically.
+recode_mode <- function(x) {
+  recode_values(x,
+    "AR" ~ "Alaska Railroad",
+    "CB" ~ "Commuter Bus",
+    "CC" ~ "Cable Car",
+    "CR" ~ "Commuter Rail",
+    "DR" ~ "Demand Response",
+    "FB" ~ "Ferryboat",
+    "HR" ~ "Heavy Rail",
+    "IP" ~ "Inclined Plane",
+    "LR" ~ "Light Rail",
+    "MB" ~ "Bus",
+    "MG" ~ "Monorail / Automated Guideway",
+    "RB" ~ "Bus Rapid Transit",
+    "SR" ~ "Streetcar Rail",
+    "TB" ~ "Trolleybus",
+    "TR" ~ "Aerial Tramway",
+    "VP" ~ "Vanpool",
+    "YR" ~ "Hybrid Rail",
+    default = "Unknown"
+  )
+}
+
+NTD_SERVICE <- NTD_SERVICE |>
+  mutate(mode = recode_mode(mode))
+```
+
+
+```{r}
+#| label: recode-mode-energy
+#| eval: false
+NTD_ENERGY <- NTD_ENERGY |>
+  mutate(Mode = recode_mode(Mode))
+```
