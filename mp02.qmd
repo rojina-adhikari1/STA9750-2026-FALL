@@ -258,3 +258,51 @@ NTD_SERVICE <- NTD_SERVICE |>
 NTD_ENERGY <- NTD_ENERGY |>
   mutate(Mode = recode_mode(Mode))
 ```
+
+## Exploring the Data
+
+### State Electricity Profiles
+
+#### Most Expensive Electricity
+
+```{r}
+#| label: fig-expensive-electricity
+#| fig-width: 8
+#| fig-height: 4.5
+EIA_SEP_REPORT |>
+  slice_max(electricity_price_MWh, n = 5) |>
+  ggplot(aes(
+    x = electricity_price_MWh,
+    y = fct_reorder(state, electricity_price_MWh)
+  )) +
+  geom_col(fill = "#2c7a4b", width = 0.7) +
+  geom_text(
+    aes(label = scales::dollar(electricity_price_MWh)),
+    hjust = -0.15, size = 4.5
+  ) +
+  scale_x_continuous(
+    labels = scales::label_dollar(),
+    expand = expansion(mult = c(0, 0.15))
+  ) +
+  labs(
+    title   = "Five Most Expensive States for Retail Electricity",
+    x       = "Average retail price per MWh",
+    y       = NULL,
+    caption = "Source: US Energy Information Administration, State Electricity Profiles"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    panel.grid.major.y = element_blank(),
+    plot.title = element_text(face = "bold")
+  )
+```
+
+#### Dirtiest Electricity Mix
+
+#### National Average Emissions
+
+#### Rarest Energy Sources
+
+#### Texas vs. New York
+
+### Transit Service
