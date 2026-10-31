@@ -101,7 +101,6 @@ EIA_SEP_REPORT <- map2(state.name, state.abb, get_eia_sep) |> list_rbind()
 
 ```{r}
 #| label: ntd-energy-download
-#| eval: false
 load_ntd_energy <- function(){
   library(readxl)
   library(httr2)
@@ -158,6 +157,7 @@ load_ntd_energy <- function(){
 
 NTD_ENERGY <- load_ntd_energy()
 ```
+the description column was dropped from the calculation because it describes the fuel rather than measuring it.
 
 ```{r}
 #| label: ntd-service-download
@@ -250,7 +250,6 @@ NTD_SERVICE <- NTD_SERVICE |>
 
 ```{r}
 #| label: recode-mode-energy
-#| eval: false
 NTD_ENERGY <- NTD_ENERGY |>
   mutate(Mode = recode_mode(Mode))
 ```
