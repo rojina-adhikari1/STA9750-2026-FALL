@@ -544,3 +544,86 @@ EMISSIONS_BASE <- SERVICE_AGG |>
              join_by(state == abbreviation),
              relationship = "many-to-one")
 ```
+
+### Emissions per Agency and Mode
+
+```{r}
+#| label: compute-emissions
+# Pounds of CO2 per unit of fuel (EIA, plus documented assumptions)
+LBS_CO2 <- c(
+  diesel    = 22.45,  # per gallon, distillate fuel oil
+  gasoline  = 18.73,  # per gallon, finished motor gasoline
+  kerosene  = 21.78,  # per gallon
+  lpg       = 12.68,  # per gallon, propane
+  bunker    = 24.78,  # per gallon, residual fuel oil
+  biodiesel = 22.45,  # per gallon, assumed equal to diesel (conservative)
+  ethanol   = 3.13,   # per gallon, assumed E85 (15% gasoline share)
+  cng       = 15.31,  # per gasoline gallon equivalent
+  lng       = 9.89,   # per gallon
+  hydrogen  = 0       # per kg, no tailpipe CO2
+)
+
+EMISSIONS <- EMISSIONS_BASE |>
+  mutate(
+    # Direct (tailpipe) emissions from combustion fuels
+    co2_fuel_lbs =
+      `Gallons of Diesel Fuel`             * LBS_CO2["diesel"] +
+      `Gallons of Gasoline`                * LBS_CO2["gasoline"] +
+      `Gallons of Kerosene`                * LBS_CO2["kerosene"] +
+      `Gallons of Liquified Petroleum Gas` * LBS_CO2["lpg"] +
+      `Gallons of Bunker Fuel`             * LBS_CO2["bunker"] +
+      `Gallons of Bio-Diesel`              * LBS_CO2["biodiesel"] +
+      `Gallons of Ethanol`                 * LBS_CO2["ethanol"] +
+      `Gallons of Compressed Natural Gas`  * LBS_CO2["cng"] +
+      `Gallons of Liquified Nat Gas`       * LBS_CO2["lng"] +
+      `Kilograms of Hydrogen`              * LBS_CO2["hydrogen"],
+    # Upstream emissions from electricity (kWh -> MWh x state rate)
+    co2_elec_lbs =
+      (`Kilowatt hours of Electric Battery` +
+       `Kilowatt hours of Electric Propulsion`) / 1000 * CO2_MWh,
+    total_co2_lbs  = co2_fuel_lbs + co2_elec_lbs,
+    total_co2_tons = total_co2_lbs / 2000
+  )
+```
+
+### Emissions per Rider
+
+```{r}
+#| label: agency-emissions
+# Combine modes into one row per agency, then normalize by usage.
+# Exclude NTD-flagged records and agencies with unreported miles,
+# since either would distort per-trip or per-mile figures.
+AGENCY_EMISSIONS <- EMISSIONS |>
+  filter(!any_flagged) |>
+  group_by(NTD_ID, AGENCY, city, state) |>
+  summarize(
+    total_co2_lbs   = sum(total_co2_lbs),
+    co2_elec_lbs    = sum(co2_elec_lbs),
+    total_upt       = sum(total_upt),
+    total_miles     = sum(total_miles),
+    miles_complete  = all(miles_reported),
+    n_modes         = n(),
+    .groups = "drop"
+  ) |>
+  filter(miles_complete, total_upt > 0, total_miles > 0) |>
+  mutate(
+    agency_short = str_remove(AGENCY, ".*dba:\\s*"),
+    co2_per_upt  = total_co2_lbs / total_upt,
+    co2_per_mile = total_co2_lbs / total_miles
+  )
+```
+
+```{r}
+#| label: agency-size
+# Exclude very small agencies, then assign award size categories
+AGENCY_EMISSIONS <- AGENCY_EMISSIONS |>
+  filter(total_upt >= 100000) |>
+  mutate(
+    size = case_when(
+      total_upt <  1e6 ~ "Small",
+      total_upt < 1e7  ~ "Medium",
+      TRUE             ~ "Large"
+    ),
+    size = factor(size, levels = c("Small", "Medium", "Large"))
+  )
+```
