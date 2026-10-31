@@ -479,3 +479,26 @@ miles_by_state |>
     plot.caption = element_text(hjust = 0)
   )
 ```
+#### State Coverage
+
+```{r}
+#| label: state-coverage
+# 50 states with no transit service in the NTD data
+missing_states <- state.name[!state.abb %in% NTD_SERVICE$state]
+
+# Regions in the NTD data that are not one of the 50 states (DC, territories)
+extra_regions <- NTD_SERVICE |>
+  distinct(state) |>
+  filter(!state %in% state.abb) |>
+  pull(state) |>
+  sort()
+
+# Readable names for the non-state regions
+region_names <- c(
+  AS = "American Samoa", DC = "District of Columbia", GU = "Guam",
+  MP = "Northern Mariana Islands", PR = "Puerto Rico", VI = "US Virgin Islands"
+)
+extra_region_names <- unname(region_names[extra_regions])
+```
+
+The NTD data cover all 50 states and include `r length(extra_regions)` additional regions: `r str_flatten_comma(extra_region_names)`. However, these regions will be excluded from the emissions analysis because the EIA dataset covers only the 50 states.
