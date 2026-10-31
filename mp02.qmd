@@ -377,3 +377,105 @@ tx_ny_ratio <- tx_co2 / ny_co2
 Texas produces `r round(tx_ny_ratio, 1)` times as much CO₂ per MWh of electricity as New York. This means New York's electricity generation is substantially cleaner than Texas's.
 
 ### Transit Service
+#### Busiest Transit Services
+
+```{r}
+#| label: fig-top-upt
+#| fig-width: 8
+#| fig-height: 4.5
+NTD_SERVICE |>
+  # Combine directly operated + purchased service for each agency + mode
+  group_by(NTD_ID, AGENCY, city, mode) |>
+  summarize(total_upt = sum(total_upt), .groups = "drop") |>
+  slice_max(total_upt, n = 5) |>
+  mutate(
+    # Shorten names like "King County, dba: King County Metro"
+    agency_short = str_remove(AGENCY, ".*dba:\\s*"),
+    label        = str_glue("{agency_short} ({city}): {mode}")
+  ) |>
+  ggplot(aes(x = total_upt, y = fct_reorder(label, total_upt))) +
+  geom_col(fill = "#2c7a4b", width = 0.7) +
+  geom_text(
+    aes(label = scales::label_number(
+      scale_cut = scales::cut_short_scale(),
+      accuracy  = 0.1
+    )(total_upt)),
+    hjust = -0.15, size = 4.5
+  ) +
+  scale_x_continuous(
+    labels = scales::label_number(scale_cut = scales::cut_short_scale()),
+    expand = expansion(mult = c(0, 0.15))
+  ) +
+  scale_y_discrete(labels = scales::label_wrap(30)) +
+  labs(
+    title   = "Five Busiest Transit Services in the US",
+    x       = "Unlinked passenger trips (2025)",
+    y       = NULL,
+    caption = "Source: National Transit Database, 2025 Service by Agency"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    panel.grid.major.y = element_blank(),
+    plot.title = element_text(face = "bold")
+  )
+```
+#### States with the Least Transit Travel
+
+```{r}
+#| label: fig-fewest-miles
+#| fig-width: 8
+#| fig-height: 4.5
+# Passenger miles by state (50 states only), tracking how many
+# services actually reported miles. Smaller "Reduced" and "Rural"
+# reporters are not required to report passenger miles.
+miles_by_state <- NTD_SERVICE |>
+  filter(state %in% state.abb) |>
+  group_by(state) |>
+  summarize(
+    total_miles = sum(sum_passenger_miles, na.rm = TRUE),
+    n_reported  = sum(!is.na(sum_passenger_miles)),
+    .groups = "drop"
+  ) |>
+  mutate(state_name = state.name[match(state, state.abb)])
+
+# States where no agency reported passenger miles
+no_miles_states <- miles_by_state |>
+  filter(n_reported == 0) |>
+  pull(state_name)
+
+miles_by_state |>
+  filter(n_reported > 0) |>
+  slice_min(total_miles, n = 5) |>
+  ggplot(aes(
+    x = total_miles,
+    y = reorder(state_name, -total_miles)
+  )) +
+  geom_col(fill = "#b5651d", width = 0.7) +
+  geom_text(
+    aes(label = scales::label_number(
+      scale_cut = scales::cut_short_scale(),
+      accuracy  = 0.1
+    )(total_miles)),
+    hjust = -0.15, size = 4.5
+  ) +
+  scale_x_continuous(
+    labels = scales::label_number(scale_cut = scales::cut_short_scale()),
+    expand = expansion(mult = c(0, 0.15))
+  ) +
+  labs(
+    title   = "Five States with the Least Public Transit Travel",
+    x       = "Total passenger miles (2025)",
+    y       = NULL,
+    caption = str_glue(
+      "Source: National Transit Database, 2025 Service by Agency\n",
+      "Excluded (no agency reported passenger miles): ",
+      "{str_flatten_comma(no_miles_states)}"
+    )
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    panel.grid.major.y = element_blank(),
+    plot.title = element_text(face = "bold"),
+    plot.caption = element_text(hjust = 0)
+  )
+```
