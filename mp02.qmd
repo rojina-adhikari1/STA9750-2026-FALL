@@ -334,6 +334,46 @@ The average CO₂ emissions rate from US electricity generation, weighted by how
 
 #### Rarest Energy Sources
 
+```{r}
+#| label: tbl-rarest-sources
+# Find the 3 primary sources used by the fewest states
+rarest_sources <- EIA_SEP_REPORT |>
+  count(primary_source) |>
+  slice_min(n, n = 3, with_ties = FALSE) |>
+  pull(primary_source)
+
+EIA_SEP_REPORT |>
+  filter(primary_source %in% rarest_sources) |>
+  group_by(primary_source) |>
+  summarize(
+    n_states  = n(),
+    states    = paste(sort(state), collapse = ", "),
+    avg_price = mean(electricity_price_MWh)
+  ) |>
+  arrange(n_states) |>
+  gt() |>
+  cols_label(
+    primary_source = "Primary Source",
+    n_states       = "Number of States",
+    states         = "States",
+    avg_price      = "Avg. Retail Price (per MWh)"
+  ) |>
+  fmt_currency(columns = avg_price, currency = "USD") |>
+  tab_header(title = "The Three Rarest Primary Energy Sources") |>
+  tab_source_note("Source: US Energy Information Administration, State Electricity Profiles")
+```
+
 #### Texas vs. New York
+
+```{r}
+#| label: tx-vs-ny
+tx_co2 <- EIA_SEP_REPORT |> filter(abbreviation == "TX") |> pull(CO2_MWh)
+ny_co2 <- EIA_SEP_REPORT |> filter(abbreviation == "NY") |> pull(CO2_MWh)
+
+# How many times more CO2 Texas emits per MWh than New York
+tx_ny_ratio <- tx_co2 / ny_co2
+```
+
+Texas produces `r round(tx_ny_ratio, 1)` times as much CO₂ per MWh of electricity as New York. This means New York's electricity generation is substantially cleaner than Texas's.
 
 ### Transit Service
