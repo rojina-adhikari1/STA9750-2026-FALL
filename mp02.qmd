@@ -501,3 +501,46 @@ extra_region_names <- unname(region_names[extra_regions])
 ```
 
 The NTD data cover all 50 states and include `r length(extra_regions)` additional regions: `r str_flatten_comma(extra_region_names)`. However, these regions will be excluded from the emissions analysis because the EIA dataset covers only the 50 states.
+
+## Data Analysis
+## Calculating Emissions
+### Preparing Service Data
+
+```{r}
+#| label: service-agg
+# Collapse service to one row per agency + mode
+# (combining directly operated and purchased transportation)
+SERVICE_AGG <- NTD_SERVICE |>
+  group_by(NTD_ID, AGENCY, city, state, uza_name, mode) |>
+  summarize(
+    total_upt      = sum(total_upt, na.rm = TRUE),
+    total_miles    = sum(sum_passenger_miles, na.rm = TRUE),
+    miles_reported = any(!is.na(sum_passenger_miles)),
+    any_flagged    = any(flagged_likely_inaccurate),
+    .groups = "drop"
+  )
+```
+
+### Combining the Data
+
+```{r}
+#| label: combine-data
+# Energy: match the service table's ID format ("00001") and column names
+ENERGY_CLEAN <- NTD_ENERGY |>
+  mutate(NTD_ID = sprintf("%05d", as.integer(`NTD ID`))) |>
+  select(-`NTD ID`, -`Agency Name`, -`Bio-Diesel Description`) |>
+  rename(mode = Mode)
+
+# EIA: keep only what the emissions calculation needs
+EIA_CO2 <- EIA_SEP_REPORT |>
+  select(abbreviation, CO2_MWh)
+
+# One row per agency + mode with service, fuel use, and grid emissions
+EMISSIONS_BASE <- SERVICE_AGG |>
+  inner_join(ENERGY_CLEAN,
+             join_by(NTD_ID, mode),
+             relationship = "one-to-one") |>
+  inner_join(EIA_CO2,
+             join_by(state == abbreviation),
+             relationship = "many-to-one")
+```
