@@ -627,3 +627,39 @@ AGENCY_EMISSIONS <- AGENCY_EMISSIONS |>
     size = factor(size, levels = c("Small", "Medium", "Large"))
   )
 ```
+
+## Award Winners
+
+### Greenest Agency
+
+```{r}
+#| label: award-greenest
+# Lowest CO2 per passenger mile in each size category,
+# compared with the median agency of the same size
+GREENEST <- AGENCY_EMISSIONS |>
+  group_by(size) |>
+  mutate(median_per_mile = median(co2_per_mile)) |>
+  slice_min(co2_per_mile, n = 1) |>
+  ungroup() |>
+  mutate(times_cleaner = median_per_mile / co2_per_mile)
+
+GREENEST |>
+  select(size, agency_short, city, state,
+         co2_per_mile, median_per_mile, times_cleaner) |>
+  gt() |>
+  cols_label(
+    size            = "Category",
+    agency_short    = "Agency",
+    city            = "City",
+    state           = "State",
+    co2_per_mile    = "Winner (lbs CO\u2082 / passenger mile)",
+    median_per_mile = "Median Agency",
+    times_cleaner   = "Times Cleaner"
+  ) |>
+  fmt_number(columns = c(co2_per_mile, median_per_mile), decimals = 3) |>
+  fmt_number(columns = times_cleaner, decimals = 1, pattern = "{x}\u00d7") |>
+  tab_header(title = "Greenest Transit Agencies of 2025") |>
+  tab_source_note(
+    "Sources: National Transit Database (2025); US Energy Information Administration"
+  )
+```
