@@ -801,7 +801,46 @@ ggplot(plot_data, aes(x = co2_per_mile, y = size)) +
 ```
 
 
-
+```{r}
+#| label: fig-avoided
+#| fig-width: 10
+#| fig-height: 6
+AGENCY_EMISSIONS |>
+  slice_max(avoided_tons, n = 10) |>
+  mutate(label = str_glue("{agency_short} ({state})")) |>
+  ggplot(aes(x = avoided_tons, y = reorder(label, avoided_tons), fill = size)) +
+  geom_col(width = 0.7) +
+  geom_text(
+    aes(label = scales::label_number(
+      scale_cut = scales::cut_short_scale(),
+      accuracy  = 1
+    )(avoided_tons)),
+    hjust = -0.1, size = 4
+  ) +
+  scale_x_continuous(
+    labels = scales::label_number(scale_cut = scales::cut_short_scale()),
+    expand = expansion(mult = c(0, 0.12))
+  ) +
+  scale_y_discrete(labels = scales::label_wrap(35)) +
+  scale_fill_manual(values = c("Small"  = "#a6dba0",
+                               "Medium" = "#5aae61",
+                               "Large"  = "#1b7837")) +
+  labs(
+    title    = "Transit Agencies That Saved the Most CO2 in 2025",
+    subtitle = "Tons of CO2 avoided compared with every rider driving alone in a 49 mpg car",
+    x        = "Tons of CO2 avoided",
+    y        = NULL,
+    fill     = "Agency size",
+    caption  = "Sources: National Transit Database (2025); US EIA; NHTSA CAFE standards"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position    = "top",
+    plot.title         = element_text(face = "bold"),
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor   = element_blank()
+  )
+```
 
 
 
