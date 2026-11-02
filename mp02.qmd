@@ -96,7 +96,9 @@ get_eia_sep <- function(state, abbr){
 
 EIA_SEP_REPORT <- map2(state.name, state.abb, get_eia_sep) |> list_rbind()
 ```
+The electricity data generated from the U.S. Energy Information administration (EIA) State Electricity Profiles includes four main variables: CO2 emissions per MWh, the state's primary energy source, net electricity generation in MWh, and the average retail electricity price. The price was converted from cents per kWh to dollars per MWh to make the units easier to comprehend. 
 
+The analysis assumes the state's overall energy emissions rate rather than a separate rate for each agency to provide a consistent estimate using state-level data. The data set covers all 50 states, excluding Washington, D.C. 
 
 ### NTD Energy Usage
 
