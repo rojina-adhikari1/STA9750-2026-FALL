@@ -13,7 +13,9 @@ execute:
 
 ## Introduction
 
-The Green Transit Alliance (GTA) awards those public transit agencies that performs well in reducing carbon emissions. Here the objective is to compare the emissions produced by public transit agencies with the emission that would have been generated from private vehicles if made the same routes across the United States. The analysis used data from the U.S. Energy Information Administrative (EIA) and the National Transit Database (NTD) to estimate the transit emissions. The study reveals that the relationship between fuel type and emissions is not always predictable. 
+The Green Transit Alliance (GTA) awards those public transit agencies that performs well in reducing carbon emissions. Here the objective is to compare the emissions produced by public transit agencies with the emission that would have been generated from private vehicles if made the same routes across the United States. 
+
+The analysis used data from the U.S. Energy Information Administrative (EIA) and the National Transit Database (NTD) to estimate the transit emissions. The study reveals that the relationship between fuel type and emissions is not always predictable. 
 
 ## Data Acquisition
 
@@ -160,7 +162,6 @@ load_ntd_energy <- function(){
 
 NTD_ENERGY <- load_ntd_energy()
 ```
-the description column was dropped from the calculation because it describes the fuel rather than measuring it.
 
 ```{r}
 #| label: ntd-service-download
@@ -214,6 +215,12 @@ load_ntd_service <- function(){
 
 NTD_SERVICE <- load_ntd_service()
 ```
+The transit energy data from the National Transit Database (NTD) reports the consumption of energy by public transportation agencies, including  diesel, gasoline, natural gas, and electricity for 2025. Each row represents one agency and one mode, for example NYC Transit's buses. The Bio-diesel description column was dropped from the calculation because it describes what type of bio-diesel was used rather than the amount. Fuel is measured in gallons, electricity in kWh, and hydrogen in kg. 
+
+The 2025 NTD service data set was provides the information about passenger trips (UTP) and passenger miles traveled. The UTP counts each passenger boarding. A transfer to another vehicle counts as two trips. 
+
+These combined data sets help to compare the energy consumption against the amount of transportation services provided.
+
 
 ## Data Cleaning and Preparation
 
