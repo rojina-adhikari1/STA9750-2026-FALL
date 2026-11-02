@@ -741,6 +741,64 @@ WORST |>
   )
 ```
 
+## Press Release Graphics
+
+```{r}
+#| label: fig-greenest-worst
+#| fig-width: 10
+#| fig-height: 6
+library(ggrepel)
+
+# Mark which agencies won Greenest or Worst Offender
+highlight <- bind_rows(
+  GREENEST |> mutate(award = "Greenest"),
+  WORST    |> mutate(award = "Worst Offender")
+) |>
+  select(NTD_ID, award)
+
+plot_data <- AGENCY_EMISSIONS |>
+  left_join(highlight, join_by(NTD_ID)) |>
+  mutate(award = replace_na(award, "Other agencies"))
+
+others  <- plot_data |> filter(award == "Other agencies")
+winners <- plot_data |> filter(award != "Other agencies")
+
+set.seed(9750)  # keeps the dot scatter identical on every render
+
+ggplot(plot_data, aes(x = co2_per_mile, y = size)) +
+  # All other agencies as faint grey dots
+  geom_jitter(data = others, height = 0.2, width = 0,
+              colour = "grey70", alpha = 0.6, size = 2) +
+  # Car benchmark line
+  geom_vline(xintercept = unname(CAR_LBS_PER_MILE),
+             linetype = "dashed", colour = "grey30") +
+  annotate("text", x = unname(CAR_LBS_PER_MILE), y = 3.45,
+           label = "Driving alone (49 mpg car)",
+           hjust = -0.05, size = 4, colour = "grey30") +
+  # Award winners, highlighted and labelled
+  geom_point(data = winners, aes(colour = award), size = 4) +
+  geom_label_repel(data = winners,
+                   aes(label = agency_short, colour = award),
+                   size = 3.5, show.legend = FALSE,
+                   min.segment.length = 0, box.padding = 0.6) +
+  scale_x_log10(labels = scales::label_number(accuracy = 0.01)) +
+  scale_colour_manual(values = c("Greenest"       = "#1b7837",
+                                 "Worst Offender" = "#b2182b")) +
+  labs(
+    title    = "The Greenest and Dirtiest Transit Agencies of 2025",
+        subtitle = "CO2 per passenger mile for every agency; dots left of the dashed line beat driving alone",
+    x        = "lbs CO2 per passenger mile (log scale)",
+    y        = NULL,
+    colour   = NULL,
+    caption  = "Sources: National Transit Database (2025); US EIA; NHTSA CAFE standards"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position  = "top",
+    plot.title       = element_text(face = "bold"),
+    panel.grid.minor = element_blank()
+  )
+```
 
 
 
