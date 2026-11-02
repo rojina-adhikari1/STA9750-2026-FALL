@@ -663,3 +663,59 @@ GREENEST |>
     "Sources: National Transit Database (2025); US Energy Information Administration"
   )
 ```
+
+### Most Emissions Avoided
+
+```{r}
+#| label: award-avoided
+# Fuel economy of the counterfactual car (NHTSA CAFE target, MY2026).
+# Generous to cars: real-world mpg is lower, so savings are conservative.
+CAFE_MPG <- 49
+
+AGENCY_EMISSIONS <- AGENCY_EMISSIONS |>
+  mutate(
+    # CO2 if every passenger mile had been driven alone in a car
+    driving_co2_lbs = total_miles / CAFE_MPG * LBS_CO2["gasoline"],
+    avoided_co2_lbs = driving_co2_lbs - total_co2_lbs,
+    avoided_tons    = avoided_co2_lbs / 2000
+  )
+
+MOST_AVOIDED <- AGENCY_EMISSIONS |>
+  group_by(size) |>
+  mutate(median_avoided = median(avoided_tons)) |>
+  slice_max(avoided_tons, n = 1) |>
+  ungroup()
+
+MOST_AVOIDED |>
+  select(size, agency_short, city, state, avoided_tons, median_avoided) |>
+  gt() |>
+  cols_label(
+    size           = "Category",
+    agency_short   = "Agency",
+    city           = "City",
+    state          = "State",
+    avoided_tons   = "CO\u2082 Avoided (tons)",
+    median_avoided = "Median Agency (tons)"
+  ) |>
+  fmt_number(columns = c(avoided_tons, median_avoided), decimals = 0) |>
+  tab_header(title = "Most Emissions Avoided in 2025") |>
+  tab_source_note(
+    "Assumes each passenger mile replaces a solo car trip at 49 mpg (NHTSA CAFE, MY2026). Sources: NTD (2025); EIA; NHTSA"
+  )
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
