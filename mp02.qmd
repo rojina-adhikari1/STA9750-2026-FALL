@@ -1,6 +1,6 @@
 ---
-title: " 2026 Greenest Transit Agency Awards announced by Green Transit Alliance "
-subtitle: "STA 9750 Mini-Project #02"
+title: "Green Transit Alliance Announces 2025 Award Winners: New York Leads in CO2 Savings" 
+subtitle: "A Diesel Coach Beats Electric Systems in the Same Category"
 format:
   html:
     code-fold: true
