@@ -266,7 +266,7 @@ NTD_ENERGY <- NTD_ENERGY |>
 
 The NTD data set uses two-letter mode codes such as, MB represent Bus, and HR represent Heavy Rail which were converted into readable name using the [NTD ridership data page](https://catalog-beta.data.gov/dataset/complete-monthly-ridership-with-adjustments-and-estimates). 
 
-The same recoding function was applied to both the service and energy datasets to ensure transit mode names match and keeps the name consistent. All codes were successfully matched, with no “Unknown” values because mode is part of the key used to join the tables. 
+The same recoding function was applied to both the service and energy datasets to ensure transit mode names match while also keeping the name consistent. All codes were successfully matched, with no “Unknown” values because mode is part of the key used to join the tables. 
 
 ## Exploring the Data
 
