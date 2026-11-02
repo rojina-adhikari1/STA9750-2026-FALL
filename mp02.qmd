@@ -13,7 +13,7 @@ execute:
 
 ## Introduction
 
-<!-- What GTA is, what the awards measure, why it matters -->
+The Green Transit Alliance (GTA) awards those public transit agencies that performs well in reducing carbon emissions. Here the objective is to compare the emissions produced by public transit agencies with the emission that would have been generated from private vehicles if made the same routes across the United States. The analysis used data from the U.S. Energy Information Administrative (EIA) and the National Transit Database (NTD) to estimate the transit emissions. The study reveals that the relationship between fuel type and emissions is not always predictable. 
 
 ## Data Acquisition
 
@@ -97,7 +97,8 @@ get_eia_sep <- function(state, abbr){
 EIA_SEP_REPORT <- map2(state.name, state.abb, get_eia_sep) |> list_rbind()
 ```
 
-## Data Acquisition - NTD Energy Usage
+
+### NTD Energy Usage
 
 ```{r}
 #| label: ntd-energy-download
