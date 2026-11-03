@@ -638,7 +638,7 @@ EMISSIONS_BASE <- SERVICE_AGG |>
 
 The cleaned energy records were matched to the service records using the standardized NTD agency identifier and recoded transit mode. State electricity emissions rates were then added using each agency’s state.
 
-Not every service record has a corresponding energy record. Therefore, emissions estimates are based on the agency-mode records that could be matched across the datasets.
+Some service records did not have matching energy records, so only the matched records were used to estimate emissions.
 
 ### Emissions per Agency and Mode
 
@@ -683,7 +683,7 @@ EMISSIONS <- EMISSIONS_BASE |>
 
 For fuel-consuming modes, emissions were estimated from reported fuel consumption and the corresponding emissions factors. For electric modes, reported electricity use was converted to MWh and multiplied by the state’s electricity emissions rate.
 
-This approach assigns the state’s average electricity emissions rate to transit electricity use. It does not account for an agency’s individual electricity contract or renewable-energy purchase.
+The analysis uses each state's average electricity emissions rate. It does not consider whether an agency buys renewable energy or has a different electricity contract.
 
 ### Emissions per Rider
 
@@ -727,9 +727,10 @@ AGENCY_EMISSIONS <- AGENCY_EMISSIONS |>
   )
 ```
 
-Emissions per passenger mile were calculated by dividing estimated CO₂ emissions by reported passenger miles. This measure allows agencies of different sizes to be compared on a common basis.
+Emissions per passenger mile were calculated by dividing total CO₂ emissions by passenger miles. This helps compare agencies of different sizes.
 
-The analysis also estimates avoided emissions by comparing transit emissions with the emissions that would result if the same passenger miles were traveled by people driving alone in a car rated at 49 miles per gallon. This benchmark uses the NHTSA CAFE target for model year 2026 and is generous to cars; actual driving may produce higher emissions.
+Avoided emissions were estimated by comparing transit emissions with the emissions from driving the same distance alone in a car that gets 49 miles per gallon. This is a generous estimate for cars, as actual driving may produce more emissions.
+
 
 ## Award Winners
 
