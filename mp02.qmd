@@ -473,8 +473,18 @@ NTD_SERVICE |>
     panel.grid.major.y = element_blank(),
     plot.title = element_text(face = "bold")
   )
-```
 
+# Top services by trips, for use in text
+top_upt <- NTD_SERVICE |>
+  group_by(NTD_ID, AGENCY, mode) |>
+  summarize(total_upt = sum(total_upt), .groups = "drop") |>
+  arrange(desc(total_upt))
+```
+Unlinked Passenger Trips (UPT) count each boarding, so a passenger transferring between vehicles counts as more than one trip. High trip counts show how much a service is used, but do not necessarily mean it operates efficiently.
+
+NYC Transit had the two highest trip totals. Its heavy rail (subway) service recorded `r scales::label_number(scale_cut = scales::cut_short_scale(), accuracy = 0.1)(top_upt$total_upt[1])` trips, about `r round(top_upt$total_upt[1] / top_upt$total_upt[2], 1)` times the   `r scales::label_number(scale_cut = scales::cut_short_scale(), accuracy = 0.1)(top_upt$total_upt[2])` trips recorded by its bus service. The top five included two heavy rail services and three bus services.
+
+Washington Metro ranked fifth, with `r scales::label_number(scale_cut = scales::cut_short_scale())(top_upt$total_upt[5])` trips. Because it operates in Washington, D.C., it is excluded from the later emissions analysis, which uses EIA data for the 50 states only.
 
 
 #### States with the Least Transit Travel
