@@ -806,42 +806,18 @@ MOST_AVOIDED |>
   tab_source_note(
     "Assumes each passenger mile replaces a solo car trip at 49 mpg (NHTSA CAFE, MY2026). Sources: NTD (2025); EIA; NHTSA"
   )
-```
 
-### Worst Offender
+# Sensitivity check: realistic real-world mpg (NHTSA: 20-30% below CAFE)
+REAL_MPG <- CAFE_MPG * 0.75
 
-```{r}
-#| label: award-worst
-# Pounds of CO2 per mile for a solo car at the CAFE target
-CAR_LBS_PER_MILE <- LBS_CO2["gasoline"] / CAFE_MPG
-
-# Highest CO2 per passenger mile among Medium and Large agencies
-WORST <- AGENCY_EMISSIONS |>
-  filter(size %in% c("Medium", "Large")) |>
-  group_by(size) |>
-  mutate(median_per_mile = median(co2_per_mile)) |>
-  slice_max(co2_per_mile, n = 1) |>
-  ungroup() |>
-  mutate(times_car = co2_per_mile / CAR_LBS_PER_MILE)
-
-WORST |>
-  select(size, agency_short, city, state,
-         co2_per_mile, median_per_mile, times_car) |>
-  gt() |>
-  cols_label(
-    size            = "Category",
-    agency_short    = "Agency",
-    city            = "City",
-    state           = "State",
-    co2_per_mile    = "lbs CO\u2082 / passenger mile",
-    median_per_mile = "Median Agency",
-    times_car       = "vs. Driving Alone"
-  ) |>
-  fmt_number(columns = c(co2_per_mile, median_per_mile), decimals = 2) |>
-  fmt_number(columns = times_car, decimals = 1, pattern = "{x}\u00d7") |>
-  tab_header(title = "Worst Offenders of 2025") |>
-  tab_source_note(
-    "Driving benchmark: solo car at 49 mpg (NHTSA CAFE, MY2026). Sources: NTD (2025); EIA; NHTSA"
+sensitivity <- AGENCY_EMISSIONS |>
+  mutate(avoided_real = total_miles / REAL_MPG * LBS_CO2["gasoline"] -
+                        total_co2_lbs) |>
+  summarize(
+    worse_cafe = sum(avoided_tons < 0),
+    worse_real = sum(avoided_real < 0),
+    total_cafe = sum(avoided_tons),
+    total_real = sum(avoided_real) / 2000
   )
 ```
 
