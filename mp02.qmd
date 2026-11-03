@@ -829,8 +829,21 @@ sensitivity <- AGENCY_EMISSIONS |>
     total_cafe = sum(avoided_tons),
     total_real = sum(avoided_real) / 2000
   )
+# Winners under the realistic-mpg benchmark (to confirm they don't change)
+MOST_AVOIDED_REAL <- AGENCY_EMISSIONS |>
+  mutate(avoided_real = (total_miles / REAL_MPG * LBS_CO2["gasoline"] -
+                         total_co2_lbs) / 2000) |>
+  group_by(size) |>
+  slice_max(avoided_real, n = 1) |>
+  ungroup()
 
 ```
+
+This award recognizes the agency with the highest estimated CO2 savings in each size group. Avoided emissions are calculated by comparing transit emissions with the estimated emissions if passengers traveled the same distance alone in a car getting 49 miles per gallon. This benchmark comes from the NHTSA Corporate Average Fuel Economy (CAFE) target for model year 2026 and is generous to cars.
+Hampton Jitney (NY) won the Small category, avoiding an estimated `r scales::comma(round(MOST_AVOIDED$avoided_tons[1]))` tons of CO2, compared with a median agency value of `r scales::comma(round(MOST_AVOIDED$median_avoided[1]))` tons. CalVans (CA) won the Medium category, avoiding `r scales::comma(round(MOST_AVOIDED$avoided_tons[2]))` tons, compared with the median of `r scales::comma(round(MOST_AVOIDED$median_avoided[2]))` tons. MTA New York City Transit (NY) won the Large category, avoiding `r scales::comma(round(MOST_AVOIDED$avoided_tons[3]))` tons, compared with the median of `r scales::comma(round(MOST_AVOIDED$median_avoided[3]))` tons. NYC Transit avoided more emissions than the next nine agencies combined.
+The median values are negative in all three groups, meaning that these agencies produced more estimated CO2 emissions than the 49-mpg car benchmark.
+The results also depend on the car's fuel efficiency. NHTSA notes that real-world fuel economy can be 20–30% below CAFE levels. To test this, the analysis uses `r REAL_MPG` mpg, which is 25% below 49 mpg. With the 49-mpg benchmark, `r sensitivity$worse_cafe` of `r nrow(AGENCY_EMISSIONS)` agencies had higher emissions than driving alone. With the lower-mpg benchmark, this number fell to `r sensitivity$worse_real`.
+The total for `r nrow(AGENCY_EMISSIONS)` agencies also changed from `r scales::comma(round(sensitivity$total_cafe))` tons to `r scales::comma(round(sensitivity$total_real))` tons. The negative result under the 49-mpg benchmark means that transit produced more estimated emissions overall than the car alternative. Under the lower-mpg benchmark, the result becomes positive, meaning transit avoided emissions overall. The award winners remained the same under both benchmarks. NYC Transit's estimated savings increased to `r scales::comma(round(MOST_AVOIDED_REAL$avoided_real[3]))` tons under the 36.75-mpg benchmark.
 
 ### Worst Offender
 
@@ -868,9 +881,28 @@ WORST |>
   tab_source_note(
     "Driving benchmark: solo car at 49 mpg (NHTSA CAFE, MY2026). Sources: NTD (2025); EIA; NHTSA"
   )
+# Passenger miles per gallon of CNG for bus services (Beeline vs. typical)
+cng_bus <- EMISSIONS |>
+  filter(mode == "Bus", `Gallons of Compressed Natural Gas` > 0,
+         total_miles > 0) |>
+  mutate(pmpg = total_miles / `Gallons of Compressed Natural Gas`)
+
+beeline_pmpg <- cng_bus |> filter(str_detect(AGENCY, "Beeline")) |> pull(pmpg)
+median_pmpg  <- median(cng_bus$pmpg)
 ```
 
+### Worst Offender
+
+This award recognizes the agencies with the highest CO2 emissions per passenger mile in the Medium and Large categories. Small agencies are excluded because services with very few riders can produce unusually high and unreliable results. It would not be fair or useful to single out a small rural van service based on such limited ridership.
+
+**Beeline Bus/Dial-A-Ride (CA)** was the worst offender in the Medium category, producing `r round(WORST$co2_per_mile[1], 2)` lbs of CO2 per passenger mile. This is `r round(WORST$times_car[1], 1)` times the emissions of driving alone and well above the Medium agency median of `r round(WORST$median_per_mile[1], 2)` lbs. One reason is low passenger occupancy: Beeline's CNG buses averaged about **4.5 passenger miles per gallon**, compared with a median of about **20.5** for CNG bus services. This means Beeline's buses generate fewer passenger miles for each gallon of fuel used.
+
+**Washington State Ferries (WA)** had the highest emissions in the Large category, at `r round(WORST$co2_per_mile[2], 2)` lbs of CO2 per passenger mile. That is `r round(WORST$times_car[2], 1)` times the emissions of driving alone and above the Large agency median of `r round(WORST$median_per_mile[2], 2)` lbs. However, this comparison needs an important caveat: the large diesel ferries also carry cars and trucks, but the analysis counts all their fuel emissions against passenger miles. This may make the ferries look less efficient than they would if vehicle transportation were accounted for separately.
+
+For comparison, the solo-car benchmark is `r round(CAR_LBS_PER_MILE, 2)` lbs of CO2 per passenger mile. These results identify agencies with high estimated emissions per passenger mile, but the reasons differ: low passenger occupancy affects Beeline's result, while the ferry calculation does not separate emissions from carrying passengers and vehicles.
+
 ## Press Release Graphics
+### Chart 1: The Greenest and Dirtiest Transit Agencies of 2025
 
 ```{r}
 #| label: fig-greenest-worst
@@ -928,7 +960,10 @@ ggplot(plot_data, aes(x = co2_per_mile, y = size)) +
     panel.grid.minor = element_blank()
   )
 ```
+Most agencies are to the right of the dashed car benchmark line, meaning their estimated emissions per passenger mile are higher than those of a person driving alone in a 49-mpg car. In total, r sensitivity$worse_cafe of r nrow(AGENCY_EMISSIONS) agencies were above this benchmark, while the highlighted winners show that some transit agencies perform much better.
 
+
+### Chart 2: Transit Agencies That Saved the Most CO₂ in 2025
 
 ```{r}
 #| label: fig-avoided
@@ -971,9 +1006,11 @@ AGENCY_EMISSIONS |>
   )
 ```
 
+MTA New York City Transit stands out with a much larger bar than the other agencies, avoiding an estimated `r scales::comma(round(MOST_AVOIDED$avoided_tons[3]))` tons of CO2 compared with driving alone. Its estimated savings were greater than those of the next nine agencies combined. Four of the top ten agencies were also in New York, highlighting the strong performance of several agencies in the state.
 
+## Conclusion
 
-
+The results show that fuel type alone does not determine how clean a transit agency is. Carrying more passengers can spread emissions across more passenger miles, allowing a well-used diesel service to outperform some electric systems. However, the main finding is that `r sensitivity$worse_cafe` of `r nrow(AGENCY_EMISSIONS)` agencies had higher estimated emissions per passenger mile than a person driving alone in a 49-mpg car. The overall result also changed from net emissions to net savings when the comparison used a more realistic 36.75-mpg car benchmark. These estimates have limitations, including missing or unmatched records, assumptions about fuel emissions, and the use of state-average electricity rates; the EIA data used here cover only the 50 states. Transit agencies can improve their results by increasing passenger occupancy, reporting complete service and energy data, and moving toward electric vehicles where the electricity supply is relatively clean.
 
 
 
