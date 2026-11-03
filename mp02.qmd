@@ -511,19 +511,25 @@ no_miles_states <- miles_by_state |>
   filter(n_reported == 0) |>
   pull(state_name)
 
-miles_by_state |>
+# Five states with the least reported transit travel, for use in text
+least5 <- miles_by_state |>
   filter(n_reported > 0) |>
-  slice_min(total_miles, n = 5) |>
+  slice_min(total_miles, n = 5)
+
+# Short formatter for numbers like 2.3M
+fmt_m <- scales::label_number(
+  scale_cut = scales::cut_short_scale(),
+  accuracy  = 0.1
+)
+
+least5 |>
   ggplot(aes(
     x = total_miles,
     y = reorder(state_name, -total_miles)
   )) +
   geom_col(fill = "#b5651d", width = 0.7) +
   geom_text(
-    aes(label = scales::label_number(
-      scale_cut = scales::cut_short_scale(),
-      accuracy  = 0.1
-    )(total_miles)),
+    aes(label = fmt_m(total_miles)),
     hjust = -0.15, size = 4.5
   ) +
   scale_x_continuous(
@@ -547,6 +553,13 @@ miles_by_state |>
     plot.caption = element_text(hjust = 0)
   )
 ```
+    
+The five states with the lowest reported passenger miles were South Dakota (`r fmt_m(least5$total_miles[1])`), New Hampshire (`r fmt_m(least5$total_miles[2])`), North Dakota (`r fmt_m(least5$total_miles[3])`), Mississippi (`r fmt_m(least5$total_miles[4])`), and Idaho (`r fmt_m(least5$total_miles[5])`).
+
+South Dakota had less than half the passenger miles of New Hampshire. Most states on this list have small populations and rural areas, where public transit may be less available or widely used. Mississippi stands out because it has a larger population but still reported low transit travel.
+
+Wyoming is excluded because no transit agency reported passenger miles. Since some smaller and rural agencies may not be required to report them, these figures reflect reported data, not necessarily all transit travel.
+
 #### State Coverage
 
 ```{r}
@@ -572,6 +585,13 @@ extra_region_names <- unname(region_names[extra_regions])
 The NTD data cover all 50 states and include `r length(extra_regions)` additional regions: `r str_flatten_comma(extra_region_names)`. However, these regions will be excluded from the emissions analysis because the EIA dataset covers only the 50 states.
 
 ## Data Analysis
+
+This analysis combines transit service, energy-use, and state electricity data to estimate CO₂ emissions, evaluate transit agencies and also estimates emissions avoided compared with driving.
+
+The results are estimates based on some assumptions. First, reported fuel use is converted into CO₂ emissions using fuel-specific conversion factors. Second, electricity emissions are estimated using each state's average electricity emissions rate. This same state rate is applied to all agencies in that state, including agencies that may have green-power contracts. Third, emissions avoided are estimated by comparing transit emissions with the emissions from driving the same passenger miles in a car assumed to get 49 miles per gallon.
+
+These results are estimates rather than exact measurements. The following sections explain the data preparation, calculations, and assumptions in more detail.
+
 ## Calculating Emissions
 ### Preparing Service Data
 
@@ -589,6 +609,8 @@ SERVICE_AGG <- NTD_SERVICE |>
     .groups = "drop"
   )
 ```
+
+Service records were grouped by agency and mode to create one record for each agency-mode combination. Passenger trips and passenger miles were retained for the emissions analysis.
 
 ### Combining the Data
 
@@ -613,6 +635,10 @@ EMISSIONS_BASE <- SERVICE_AGG |>
              join_by(state == abbreviation),
              relationship = "many-to-one")
 ```
+
+The cleaned energy records were matched to the service records using the standardized NTD agency identifier and recoded transit mode. State electricity emissions rates were then added using each agency’s state.
+
+Not every service record has a corresponding energy record. Therefore, emissions estimates are based on the agency-mode records that could be matched across the datasets.
 
 ### Emissions per Agency and Mode
 
@@ -655,6 +681,10 @@ EMISSIONS <- EMISSIONS_BASE |>
   )
 ```
 
+For fuel-consuming modes, emissions were estimated from reported fuel consumption and the corresponding emissions factors. For electric modes, reported electricity use was converted to MWh and multiplied by the state’s electricity emissions rate.
+
+This approach assigns the state’s average electricity emissions rate to transit electricity use. It does not account for an agency’s individual electricity contract or renewable-energy purchase.
+
 ### Emissions per Rider
 
 ```{r}
@@ -696,6 +726,10 @@ AGENCY_EMISSIONS <- AGENCY_EMISSIONS |>
     size = factor(size, levels = c("Small", "Medium", "Large"))
   )
 ```
+
+Emissions per passenger mile were calculated by dividing estimated CO₂ emissions by reported passenger miles. This measure allows agencies of different sizes to be compared on a common basis.
+
+The analysis also estimates avoided emissions by comparing transit emissions with the emissions that would result if the same passenger miles were traveled by people driving alone in a car rated at 49 miles per gallon. This benchmark uses the NHTSA CAFE target for model year 2026 and is generous to cars; actual driving may produce higher emissions.
 
 ## Award Winners
 
