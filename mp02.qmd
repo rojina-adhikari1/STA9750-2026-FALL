@@ -404,7 +404,19 @@ EIA_SEP_REPORT |>
   fmt_currency(columns = avg_price, currency = "USD") |>
   tab_header(title = "The Three Rarest Primary Energy Sources") |>
   tab_source_note("Source: US Energy Information Administration, State Electricity Profiles")
+
+avg_price_by_source <- EIA_SEP_REPORT |>
+  group_by(primary_source) |>
+  summarize(avg = mean(electricity_price_MWh)) |>
+  deframe()
 ```
+
+The three rarest primary electricity sources were petroleum, hydroelectric, and wind. Petroleum was used by only by Hawaii, while hydroelectric and wind were each used by four states.
+
+Hawaii's electricity was the most expensive among these groups, averaging $`r round(avg_price_by_source["Petroleum"])`/MWh. The four hydroelectric states—Idaho, Oregon, Vermont, and Washington—had an average price of $`r round(avg_price_by_source["Hydroelectric"])`/MWh. The four wind states—Iowa, Kansas, New Mexico, and South Dakota had the lowest average price of the three groups, at $`r round(avg_price_by_source["Wind"])`/MWh.
+
+These results show that petroleum was both rare and expensive, while wind-powered states had the lowest average electricity prices among the three groups.
+
 
 #### Texas vs. New York
 
@@ -462,6 +474,9 @@ NTD_SERVICE |>
     plot.title = element_text(face = "bold")
   )
 ```
+
+
+
 #### States with the Least Transit Travel
 
 ```{r}
