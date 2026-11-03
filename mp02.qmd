@@ -274,7 +274,7 @@ The same recoding function was applied to both the service and energy datasets t
 
 This section explores the electricity differences across states. It helps to understand why electric transit systems may have different emissions depending on which state they operate and what energy source they are using to generate electricity. 
 
-From the exploratory analysis, Natural gas is the primary elextricity source used by `r sum(EIA_SEP_REPORT$primary_source == "Natural gas")` out of `r nrow(EIA_SEP_REPORT)` states as it produces les C02 than coal but more than lower-emission sources like hydro, nuclear and wind.
+From the exploratory analysis, Natural gas is the primary elextricity source used by `r sum(EIA_SEP_REPORT$primary_source == "Natural gas")` out of `r nrow(EIA_SEP_REPORT)` states as it produces less CO2 than coal but more than lower-emission sources like hydro, nuclear and wind.
 
 #### Most Expensive Electricity
 
@@ -373,7 +373,7 @@ us_avg_co2 <- EIA_SEP_REPORT |>
 us_simple_avg_co2 <- mean(EIA_SEP_REPORT$CO2_MWh)
 ```
 
-The average CO₂ emissions rate from US electricity generation, weighted by how much electricity each state produces, was `r scales::comma(us_avg_co2, accuracy = 1)` pounds of CO₂ per MWh. This means that the average emissions rate reflects the electricity generated across the country rather than treating every state equally. Compared with the cleanest and dirtiest states in the dataset, this national average provides a useful benchmark for understanding differences in electricity-related emissions.
+The average CO2 emissions rate from US electricity generation, weighted by how much electricity each state produces, was `r scales::comma(us_avg_co2, accuracy = 1)` pounds of CO2 per MWh. This means that the average emissions rate reflects the electricity generated across the country rather than treating every state equally. Compared with the cleanest and dirtiest states in the dataset, this national average provides a useful benchmark for understanding differences in electricity-related emissions.
 
 #### Rarest Energy Sources
 
@@ -429,7 +429,7 @@ ny_co2 <- EIA_SEP_REPORT |> filter(abbreviation == "NY") |> pull(CO2_MWh)
 tx_ny_ratio <- tx_co2 / ny_co2
 ```
 
-Texas produces `r round(tx_ny_ratio, 1)` times as much CO₂ per MWh of electricity as New York. This means New York's electricity generation is substantially cleaner than Texas's.
+Texas produces `r round(tx_ny_ratio, 1)` times as much CO2 per MWh of electricity as New York. This means New York's electricity generation is substantially cleaner than Texas's.
 
 ### Transit Service
 #### Busiest Transit Services
@@ -734,6 +734,8 @@ Avoided emissions were estimated by comparing transit emissions with the emissio
 
 ## Award Winners
 
+The Green Transit Alliance announces its 2025 transit emissions award winners recognizind agencies that reduce CO2 emissions and make public transportation more environmentally friendly. 954,036 tons of CO₂ compared with driving alone. Interestingly, a diesel-powered Adirondack Trailways, won the Small Agency Greenest award, showing how efficient, full vehicles on long trips can reduce emissions per passenger mile.
+
 ### Greenest Agency
 
 ```{r}
@@ -767,6 +769,14 @@ GREENEST |>
     "Sources: National Transit Database (2025); US Energy Information Administration"
   )
 ```
+
+The Greenest Agency award goes to the agency with the lowest CO2 emissions per passenger mile in each size group. This is a fairer way to compare agencies because it accounts for the distance traveled by passengers.
+
+Among small agencies, **Adirondack Trailways (NY)** had the lowest emissions at `r round(GREENEST$co2_per_mile[1], 3)` lbs CO2 per passenger mile, making it **`r round(GREENEST$times_cleaner[1], 1)` times cleaner** than the median small agency. **Seattle Center Monorail (WA)** won the Medium category with `r round(GREENEST$co2_per_mile[2], 3)` lbs, or **`r round(GREENEST$times_cleaner[2], 1)` times cleaner** than the median agency. **TriMet (OR)** won the Large category with `r round(GREENEST$co2_per_mile[3], 3)` lbs, or **`r round(GREENEST$times_cleaner[3], 1)` times cleaner** than the median large agency.
+
+One surprising result was that diesel-powered Adirondack Trailways won the Small category. This suggests that carrying more passengers on longer trips can help lower emissions per passenger mile, even when an agency uses diesel.
+
+Seattle Center Monorail and TriMet also have lower emissions because they operate in states with cleaner electricity. Washington produces about `r co2["WA"]` lbs of CO2 per MWh, while Oregon produces about `r co2["OR"]` lbs. Both are below the national average of 785 lbs per MWh. This helps explain why these electric transit systems achieved low emissions per passenger mile.
 
 ### Most Emissions Avoided
 
@@ -818,6 +828,45 @@ sensitivity <- AGENCY_EMISSIONS |>
     worse_real = sum(avoided_real < 0),
     total_cafe = sum(avoided_tons),
     total_real = sum(avoided_real) / 2000
+  )
+
+```
+
+### Worst Offender
+
+
+```{r}
+#| label: award-worst
+# Pounds of CO2 per mile for a solo car at the CAFE target
+CAR_LBS_PER_MILE <- LBS_CO2["gasoline"] / CAFE_MPG
+
+# Highest CO2 per passenger mile among Medium and Large agencies
+WORST <- AGENCY_EMISSIONS |>
+  filter(size %in% c("Medium", "Large")) |>
+  group_by(size) |>
+  mutate(median_per_mile = median(co2_per_mile)) |>
+  slice_max(co2_per_mile, n = 1) |>
+  ungroup() |>
+  mutate(times_car = co2_per_mile / CAR_LBS_PER_MILE)
+
+WORST |>
+  select(size, agency_short, city, state,
+         co2_per_mile, median_per_mile, times_car) |>
+  gt() |>
+  cols_label(
+    size            = "Category",
+    agency_short    = "Agency",
+    city            = "City",
+    state           = "State",
+    co2_per_mile    = "lbs CO\u2082 / passenger mile",
+    median_per_mile = "Median Agency",
+    times_car       = "vs. Driving Alone"
+  ) |>
+  fmt_number(columns = c(co2_per_mile, median_per_mile), decimals = 2) |>
+  fmt_number(columns = times_car, decimals = 1, pattern = "{x}\u00d7") |>
+  tab_header(title = "Worst Offenders of 2025") |>
+  tab_source_note(
+    "Driving benchmark: solo car at 49 mpg (NHTSA CAFE, MY2026). Sources: NTD (2025); EIA; NHTSA"
   )
 ```
 
