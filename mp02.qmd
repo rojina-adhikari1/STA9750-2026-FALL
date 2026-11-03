@@ -310,6 +310,27 @@ EIA_SEP_REPORT |>
   )
 ```
 
+```{r}
+#| label: price-vs-emissions
+# Look up any state's price or emissions by its abbreviation
+price <- EIA_SEP_REPORT |>
+  select(abbreviation, electricity_price_MWh) |>
+  deframe()
+
+co2 <- EIA_SEP_REPORT |>
+  select(abbreviation, CO2_MWh) |>
+  deframe()
+
+# National weighted average emissions
+us_avg_co2 <- EIA_SEP_REPORT |>
+  summarize(avg = weighted.mean(CO2_MWh, w = generation_MWh)) |>
+  pull(avg)
+```
+
+The state with the most highest average electricity prices is Hawaii with \$`r round(price["HI"])`/MWh, followed by California with \$`r round(price["CA"])`/MWh, Connecticut \$`r round(price["CT"])`/MWh, Rhode Island $`r round(price["RI"])`/MWh, and Massachusetts \$`r round(price["MA"])`/MWh. 
+ 
+Hawaii had \$`r round(price["HI"] - price["CA"])`/MWh price higher than California emitting `r scales::comma(co2["HI"])` pounds  while California with second highest price had relatively low emissions of `r co2["CA"]` pounds. Thus, this shows that higher electricity prices do not always show higher emissions.
+
 #### Dirtiest Electricity Mix
 
 ```{r}
