@@ -272,6 +272,10 @@ The same recoding function was applied to both the service and energy datasets t
 
 ### State Electricity Profiles
 
+This section explores the electricity differences across states. It helps to understand why electric transit systems may have different emissions depending on which state they operate and what energy source they are using to generate electricity. 
+
+From the exploratory analysis, Natural gas is the primary elextricity source used by `r sum(EIA_SEP_REPORT$primary_source == "Natural gas")` out of `r nrow(EIA_SEP_REPORT)` states as it produces les C02 than coal but more than lower-emission sources like hydro, nuclear and wind.
+
 #### Most Expensive Electricity
 
 ```{r}
