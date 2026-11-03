@@ -329,7 +329,7 @@ us_avg_co2 <- EIA_SEP_REPORT |>
 
 The state with the most highest average electricity prices is Hawaii with \$`r round(price["HI"])`/MWh, followed by California with \$`r round(price["CA"])`/MWh, Connecticut being the third highest has \$`r round(price["CT"])`/MWh, Rhode Island $`r round(price["RI"])`/MWh, and finally Massachusetts having \$`r round(price["MA"])`/MWh. 
  
-Hawaii had \$`r round(price["HI"] - price["CA"])`/MWh price higher than California emitting `r scales::comma(co2["HI"])` pounds  while California with second highest price had relatively low emissions of `r co2["CA"]` pounds. Thus, this shows that higher electricity prices do not always show higher emissions.
+Hawaii had \$`r round(price["HI"] - price["CA"])`/MWh price higher than California emitting `r scales::comma(co2["HI"])` lbs CO₂/MWh  while California with second highest price had relatively low emissions of `r co2["CA"]` lbs CO₂/MWh. Thus, this shows that higher electricity prices do not always show higher emissions.
 
 #### Dirtiest Electricity Mix
 
@@ -351,7 +351,12 @@ EIA_SEP_REPORT |>
   ) |>
   tab_header(title = "Five States with the Dirtiest Electricity") |>
   tab_source_note("Source: US Energy Information Administration, State Electricity Profiles")
+# Five dirtiest states
+dirtiest5 <- EIA_SEP_REPORT |> slice_max(CO2_MWh, n = 5)
 ```
+From the table above, four out of five states showing the highest CO2 emissions rates use coal as the primary electricity source while Hawaii being exception depending mainly on petroleum. This suggests that the coal and petroleum based energy sources are responsible for the high emission.
+
+Likewise, West Virginia has the highest emissions rate, at `r scales::comma(co2["WV"])` lbs CO₂/MWh, which is about `r round(co2["WV"] / us_avg_co2, 1)` times the national average. Hawaii also turns our to be a state showing the highest electricity prices and high emissions at the same time.
 
 #### National Average Emissions
 
