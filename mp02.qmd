@@ -1015,7 +1015,11 @@ MTA New York City Transit stands out with estimated CO2 savings of `r scales::co
 
 ## Conclusion
 
-The results show that fuel type alone does not determine how clean a transit agency is. Carrying more passengers can spread emissions across more passenger miles, allowing a well-used diesel service to outperform some electric systems. However, the main finding is that `r sensitivity$worse_cafe` of `r nrow(AGENCY_EMISSIONS)` agencies had higher estimated emissions per passenger mile than a person driving alone in a 49-mpg car. The overall result also changed from net emissions to net savings when the comparison used a more realistic 36.75-mpg car benchmark. These estimates have limitations, including missing or unmatched records, assumptions about fuel emissions, and the use of state-average electricity rates; the EIA data used here cover only the 50 states. Transit agencies can improve their results by increasing passenger occupancy, reporting complete service and energy data, and moving toward electric vehicles where the electricity supply is relatively clean.
+The results show that fuel type alone does not determine how clean a transit agency is. A diesel service that carries many passengers can have lower emissions per passenger mile than an electric service with fewer riders. However, the main finding is that `r sensitivity$worse_cafe` of `r nrow(AGENCY_EMISSIONS)` agencies had higher estimated emissions per passenger mile than a person driving alone in a 49-mpg car. Using the 36.75-mpg car benchmark, transit saved more emissions overall. 
+
+These results have some limitations. Some data were missing, fuel emissions were estimated using certain assumptions, and average state electricity rates may not reflect the actual electricity used by each agency. The EIA data also cover only 50 states.
+
+Transit agencies can reduce emissions by carrying more passengers, keeping better records of their services and energy use, and switching to electric vehicles, especially in areas where electricity is cleaner.
 
 ## AI Usuage Statement
 
