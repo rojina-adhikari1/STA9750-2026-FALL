@@ -1,7 +1,8 @@
 ---
 title: "Green Transit Alliance Announces 2025 Award Winners: New York Leads in CO2 Savings" 
 subtitle: "A Diesel Coach Beats Electric Systems in the Same Category"
-format:
+author: "Rojina Adhikari"
+  format:
   html:
     code-fold: true
     code-summary: "Show code"
