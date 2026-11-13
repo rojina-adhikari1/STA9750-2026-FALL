@@ -546,6 +546,90 @@ commercial_pct    <- commercial_pop / sum(q10$pop, na.rm = TRUE)
   `r commercial_tracts` tracts, `r comma(commercial_pop)` people,
   `r percent(commercial_pct, 0.1)` of New Yorkers -->
 
+## Beyond Ancestry: Birthplace and Income
+
+<!-- TODO (write yourself): 1-2 sentences on why birthplace and income add to the story. -->
+
+```{r}
+#| label: ec2-nepal-born
+# Extra Credit #2a: how many people were born in Nepal (table B05006)?
+# The Nepal line number in B05006 changes between years, so find it by
+# its label instead of hardcoding it. Stops with an error if not found.
+NEPAL_BORN_VAR <- acs1_vars |>
+    filter(str_starts(name, "B05006_"), str_detect(label, "!!Nepal$")) |>
+    pull(name)
+stopifnot(length(NEPAL_BORN_VAR) == 1)
+
+nepal_born_cbsa <- get_acs_cached(
+    "cbsa_nepal_born_acs5",
+    geography = "cbsa",
+    variables = c(nepal_born = NEPAL_BORN_VAR),
+    year = ACS_YEAR, survey = "acs5", output = "wide"
+)
+
+nepal_born_us <- get_acs_cached(
+    "us_nepal_born_acs5",
+    geography = "us",
+    variables = c(nepal_born = NEPAL_BORN_VAR),
+    year = ACS_YEAR, survey = "acs5", output = "wide"
+)
+
+us_pct_born_nepal <- nepal_born_us$nepal_bornE / us_pop$nepaleseE
+
+cbsa_pop |>
+    filter(!is.na(nepaleseE)) |>
+    slice_max(nepaleseE, n = 5) |>
+    left_join(nepal_born_cbsa |> select(GEOID, nepal_bornE), by = "GEOID") |>
+    mutate(pct_born_nepal = nepal_bornE / nepaleseE) |>
+    select(NAME, nepaleseE, nepal_bornE, pct_born_nepal) |>
+    gt() |>
+    cols_label(NAME = "Metro Area", nepaleseE = "Nepalese (ancestry)",
+               nepal_bornE = "Born in Nepal",
+               pct_born_nepal = "Born in Nepal (% of Nepalese)") |>
+    fmt_number(c(nepaleseE, nepal_bornE), decimals = 0) |>
+    fmt_percent(pct_born_nepal, decimals = 0) |>
+    tab_header(title = "How Many Nepalese Americans Are Immigrants?",
+               subtitle = "ACS 2024 5-year. Approximate: the two tables count people differently.")
+```
+
+<!-- TODO (write yourself). Inline value: nationally `r percent(us_pct_born_nepal)` -->
+
+```{r}
+#| label: ec2-income
+# Extra Credit #2b: median household income (B19013_001) by NYC tract.
+# Medians can't be added up, so compare the income of the tract the
+# typical Nepalese New Yorker lives in vs. the typical New Yorker.
+nyc_income <- get_acs_cached(
+    "nyc_tracts_income_acs5",
+    geography = "tract",
+    state     = "NY",
+    county    = NYC_COUNTIES,
+    variables = c(med_income = "B19013_001"),
+    year = ACS_YEAR, survey = "acs5", output = "wide"
+)
+
+income_compare <- tract_lookup |>
+    left_join(nyc_income |> select(GEOID, med_incomeE), by = "GEOID") |>
+    filter(!is.na(med_incomeE))
+
+nepalese_tract_income <- weighted.mean(income_compare$med_incomeE, income_compare$nepalese)
+all_tract_income      <- weighted.mean(income_compare$med_incomeE, income_compare$pop)
+
+tibble(
+    group  = c("Nepalese New Yorkers", "All New Yorkers"),
+    income = c(nepalese_tract_income, all_tract_income)
+) |>
+    gt() |>
+    cols_label(group = "", income = "Median Household Income of Home Tract") |>
+    fmt_currency(income, decimals = 0) |>
+    tab_header(title = "Neighborhood Income: Nepalese vs. All New Yorkers",
+               subtitle = "Population-weighted average of tract medians, ACS 2024 5-year")
+```
+
+<!-- TODO (write yourself). Inline values:
+  `r dollar(nepalese_tract_income)` vs `r dollar(all_tract_income)` -->
+
+
 ## Atlas Entry
 
 <!-- TODO (write yourself): the 300+ word story, 4+ numbers, history.
