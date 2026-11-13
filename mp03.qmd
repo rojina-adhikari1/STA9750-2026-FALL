@@ -731,6 +731,3 @@ girafe(
 )
 ```
 
-::: {.callout-note title="AI Usage Statement" collapse="true"}
-TODO (write yourself): describe how you used AI in this project.
-:::
