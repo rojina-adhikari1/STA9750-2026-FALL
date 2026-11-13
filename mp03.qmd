@@ -1,7 +1,286 @@
 
   ---
-  title: "Mini-Project Placeholder"
-  ---
-  
-  This is a placeholder for STA9750 Mini-Project 3. Check back soon for more!
-  
+title: "TODO: your title"
+subtitle: "TODO: your subtitle"
+author: "Rojina Adhikari"
+format:
+  html:
+    code-fold: true
+    code-summary: "Show code"
+    toc: true
+execute:
+  warning: false
+  message: false
+---
+
+## Introduction
+
+<!-- TODO (write yourself): introduce the Nepalese community and what this atlas entry covers. -->
+
+## Data Acquisition
+
+```{r}
+#| label: setup
+library(tidyverse)
+library(tidycensus)
+library(sf)
+library(httr2)
+library(fs)
+library(gt)
+
+options(tigris_use_cache = TRUE)
+
+DATA_DIR <- fs::path("data", "mp03")
+fs::dir_create(DATA_DIR, recurse = TRUE)
+
+# Nepalese in table B02018 (Asian alone or in any combination, by group).
+# Checked for 2024 ACS-1 and ACS-5: B02018_024 = "South Asian: Nepalese".
+# NOTE: this number changed between years (it was B02018_016 in 2021),
+# so re-check it if you switch to a different year.
+GROUP_VAR <- "B02018_024"
+ACS_YEAR  <- 2024
+```
+
+```{r}
+#| label: acs-cache-helper
+# Same caching idea as MP02: only hit the API if the file isn't saved yet.
+# To refresh (e.g. after adding variables), delete the matching .rds file.
+get_acs_cached <- function(file_name, ...){
+    file_path <- fs::path(DATA_DIR, paste0(file_name, ".rds"))
+
+    if(!fs::file_exists(file_path)){
+        result <- get_acs(...)
+        saveRDS(result, file_path)
+    }
+
+    readRDS(file_path)
+}
+```
+
+### Metro Area (CBSA) Population
+
+```{r}
+#| label: task1-cbsa
+# Task 1: total population and Nepalese population for every metro area (ACS-1)
+cbsa_pop <- get_acs_cached(
+    "cbsa_nepalese_acs1",
+    geography = "cbsa",
+    variables = c(total = "B01003_001", nepalese = GROUP_VAR),
+    year      = ACS_YEAR,
+    survey    = "acs1",
+    output    = "wide"
+) |>
+    mutate(nepalese_share = nepaleseE / totalE)
+
+# Full B02018 table for every metro, used for the ancestry-mix question (Q5)
+cbsa_asian_groups <- get_acs_cached(
+    "cbsa_b02018_acs1",
+    geography = "cbsa",
+    table     = "B02018",
+    year      = ACS_YEAR,
+    survey    = "acs1"
+)
+
+# Variable labels, so B02018_0xx codes can be turned into group names
+acs1_vars <- {
+    f <- fs::path(DATA_DIR, "acs1_variables.rds")
+    if(!fs::file_exists(f)) saveRDS(load_variables(ACS_YEAR, "acs1"), f)
+    readRDS(f)
+}
+
+# National total, used for the "share of all US Nepalese" question (Q6)
+us_pop <- get_acs_cached(
+    "us_nepalese_acs1",
+    geography = "us",
+    variables = c(total = "B01003_001", nepalese = GROUP_VAR),
+    year      = ACS_YEAR,
+    survey    = "acs1",
+    output    = "wide"
+)
+```
+
+### NYC Census Tract Population
+
+```{r}
+#| label: task2-tracts
+# Task 2: same variables at tract level for the 5 NYC counties (ACS-5), with shapes
+NYC_COUNTIES <- c("New York", "Kings", "Queens", "Bronx", "Richmond")
+
+nyc_tracts <- get_acs_cached(
+    "nyc_tracts_nepalese_acs5",
+    geography = "tract",
+    state     = "NY",
+    county    = NYC_COUNTIES,
+    variables = c(total = "B01003_001", nepalese = GROUP_VAR),
+    year      = ACS_YEAR,
+    survey    = "acs5",
+    output    = "wide",
+    geometry  = TRUE
+)
+```
+
+### NYC Neighborhood Tabulation Areas
+
+```{r}
+#| label: task3-nta
+# Task 3: download, unzip and read the 2020 NTA shapefile (not via tidycensus)
+load_nyc_nta <- function(){
+    # TODO: if this URL fails, go to the NYC Planning NTA page, right-click the
+    # first "Download Files" button under "2020 Neighborhood Tabulation Areas",
+    # choose "Copy link", and paste it here. The version letters change over time.
+   NTA_URL <- "https://s-media.nyc.gov/agencies/dcp/assets/files/zip/data-tools/bytes/neighborhood-tabulation-areas/nynta2020_26c.zip"
+    zip_file <- fs::path(DATA_DIR, "nynta2020.zip")
+
+    if(!fs::file_exists(zip_file)){
+        request(NTA_URL) |>
+            req_headers(
+                `User-Agent` = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:149.0) Gecko/20100101 Firefox/149.0"
+            ) |>
+            req_retry(max_tries = 4) |>
+            req_perform(path = zip_file)
+    }
+
+    shp_file <- fs::dir_ls(DATA_DIR, recurse = TRUE, glob = "*nynta2020*.shp")
+
+    if(length(shp_file) == 0){
+        unzip(zip_file, exdir = DATA_DIR)
+        shp_file <- fs::dir_ls(DATA_DIR, recurse = TRUE, glob = "*nynta2020*.shp")
+    }
+
+    st_read(shp_file[1], quiet = TRUE) |>
+        # NTAType: 0 = residential neighborhood; other codes are parks,
+        # airports, cemeteries etc. Kept so those can be filtered out later.
+        select(BoroName, NTA2020, NTAName, NTAType)
+}
+
+nyc_nta <- load_nyc_nta()
+```
+
+### Aggregating Tracts to Neighborhoods
+
+```{r}
+#| label: task4-tract-to-nta
+# Task 4: give each tract the NTA it overlaps most, then add tracts up per NTA.
+# 2020 NTAs are built from whole 2020 tracts, so largest = TRUE is a clean match.
+nyc_tracts <- st_transform(nyc_tracts, st_crs(nyc_nta))
+
+tract_to_nta <- nyc_tracts |>
+    st_join(nyc_nta, join = st_intersects, largest = TRUE)
+
+nta_pop <- tract_to_nta |>
+    st_drop_geometry() |>
+    group_by(NTA2020) |>
+    summarize(
+        total    = sum(totalE, na.rm = TRUE),
+        nepalese = sum(nepaleseE, na.rm = TRUE),
+        .groups  = "drop"
+    )
+
+nta_data <- nyc_nta |>
+    left_join(nta_pop, by = "NTA2020") |>
+    mutate(nepalese_share = nepalese / total)
+```
+
+### NYC PLUTO (Tax Lot Data)
+
+```{r}
+#| label: task5-pluto
+# Task 5: page through the PLUTO API and save one CSV (cached like MP02)
+load_pluto <- function(){
+    PLUTO_FILE <- fs::path(DATA_DIR, "pluto.csv")
+
+    if(!fs::file_exists(PLUTO_FILE)){
+        BASE_URL  <- "https://data.cityofnewyork.us/resource/64uk-42ks.csv"
+        # Only the columns needed later
+        PLUTO_COLS <- c("bbl", "borough", "bct2020", "landuse",
+                        "lotarea", "bldgarea", "comarea", "resarea",
+                        "officearea", "retailarea",
+                        "unitsres", "unitstotal", "numfloors")
+        PAGE_SIZE <- 50000
+        offset    <- 0
+        pages     <- list()
+
+        repeat {
+            page <- request(BASE_URL) |>
+                req_url_query(
+                    `$select` = paste(PLUTO_COLS, collapse = ","),
+                    `$order`  = "bbl",          # fixed order so pages don't overlap
+                    `$limit`  = PAGE_SIZE,
+                    `$offset` = offset
+                ) |>
+                req_retry(max_tries = 4) |>
+                req_perform() |>
+                resp_body_string() |>
+                read_csv(col_types = cols(.default = col_character()))
+
+            if(nrow(page) == 0) break
+            pages[[length(pages) + 1]] <- page
+            if(nrow(page) < PAGE_SIZE) break
+            offset <- offset + PAGE_SIZE
+        }
+
+        bind_rows(pages) |> write_csv(PLUTO_FILE)
+    }
+
+    read_csv(
+        PLUTO_FILE,
+        col_types = cols(
+            bbl = col_character(), borough = col_character(),
+            bct2020 = col_character(), landuse = col_character(),
+            .default = col_double()
+        )
+    )
+}
+
+pluto <- load_pluto()
+
+# bct2020 = borough digit + 6-digit tract (e.g. 1000100).
+# Convert to the Census GEOID (e.g. 36061000100) so PLUTO can join to tracts.
+BORO_TO_COUNTY <- c("1" = "061", "2" = "005", "3" = "047", "4" = "081", "5" = "085")
+
+pluto <- pluto |>
+    mutate(
+        bct2020 = str_remove(bct2020, "\\.0+$"),
+        GEOID   = paste0("36",
+                         BORO_TO_COUNTY[str_sub(bct2020, 1, 1)],
+                         str_sub(bct2020, 2))
+    )
+
+# One row per tract with building totals, for the EDA questions
+tract_buildings <- pluto |>
+    filter(!is.na(bct2020)) |>
+    group_by(GEOID) |>
+    summarize(
+        office_area = sum(officearea, na.rm = TRUE),
+        res_area    = sum(resarea,    na.rm = TRUE),
+        com_area    = sum(comarea,    na.rm = TRUE),
+        bldg_area   = sum(bldgarea,   na.rm = TRUE),
+        res_units   = sum(unitsres,   na.rm = TRUE),
+        max_floors  = max(numfloors,  na.rm = TRUE),
+        .groups     = "drop"
+    )
+```
+
+```{r}
+#| label: data-check
+# Quick sanity checks: run these and look at the numbers before moving on
+tibble(
+    check = c("Metros", "NYC tracts", "NTAs", "PLUTO lots",
+              "PLUTO tracts matched to Census tracts"),
+    value = c(nrow(cbsa_pop), nrow(nyc_tracts), nrow(nyc_nta), nrow(pluto),
+              sum(tract_buildings$GEOID %in% nyc_tracts$GEOID))
+) |>
+    gt()
+```
+
+## Exploratory Data Analysis
+
+<!-- Next step: the 10 EDA questions -->
+
+## Atlas Entry
+
+<!-- TODO (write yourself): the 300+ word story -->
+
+::: {.callout-note title="AI Usage Statement" collapse="true"}
+TODO (write yourself): describe how you used AI in this project.
+:::
