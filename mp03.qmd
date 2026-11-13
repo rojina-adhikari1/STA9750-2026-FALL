@@ -36,7 +36,6 @@ fs::dir_create(DATA_DIR, recurse = TRUE)
 # Nepalese in table B02018 (Asian alone or in any combination, by group).
 # Checked for 2024 ACS-1 and ACS-5: B02018_024 = "South Asian: Nepalese".
 # NOTE: this number changed between years (it was B02018_016 in 2021),
-# so re-check it if you switch to a different year.
 GROUP_VAR <- "B02018_024"
 ACS_YEAR  <- 2024
 ```
@@ -125,9 +124,6 @@ nyc_tracts <- get_acs_cached(
 #| label: task3-nta
 # Task 3: download, unzip and read the 2020 NTA shapefile (not via tidycensus)
 load_nyc_nta <- function(){
-    # TODO: if this URL fails, go to the NYC Planning NTA page, right-click the
-    # first "Download Files" button under "2020 Neighborhood Tabulation Areas",
-    # choose "Copy link", and paste it here. The version letters change over time.
    NTA_URL <- "https://s-media.nyc.gov/agencies/dcp/assets/files/zip/data-tools/bytes/neighborhood-tabulation-areas/nynta2020_26c.zip"
     zip_file <- fs::path(DATA_DIR, "nynta2020.zip")
 
@@ -256,7 +252,7 @@ tract_buildings <- pluto |>
         com_area    = sum(comarea,    na.rm = TRUE),
         bldg_area   = sum(bldgarea,   na.rm = TRUE),
         res_units   = sum(unitsres,   na.rm = TRUE),
-        max_floors  = max(numfloors,  na.rm = TRUE),
+                max_floors  = if (all(is.na(numfloors))) NA_real_ else max(numfloors, na.rm = TRUE),,
         .groups     = "drop"
     )
 ```
@@ -275,11 +271,319 @@ tibble(
 
 ## Exploratory Data Analysis
 
-<!-- Next step: the 10 EDA questions -->
+<!-- TODO (write yourself): 2-3 sentences introducing this section. -->
+
+```{r}
+#| label: eda-prep
+library(scales)
+
+# One row per NYC tract: Census population + its NTA + PLUTO building totals
+tract_lookup <- tract_to_nta |>
+    st_drop_geometry() |>
+    select(GEOID, tract_name = NAME, NTA2020, NTAName, BoroName,
+           pop = totalE, nepalese = nepaleseE)
+
+tract_full <- tract_lookup |>
+    left_join(tract_buildings, by = "GEOID")
+```
+
+### Q1. Most Office Space
+
+```{r}
+#| label: tbl-q1-office
+q1 <- tract_full |>
+    slice_max(office_area, n = 5) |>
+    select(tract_name, NTAName, BoroName, office_area)
+
+top_office <- q1 |> slice(1)
+
+q1 |>
+    gt() |>
+    cols_label(tract_name = "Census Tract", NTAName = "Neighborhood",
+               BoroName = "Borough", office_area = "Office Floor Area (sq ft)") |>
+    fmt_number(office_area, decimals = 0) |>
+    tab_header(title = "NYC Tracts with the Most Office Space")
+```
+
+<!-- TODO (write yourself). Inline values you can use:
+  `r top_office$NTAName`   `r comma(top_office$office_area)`  -->
+
+### Q2. Most Residential Units
+
+```{r}
+#| label: q2-units
+nta_units <- tract_full |>
+    group_by(NTA2020, NTAName, BoroName) |>
+    summarize(res_units = sum(res_units, na.rm = TRUE), .groups = "drop") |>
+    arrange(desc(res_units))
+
+top_units_nta <- nta_units |> slice(1)
+```
+
+<!-- TODO (write yourself). Inline values:
+  `r top_units_nta$NTAName`   `r top_units_nta$BoroName`   `r comma(top_units_nta$res_units)` -->
+
+### Q3. Most Crowded Tracts
+
+```{r}
+#| label: tbl-q3-density
+# Small denominators give silly results (e.g. a tract with 2 apartments and
+# a big dorm or prison), so only tracts with a real amount of housing count.
+q3 <- tract_full |>
+    filter(pop >= 500, res_area >= 50000, res_units >= 50) |>
+    mutate(
+        pop_per_1000_sqft = pop / res_area * 1000,
+        pop_per_unit      = pop / res_units
+    )
+
+q3_sqft <- q3 |> slice_max(pop_per_1000_sqft, n = 5) |>
+    mutate(measure = "People per 1,000 sq ft of residential space")
+q3_unit <- q3 |> slice_max(pop_per_unit, n = 5) |>
+    mutate(measure = "People per residential unit")
+
+same_top_tract <- q3_sqft$GEOID[1] == q3_unit$GEOID[1]
+
+bind_rows(q3_sqft, q3_unit) |>
+    select(measure, tract_name, NTAName, pop, pop_per_1000_sqft, pop_per_unit) |>
+    gt(groupname_col = "measure") |>
+    cols_label(tract_name = "Census Tract", NTAName = "Neighborhood",
+               pop = "Population", pop_per_1000_sqft = "per 1,000 sq ft",
+               pop_per_unit = "per unit") |>
+    fmt_number(pop, decimals = 0) |>
+    fmt_number(c(pop_per_1000_sqft, pop_per_unit), decimals = 2) |>
+    tab_header(title = "Most Densely Housed NYC Tracts, Two Ways")
+```
+
+<!-- TODO (write yourself): does the answer change? `r same_top_tract` is TRUE/FALSE -->
+
+### Q4. Metros with the Highest Nepalese Share
+
+```{r}
+#| label: tbl-q4-share
+q4 <- cbsa_pop |>
+    filter(!str_detect(NAME, "New York-Newark"), !is.na(nepaleseE)) |>
+    slice_max(nepalese_share, n = 5) |>
+    select(NAME, totalE, nepaleseE, nepaleseM, nepalese_share)
+
+q4 |>
+    gt() |>
+    cols_label(NAME = "Metro Area", totalE = "Total Population",
+               nepaleseE = "Nepalese", nepaleseM = "Margin of Error (±)",
+               nepalese_share = "Nepalese Share") |>
+    fmt_number(c(totalE, nepaleseE, nepaleseM), decimals = 0) |>
+    fmt_percent(nepalese_share, decimals = 2) |>
+    tab_header(title = "Metros (Outside NYC) with the Largest Nepalese Share")
+```
+
+<!-- Note for your text: ACS-1 margins of error are large for small groups. -->
+
+### Q5. Asian Ancestry Mix in Another Large Metro
+
+```{r}
+#| label: fig-q5-ancestry
+# Default: the non-NYC metro with the most Nepalese residents.
+# You can replace this with any metro name from cbsa_pop$NAME.
+COMPARISON_METRO <- cbsa_pop |>
+    filter(!str_detect(NAME, "New York-Newark"), !is.na(nepaleseE)) |>
+    slice_max(nepaleseE, n = 1) |>
+    pull(NAME)
+
+# Turn labels like "Estimate!!Total Groups Tallied:!!South Asian:!!Nepalese"
+# into a broad region ("South Asian") and keep only the bottom-level rows,
+# so nothing is counted twice.
+b02018_labels <- acs1_vars |>
+    filter(str_starts(name, "B02018_")) |>
+    transmute(
+        variable = name,
+        depth    = str_count(label, "!!"),
+        region   = str_remove(str_split_i(label, "!!", 3), ":$"),
+        is_header = str_ends(label, ":")
+    ) |>
+    filter(depth >= 2, !is_header)
+
+q5 <- cbsa_asian_groups |>
+    filter(NAME == COMPARISON_METRO) |>
+    inner_join(b02018_labels, by = "variable") |>
+    group_by(region) |>
+    summarize(people = sum(estimate, na.rm = TRUE), .groups = "drop")
+
+ggplot(q5, aes(x = people, y = fct_reorder(region, people))) +
+    geom_col(fill = "#2a7f8f") +
+    scale_x_continuous(labels = comma) +
+    labs(
+        title    = paste("Asian Ancestry Groups in", COMPARISON_METRO),
+        subtitle = "ACS 2024 1-year; people reporting more than one group are counted in each",
+        x = "People", y = NULL
+    ) +
+    theme_minimal()
+```
+
+### Q6. Where US Nepalese Residents Live
+
+```{r}
+#| label: tbl-q6-us-share
+us_nepalese <- us_pop$nepaleseE
+
+q6 <- cbsa_pop |>
+    filter(!is.na(nepaleseE)) |>
+    slice_max(nepaleseE, n = 10) |>
+    mutate(share_of_us = nepaleseE / us_nepalese) |>
+    select(NAME, nepaleseE, share_of_us)
+
+ny_share    <- q6 |> filter(str_detect(NAME, "New York-Newark")) |> pull(share_of_us)
+top10_share <- sum(q6$share_of_us)
+
+q6 |>
+    gt() |>
+    cols_label(NAME = "Metro Area", nepaleseE = "Nepalese Residents",
+               share_of_us = "Share of All US Nepalese") |>
+    fmt_number(nepaleseE, decimals = 0) |>
+    fmt_percent(share_of_us, decimals = 1) |>
+    tab_header(title = "Ten Metros with the Most Nepalese Residents")
+```
+
+<!-- TODO (write yourself). Inline values:
+  US total `r comma(us_nepalese)`, NY metro `r percent(ny_share, 0.1)`,
+  top 10 combined `r percent(top10_share, 0.1)` -->
+
+### Q7. Population vs. Housing
+
+```{r}
+#| label: fig-q7-pop-housing
+q7 <- tract_full |> filter(pop > 0, res_units > 0)
+pop_unit_cor <- cor(q7$pop, q7$res_units)
+
+ggplot(q7, aes(x = res_units, y = pop)) +
+    geom_point(alpha = 0.25, size = 0.8) +
+    geom_smooth(aes(color = "Straight line"), method = "lm", se = FALSE) +
+    geom_smooth(aes(color = "Flexible curve"), method = "loess", se = FALSE) +
+    scale_x_continuous(labels = comma) +
+    scale_y_continuous(labels = comma) +
+    scale_color_manual(values = c("Straight line" = "#d1495b",
+                                  "Flexible curve" = "#2a7f8f")) +
+    labs(title = "Population vs. Residential Units, NYC Census Tracts",
+         x = "Residential units (PLUTO)", y = "Population (ACS 2024 5-year)",
+         color = NULL) +
+    theme_minimal() +
+    theme(legend.position = "top")
+```
+
+<!-- TODO (write yourself). Correlation: `r round(pop_unit_cor, 2)` -->
+
+### Q8. Neighborhoods with the Tallest Buildings
+
+```{r}
+#| label: tbl-q8-floors
+q8 <- pluto |>
+    filter(!is.na(numfloors), numfloors > 0) |>
+    inner_join(tract_lookup |> select(GEOID, NTA2020, NTAName, BoroName),
+               by = "GEOID") |>
+    group_by(NTA2020, NTAName, BoroName) |>
+    summarize(
+        max_floors    = max(numfloors),
+        median_floors = median(numfloors),
+        .groups = "drop"
+    ) |>
+    slice_max(max_floors, n = 10)
+
+q8 |>
+    select(-NTA2020) |>
+    gt() |>
+    cols_label(NTAName = "Neighborhood", BoroName = "Borough",
+               max_floors = "Tallest Building (floors)",
+               median_floors = "Typical Building (median floors)") |>
+    fmt_number(c(max_floors, median_floors), decimals = 0) |>
+    tab_header(title = "NYC Neighborhoods with the Tallest Buildings")
+```
+
+### Q9. Population Density Across NYC
+
+```{r}
+#| label: fig-q9-density-map
+tract_density <- nyc_tracts |>
+    mutate(
+        area_sqmi = as.numeric(units::set_units(st_area(geometry), "mi^2")),
+        density   = if_else(totalE > 0, totalE / area_sqmi, NA_real_)
+    )
+
+ggplot(tract_density) +
+    geom_sf(aes(fill = density), color = NA) +
+    scale_fill_viridis_c(trans = "log10", labels = comma,
+                         na.value = "grey85", name = "People per\nsq mile") +
+    labs(title = "Population Density by Census Tract",
+         subtitle = "ACS 2024 5-year; grey = no residents (parks, airports)") +
+    theme_void()
+```
+
+### Q10. New Yorkers in Primarily Commercial Areas
+
+```{r}
+#| label: q10-commercial
+# My definition (you decide!): a tract is "primarily commercial" if at least
+# half of its building floor area is commercial (PLUTO comarea / bldgarea).
+COMMERCIAL_CUTOFF <- 0.5
+
+q10 <- tract_full |>
+    filter(bldg_area > 0) |>
+    mutate(com_share = com_area / bldg_area,
+           primarily_commercial = com_share >= COMMERCIAL_CUTOFF)
+
+commercial_tracts <- sum(q10$primarily_commercial)
+commercial_pop    <- sum(q10$pop[q10$primarily_commercial], na.rm = TRUE)
+commercial_pct    <- commercial_pop / sum(q10$pop, na.rm = TRUE)
+```
+
+<!-- TODO (write yourself). Inline values:
+  `r commercial_tracts` tracts, `r comma(commercial_pop)` people,
+  `r percent(commercial_pct, 0.1)` of New Yorkers -->
 
 ## Atlas Entry
 
-<!-- TODO (write yourself): the 300+ word story -->
+<!-- TODO (write yourself): the 300+ word story, 4+ numbers, history.
+     Put the two maps below wherever they fit your story. -->
+
+```{r}
+#| label: fig-map-nyc-nepalese
+ggplot(nta_data |> filter(NTAType == 0)) +
+    geom_sf(aes(fill = nepalese_share), color = "white", linewidth = 0.1) +
+    geom_sf(data = nta_data |> filter(NTAType != 0),
+            fill = "grey90", color = "white", linewidth = 0.1) +
+    scale_fill_viridis_c(option = "magma", direction = -1,
+                         labels = percent, name = "Nepalese\nshare") +
+    labs(title = "Nepalese Residents by NYC Neighborhood",
+         subtitle = "ACS 2024 5-year; grey = parks, airports, cemeteries") +
+    theme_void()
+```
+
+```{r}
+#| label: fig-map-us-metros
+# Metro shapes (cached) + state outlines, with Alaska/Hawaii moved under the map
+cbsa_geo <- get_acs_cached(
+    "cbsa_nepalese_acs1_geom",
+    geography = "cbsa",
+    variables = c(total = "B01003_001", nepalese = GROUP_VAR),
+    year      = ACS_YEAR,
+    survey    = "acs1",
+    output    = "wide",
+    geometry  = TRUE
+) |>
+    filter(!str_detect(NAME, ", PR"), !is.na(nepaleseE), nepaleseE > 0) |>
+    tigris::shift_geometry() |>
+    st_centroid()
+
+us_states <- tigris::states(cb = TRUE, resolution = "20m", year = ACS_YEAR) |>
+    filter(!STUSPS %in% c("PR", "VI", "GU", "MP", "AS")) |>
+    tigris::shift_geometry()
+
+ggplot() +
+    geom_sf(data = us_states, fill = "grey95", color = "white") +
+    geom_sf(data = cbsa_geo |> arrange(desc(nepaleseE)),
+            aes(size = nepaleseE), color = "#d1495b", alpha = 0.6) +
+    scale_size_area(max_size = 14, labels = comma, name = "Nepalese\nresidents") +
+    labs(title = "Where Nepalese Americans Live",
+         subtitle = "Metro areas, ACS 2024 1-year") +
+    theme_void()
+```
 
 ::: {.callout-note title="AI Usage Statement" collapse="true"}
 TODO (write yourself): describe how you used AI in this project.
