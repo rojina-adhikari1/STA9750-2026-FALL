@@ -1,5 +1,4 @@
-
-  ---
+---
 title: "TODO: your title"
 subtitle: "TODO: your subtitle"
 author: "Rojina Adhikari"
@@ -19,6 +18,7 @@ execute:
 
 ## Data Acquisition
 
+
 ```{r}
 #| label: setup
 library(tidyverse)
@@ -36,6 +36,7 @@ fs::dir_create(DATA_DIR, recurse = TRUE)
 # Nepalese in table B02018 (Asian alone or in any combination, by group).
 # Checked for 2024 ACS-1 and ACS-5: B02018_024 = "South Asian: Nepalese".
 # NOTE: this number changed between years (it was B02018_016 in 2021),
+# so re-check it if you switch to a different year.
 GROUP_VAR <- "B02018_024"
 ACS_YEAR  <- 2024
 ```
@@ -60,40 +61,40 @@ get_acs_cached <- function(file_name, ...){
 
 ```{r}
 #| label: task1-cbsa
-# Task 1: total population and Nepalese population for every metro area (ACS-1)
+# Task 1: total population and Nepalese population for every metro area (ACS-5; ACS-1 suppresses Nepalese counts)
 cbsa_pop <- get_acs_cached(
-    "cbsa_nepalese_acs1",
+    "cbsa_nepalese_acs5",
     geography = "cbsa",
     variables = c(total = "B01003_001", nepalese = GROUP_VAR),
     year      = ACS_YEAR,
-    survey    = "acs1",
+    survey    = "acs5",
     output    = "wide"
 ) |>
     mutate(nepalese_share = nepaleseE / totalE)
 
 # Full B02018 table for every metro, used for the ancestry-mix question (Q5)
 cbsa_asian_groups <- get_acs_cached(
-    "cbsa_b02018_acs1",
+    "cbsa_b02018_acs5",
     geography = "cbsa",
     table     = "B02018",
     year      = ACS_YEAR,
-    survey    = "acs1"
+    survey    = "acs5"
 )
 
 # Variable labels, so B02018_0xx codes can be turned into group names
 acs1_vars <- {
-    f <- fs::path(DATA_DIR, "acs1_variables.rds")
-    if(!fs::file_exists(f)) saveRDS(load_variables(ACS_YEAR, "acs1"), f)
+    f <- fs::path(DATA_DIR, "acs5_variables.rds")
+    if(!fs::file_exists(f)) saveRDS(load_variables(ACS_YEAR, "acs5"), f)
     readRDS(f)
 }
 
 # National total, used for the "share of all US Nepalese" question (Q6)
 us_pop <- get_acs_cached(
-    "us_nepalese_acs1",
+    "us_nepalese_acs5",
     geography = "us",
     variables = c(total = "B01003_001", nepalese = GROUP_VAR),
     year      = ACS_YEAR,
-    survey    = "acs1",
+    survey    = "acs5",
     output    = "wide"
 )
 ```
@@ -124,7 +125,7 @@ nyc_tracts <- get_acs_cached(
 #| label: task3-nta
 # Task 3: download, unzip and read the 2020 NTA shapefile (not via tidycensus)
 load_nyc_nta <- function(){
-   NTA_URL <- "https://s-media.nyc.gov/agencies/dcp/assets/files/zip/data-tools/bytes/neighborhood-tabulation-areas/nynta2020_26c.zip"
+    NTA_URL  <- "https://s-media.nyc.gov/agencies/dcp/assets/files/zip/data-tools/bytes/neighborhood-tabulation-areas/nynta2020_26c.zip"
     zip_file <- fs::path(DATA_DIR, "nynta2020.zip")
 
     if(!fs::file_exists(zip_file)){
@@ -136,10 +137,18 @@ load_nyc_nta <- function(){
             req_perform(path = zip_file)
     }
 
+    # Stop early if the download isn't a real zip (e.g. a web page)
+    # (every real zip file starts with the letters "PK")
+    zip_ok <- identical(readBin(zip_file, "raw", 2), charToRaw("PK"))
+    if(!zip_ok){
+        fs::file_delete(zip_file)
+        stop("NTA download is not a valid zip file. Check NTA_URL.")
+    }
+
     shp_file <- fs::dir_ls(DATA_DIR, recurse = TRUE, glob = "*nynta2020*.shp")
 
     if(length(shp_file) == 0){
-        unzip(zip_file, exdir = DATA_DIR)
+        unzip(zip_file, exdir = DATA_DIR, unzip = "unzip")  # macOS system unzip
         shp_file <- fs::dir_ls(DATA_DIR, recurse = TRUE, glob = "*nynta2020*.shp")
     }
 
@@ -252,7 +261,7 @@ tract_buildings <- pluto |>
         com_area    = sum(comarea,    na.rm = TRUE),
         bldg_area   = sum(bldgarea,   na.rm = TRUE),
         res_units   = sum(unitsres,   na.rm = TRUE),
-                max_floors  = if (all(is.na(numfloors))) NA_real_ else max(numfloors, na.rm = TRUE),,
+        max_floors  = if (all(is.na(numfloors))) NA_real_ else max(numfloors, na.rm = TRUE),
         .groups     = "drop"
     )
 ```
@@ -412,7 +421,7 @@ ggplot(q5, aes(x = people, y = fct_reorder(region, people))) +
     scale_x_continuous(labels = comma) +
     labs(
         title    = paste("Asian Ancestry Groups in", COMPARISON_METRO),
-        subtitle = "ACS 2024 1-year; people reporting more than one group are counted in each",
+        subtitle = "ACS 2024 5-year; people reporting more than one group are counted in each",
         x = "People", y = NULL
     ) +
     theme_minimal()
@@ -559,11 +568,11 @@ ggplot(nta_data |> filter(NTAType == 0)) +
 #| label: fig-map-us-metros
 # Metro shapes (cached) + state outlines, with Alaska/Hawaii moved under the map
 cbsa_geo <- get_acs_cached(
-    "cbsa_nepalese_acs1_geom",
+    "cbsa_nepalese_acs5_geom",
     geography = "cbsa",
     variables = c(total = "B01003_001", nepalese = GROUP_VAR),
     year      = ACS_YEAR,
-    survey    = "acs1",
+    survey    = "acs5",
     output    = "wide",
     geometry  = TRUE
 ) |>
@@ -581,7 +590,7 @@ ggplot() +
             aes(size = nepaleseE), color = "#d1495b", alpha = 0.6) +
     scale_size_area(max_size = 14, labels = comma, name = "Nepalese\nresidents") +
     labs(title = "Where Nepalese Americans Live",
-         subtitle = "Metro areas, ACS 2024 1-year") +
+         subtitle = "Metro areas, ACS 2024 5-year") +
     theme_void()
 ```
 

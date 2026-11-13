@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Rojina Adhikari">
 
-<title>mp03 – STA 9750 Submission Material</title>
+<title>TODO: your title – STA 9750 Submission Material</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -25,6 +26,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -77,7 +113,7 @@ ul.task-list li input[type="checkbox"] {
 
 </head>
 
-<body class="nav-fixed fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -97,23 +133,3881 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#data-acquisition" id="toc-data-acquisition" class="nav-link" data-scroll-target="#data-acquisition">Data Acquisition</a>
+  <ul class="collapse">
+  <li><a href="#metro-area-cbsa-population" id="toc-metro-area-cbsa-population" class="nav-link" data-scroll-target="#metro-area-cbsa-population">Metro Area (CBSA) Population</a></li>
+  <li><a href="#nyc-census-tract-population" id="toc-nyc-census-tract-population" class="nav-link" data-scroll-target="#nyc-census-tract-population">NYC Census Tract Population</a></li>
+  <li><a href="#nyc-neighborhood-tabulation-areas" id="toc-nyc-neighborhood-tabulation-areas" class="nav-link" data-scroll-target="#nyc-neighborhood-tabulation-areas">NYC Neighborhood Tabulation Areas</a></li>
+  <li><a href="#aggregating-tracts-to-neighborhoods" id="toc-aggregating-tracts-to-neighborhoods" class="nav-link" data-scroll-target="#aggregating-tracts-to-neighborhoods">Aggregating Tracts to Neighborhoods</a></li>
+  <li><a href="#nyc-pluto-tax-lot-data" id="toc-nyc-pluto-tax-lot-data" class="nav-link" data-scroll-target="#nyc-pluto-tax-lot-data">NYC PLUTO (Tax Lot Data)</a></li>
+  </ul></li>
+  <li><a href="#exploratory-data-analysis" id="toc-exploratory-data-analysis" class="nav-link" data-scroll-target="#exploratory-data-analysis">Exploratory Data Analysis</a>
+  <ul class="collapse">
+  <li><a href="#q1.-most-office-space" id="toc-q1.-most-office-space" class="nav-link" data-scroll-target="#q1.-most-office-space">Q1. Most Office Space</a></li>
+  <li><a href="#q2.-most-residential-units" id="toc-q2.-most-residential-units" class="nav-link" data-scroll-target="#q2.-most-residential-units">Q2. Most Residential Units</a></li>
+  <li><a href="#q3.-most-crowded-tracts" id="toc-q3.-most-crowded-tracts" class="nav-link" data-scroll-target="#q3.-most-crowded-tracts">Q3. Most Crowded Tracts</a></li>
+  <li><a href="#q4.-metros-with-the-highest-nepalese-share" id="toc-q4.-metros-with-the-highest-nepalese-share" class="nav-link" data-scroll-target="#q4.-metros-with-the-highest-nepalese-share">Q4. Metros with the Highest Nepalese Share</a></li>
+  <li><a href="#q5.-asian-ancestry-mix-in-another-large-metro" id="toc-q5.-asian-ancestry-mix-in-another-large-metro" class="nav-link" data-scroll-target="#q5.-asian-ancestry-mix-in-another-large-metro">Q5. Asian Ancestry Mix in Another Large Metro</a></li>
+  <li><a href="#q6.-where-us-nepalese-residents-live" id="toc-q6.-where-us-nepalese-residents-live" class="nav-link" data-scroll-target="#q6.-where-us-nepalese-residents-live">Q6. Where US Nepalese Residents Live</a></li>
+  <li><a href="#q7.-population-vs.-housing" id="toc-q7.-population-vs.-housing" class="nav-link" data-scroll-target="#q7.-population-vs.-housing">Q7. Population vs.&nbsp;Housing</a></li>
+  <li><a href="#q8.-neighborhoods-with-the-tallest-buildings" id="toc-q8.-neighborhoods-with-the-tallest-buildings" class="nav-link" data-scroll-target="#q8.-neighborhoods-with-the-tallest-buildings">Q8. Neighborhoods with the Tallest Buildings</a></li>
+  <li><a href="#q9.-population-density-across-nyc" id="toc-q9.-population-density-across-nyc" class="nav-link" data-scroll-target="#q9.-population-density-across-nyc">Q9. Population Density Across NYC</a></li>
+  <li><a href="#q10.-new-yorkers-in-primarily-commercial-areas" id="toc-q10.-new-yorkers-in-primarily-commercial-areas" class="nav-link" data-scroll-target="#q10.-new-yorkers-in-primarily-commercial-areas">Q10. New Yorkers in Primarily Commercial Areas</a></li>
+  </ul></li>
+  <li><a href="#atlas-entry" id="toc-atlas-entry" class="nav-link" data-scroll-target="#atlas-entry">Atlas Entry</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">TODO: your title</h1>
+<p class="subtitle lead">TODO: your subtitle</p>
+</div>
 
 
 
+<div class="quarto-title-meta">
 
-<table class="caption-top table">
-<tbody>
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Rojina Adhikari </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<!-- TODO (write yourself): introduce the Nepalese community and what this atlas entry covers. -->
+</section>
+<section id="data-acquisition" class="level2">
+<h2 class="anchored" data-anchor-id="data-acquisition">Data Acquisition</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidycensus)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(httr2)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fs)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">tigris_use_cache =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>DATA_DIR <span class="ot">&lt;-</span> fs<span class="sc">::</span><span class="fu">path</span>(<span class="st">"data"</span>, <span class="st">"mp03"</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>fs<span class="sc">::</span><span class="fu">dir_create</span>(DATA_DIR, <span class="at">recurse =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Nepalese in table B02018 (Asian alone or in any combination, by group).</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Checked for 2024 ACS-1 and ACS-5: B02018_024 = "South Asian: Nepalese".</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">: this number changed between years (it was B02018_016 in 2021),</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># so re-check it if you switch to a different year.</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>GROUP_VAR <span class="ot">&lt;-</span> <span class="st">"B02018_024"</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>ACS_YEAR  <span class="ot">&lt;-</span> <span class="dv">2024</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Same caching idea as MP02: only hit the API if the file isn't saved yet.</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># To refresh (e.g. after adding variables), delete the matching .rds file.</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>get_acs_cached <span class="ot">&lt;-</span> <span class="cf">function</span>(file_name, ...){</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    file_path <span class="ot">&lt;-</span> fs<span class="sc">::</span><span class="fu">path</span>(DATA_DIR, <span class="fu">paste0</span>(file_name, <span class="st">".rds"</span>))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span>fs<span class="sc">::</span><span class="fu">file_exists</span>(file_path)){</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        result <span class="ot">&lt;-</span> <span class="fu">get_acs</span>(...)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">saveRDS</span>(result, file_path)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">readRDS</span>(file_path)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<section id="metro-area-cbsa-population" class="level3">
+<h3 class="anchored" data-anchor-id="metro-area-cbsa-population">Metro Area (CBSA) Population</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Task 1: total population and Nepalese population for every metro area (ACS-5; ACS-1 suppresses Nepalese counts)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>cbsa_pop <span class="ot">&lt;-</span> <span class="fu">get_acs_cached</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"cbsa_nepalese_acs5"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">geography =</span> <span class="st">"cbsa"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">variables =</span> <span class="fu">c</span>(<span class="at">total =</span> <span class="st">"B01003_001"</span>, <span class="at">nepalese =</span> GROUP_VAR),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">year      =</span> ACS_YEAR,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">survey    =</span> <span class="st">"acs5"</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">output    =</span> <span class="st">"wide"</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">nepalese_share =</span> nepaleseE <span class="sc">/</span> totalE)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Full B02018 table for every metro, used for the ancestry-mix question (Q5)</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>cbsa_asian_groups <span class="ot">&lt;-</span> <span class="fu">get_acs_cached</span>(</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"cbsa_b02018_acs5"</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">geography =</span> <span class="st">"cbsa"</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">table     =</span> <span class="st">"B02018"</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">year      =</span> ACS_YEAR,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">survey    =</span> <span class="st">"acs5"</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Variable labels, so B02018_0xx codes can be turned into group names</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>acs1_vars <span class="ot">&lt;-</span> {</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    f <span class="ot">&lt;-</span> fs<span class="sc">::</span><span class="fu">path</span>(DATA_DIR, <span class="st">"acs5_variables.rds"</span>)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span>fs<span class="sc">::</span><span class="fu">file_exists</span>(f)) <span class="fu">saveRDS</span>(<span class="fu">load_variables</span>(ACS_YEAR, <span class="st">"acs5"</span>), f)</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">readRDS</span>(f)</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="co"># National total, used for the "share of all US Nepalese" question (Q6)</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>us_pop <span class="ot">&lt;-</span> <span class="fu">get_acs_cached</span>(</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    <span class="st">"us_nepalese_acs5"</span>,</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">geography =</span> <span class="st">"us"</span>,</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">variables =</span> <span class="fu">c</span>(<span class="at">total =</span> <span class="st">"B01003_001"</span>, <span class="at">nepalese =</span> GROUP_VAR),</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">year      =</span> ACS_YEAR,</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">survey    =</span> <span class="st">"acs5"</span>,</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">output    =</span> <span class="st">"wide"</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="nyc-census-tract-population" class="level3">
+<h3 class="anchored" data-anchor-id="nyc-census-tract-population">NYC Census Tract Population</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Task 2: same variables at tract level for the 5 NYC counties (ACS-5), with shapes</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>NYC_COUNTIES <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"New York"</span>, <span class="st">"Kings"</span>, <span class="st">"Queens"</span>, <span class="st">"Bronx"</span>, <span class="st">"Richmond"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>nyc_tracts <span class="ot">&lt;-</span> <span class="fu">get_acs_cached</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"nyc_tracts_nepalese_acs5"</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">geography =</span> <span class="st">"tract"</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">state     =</span> <span class="st">"NY"</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">county    =</span> NYC_COUNTIES,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">variables =</span> <span class="fu">c</span>(<span class="at">total =</span> <span class="st">"B01003_001"</span>, <span class="at">nepalese =</span> GROUP_VAR),</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">year      =</span> ACS_YEAR,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">survey    =</span> <span class="st">"acs5"</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">output    =</span> <span class="st">"wide"</span>,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">geometry  =</span> <span class="cn">TRUE</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="nyc-neighborhood-tabulation-areas" class="level3">
+<h3 class="anchored" data-anchor-id="nyc-neighborhood-tabulation-areas">NYC Neighborhood Tabulation Areas</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Task 3: download, unzip and read the 2020 NTA shapefile (not via tidycensus)</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>load_nyc_nta <span class="ot">&lt;-</span> <span class="cf">function</span>(){</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    NTA_URL  <span class="ot">&lt;-</span> <span class="st">"https://s-media.nyc.gov/agencies/dcp/assets/files/zip/data-tools/bytes/neighborhood-tabulation-areas/nynta2020_26c.zip"</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    zip_file <span class="ot">&lt;-</span> fs<span class="sc">::</span><span class="fu">path</span>(DATA_DIR, <span class="st">"nynta2020.zip"</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span>fs<span class="sc">::</span><span class="fu">file_exists</span>(zip_file)){</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">request</span>(NTA_URL) <span class="sc">|&gt;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>            <span class="fu">req_headers</span>(</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                <span class="st">`</span><span class="at">User-Agent</span><span class="st">`</span> <span class="ot">=</span> <span class="st">"Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:149.0) Gecko/20100101 Firefox/149.0"</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>            ) <span class="sc">|&gt;</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>            <span class="fu">req_retry</span>(<span class="at">max_tries =</span> <span class="dv">4</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>            <span class="fu">req_perform</span>(<span class="at">path =</span> zip_file)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Stop early if the download isn't a real zip (e.g. a web page)</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># (every real zip file starts with the letters "PK")</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    zip_ok <span class="ot">&lt;-</span> <span class="fu">identical</span>(<span class="fu">readBin</span>(zip_file, <span class="st">"raw"</span>, <span class="dv">2</span>), <span class="fu">charToRaw</span>(<span class="st">"PK"</span>))</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span>zip_ok){</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>        fs<span class="sc">::</span><span class="fu">file_delete</span>(zip_file)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>        <span class="fu">stop</span>(<span class="st">"NTA download is not a valid zip file. Check NTA_URL."</span>)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    shp_file <span class="ot">&lt;-</span> fs<span class="sc">::</span><span class="fu">dir_ls</span>(DATA_DIR, <span class="at">recurse =</span> <span class="cn">TRUE</span>, <span class="at">glob =</span> <span class="st">"*nynta2020*.shp"</span>)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">length</span>(shp_file) <span class="sc">==</span> <span class="dv">0</span>){</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>        <span class="fu">unzip</span>(zip_file, <span class="at">exdir =</span> DATA_DIR, <span class="at">unzip =</span> <span class="st">"unzip"</span>)  <span class="co"># macOS system unzip</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>        shp_file <span class="ot">&lt;-</span> fs<span class="sc">::</span><span class="fu">dir_ls</span>(DATA_DIR, <span class="at">recurse =</span> <span class="cn">TRUE</span>, <span class="at">glob =</span> <span class="st">"*nynta2020*.shp"</span>)</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_read</span>(shp_file[<span class="dv">1</span>], <span class="at">quiet =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>        <span class="co"># NTAType: 0 = residential neighborhood; other codes are parks,</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>        <span class="co"># airports, cemeteries etc. Kept so those can be filtered out later.</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(BoroName, NTA2020, NTAName, NTAType)</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>nyc_nta <span class="ot">&lt;-</span> <span class="fu">load_nyc_nta</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="aggregating-tracts-to-neighborhoods" class="level3">
+<h3 class="anchored" data-anchor-id="aggregating-tracts-to-neighborhoods">Aggregating Tracts to Neighborhoods</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Task 4: give each tract the NTA it overlaps most, then add tracts up per NTA.</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 2020 NTAs are built from whole 2020 tracts, so largest = TRUE is a clean match.</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>nyc_tracts <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(nyc_tracts, <span class="fu">st_crs</span>(nyc_nta))</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>tract_to_nta <span class="ot">&lt;-</span> nyc_tracts <span class="sc">|&gt;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_join</span>(nyc_nta, <span class="at">join =</span> st_intersects, <span class="at">largest =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>nta_pop <span class="ot">&lt;-</span> tract_to_nta <span class="sc">|&gt;</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_drop_geometry</span>() <span class="sc">|&gt;</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(NTA2020) <span class="sc">|&gt;</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">total    =</span> <span class="fu">sum</span>(totalE, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">nepalese =</span> <span class="fu">sum</span>(nepaleseE, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">.groups  =</span> <span class="st">"drop"</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>nta_data <span class="ot">&lt;-</span> nyc_nta <span class="sc">|&gt;</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(nta_pop, <span class="at">by =</span> <span class="st">"NTA2020"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">nepalese_share =</span> nepalese <span class="sc">/</span> total)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="nyc-pluto-tax-lot-data" class="level3">
+<h3 class="anchored" data-anchor-id="nyc-pluto-tax-lot-data">NYC PLUTO (Tax Lot Data)</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Task 5: page through the PLUTO API and save one CSV (cached like MP02)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>load_pluto <span class="ot">&lt;-</span> <span class="cf">function</span>(){</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    PLUTO_FILE <span class="ot">&lt;-</span> fs<span class="sc">::</span><span class="fu">path</span>(DATA_DIR, <span class="st">"pluto.csv"</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span>fs<span class="sc">::</span><span class="fu">file_exists</span>(PLUTO_FILE)){</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        BASE_URL  <span class="ot">&lt;-</span> <span class="st">"https://data.cityofnewyork.us/resource/64uk-42ks.csv"</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Only the columns needed later</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        PLUTO_COLS <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"bbl"</span>, <span class="st">"borough"</span>, <span class="st">"bct2020"</span>, <span class="st">"landuse"</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"lotarea"</span>, <span class="st">"bldgarea"</span>, <span class="st">"comarea"</span>, <span class="st">"resarea"</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"officearea"</span>, <span class="st">"retailarea"</span>,</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"unitsres"</span>, <span class="st">"unitstotal"</span>, <span class="st">"numfloors"</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        PAGE_SIZE <span class="ot">&lt;-</span> <span class="dv">50000</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        offset    <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        pages     <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">repeat</span> {</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>            page <span class="ot">&lt;-</span> <span class="fu">request</span>(BASE_URL) <span class="sc">|&gt;</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>                <span class="fu">req_url_query</span>(</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>                    <span class="st">`</span><span class="at">$select</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">paste</span>(PLUTO_COLS, <span class="at">collapse =</span> <span class="st">","</span>),</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>                    <span class="st">`</span><span class="at">$order</span><span class="st">`</span>  <span class="ot">=</span> <span class="st">"bbl"</span>,          <span class="co"># fixed order so pages don't overlap</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>                    <span class="st">`</span><span class="at">$limit</span><span class="st">`</span>  <span class="ot">=</span> PAGE_SIZE,</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>                    <span class="st">`</span><span class="at">$offset</span><span class="st">`</span> <span class="ot">=</span> offset</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>                ) <span class="sc">|&gt;</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>                <span class="fu">req_retry</span>(<span class="at">max_tries =</span> <span class="dv">4</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>                <span class="fu">req_perform</span>() <span class="sc">|&gt;</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>                <span class="fu">resp_body_string</span>() <span class="sc">|&gt;</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>                <span class="fu">read_csv</span>(<span class="at">col_types =</span> <span class="fu">cols</span>(<span class="at">.default =</span> <span class="fu">col_character</span>()))</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span>(<span class="fu">nrow</span>(page) <span class="sc">==</span> <span class="dv">0</span>) <span class="cf">break</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>            pages[[<span class="fu">length</span>(pages) <span class="sc">+</span> <span class="dv">1</span>]] <span class="ot">&lt;-</span> page</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span>(<span class="fu">nrow</span>(page) <span class="sc">&lt;</span> PAGE_SIZE) <span class="cf">break</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>            offset <span class="ot">&lt;-</span> offset <span class="sc">+</span> PAGE_SIZE</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>        <span class="fu">bind_rows</span>(pages) <span class="sc">|&gt;</span> <span class="fu">write_csv</span>(PLUTO_FILE)</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">read_csv</span>(</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>        PLUTO_FILE,</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>        <span class="at">col_types =</span> <span class="fu">cols</span>(</span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>            <span class="at">bbl =</span> <span class="fu">col_character</span>(), <span class="at">borough =</span> <span class="fu">col_character</span>(),</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>            <span class="at">bct2020 =</span> <span class="fu">col_character</span>(), <span class="at">landuse =</span> <span class="fu">col_character</span>(),</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>            <span class="at">.default =</span> <span class="fu">col_double</span>()</span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>pluto <span class="ot">&lt;-</span> <span class="fu">load_pluto</span>()</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a><span class="co"># bct2020 = borough digit + 6-digit tract (e.g. 1000100).</span></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to the Census GEOID (e.g. 36061000100) so PLUTO can join to tracts.</span></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>BORO_TO_COUNTY <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"1"</span> <span class="ot">=</span> <span class="st">"061"</span>, <span class="st">"2"</span> <span class="ot">=</span> <span class="st">"005"</span>, <span class="st">"3"</span> <span class="ot">=</span> <span class="st">"047"</span>, <span class="st">"4"</span> <span class="ot">=</span> <span class="st">"081"</span>, <span class="st">"5"</span> <span class="ot">=</span> <span class="st">"085"</span>)</span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>pluto <span class="ot">&lt;-</span> pluto <span class="sc">|&gt;</span></span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>        <span class="at">bct2020 =</span> <span class="fu">str_remove</span>(bct2020, <span class="st">"</span><span class="sc">\\</span><span class="st">.0+$"</span>),</span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>        <span class="at">GEOID   =</span> <span class="fu">paste0</span>(<span class="st">"36"</span>,</span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>                         BORO_TO_COUNTY[<span class="fu">str_sub</span>(bct2020, <span class="dv">1</span>, <span class="dv">1</span>)],</span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">str_sub</span>(bct2020, <span class="dv">2</span>))</span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a><span class="co"># One row per tract with building totals, for the EDA questions</span></span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>tract_buildings <span class="ot">&lt;-</span> pluto <span class="sc">|&gt;</span></span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(bct2020)) <span class="sc">|&gt;</span></span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(GEOID) <span class="sc">|&gt;</span></span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(</span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a>        <span class="at">office_area =</span> <span class="fu">sum</span>(officearea, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a>        <span class="at">res_area    =</span> <span class="fu">sum</span>(resarea,    <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a>        <span class="at">com_area    =</span> <span class="fu">sum</span>(comarea,    <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a>        <span class="at">bldg_area   =</span> <span class="fu">sum</span>(bldgarea,   <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a>        <span class="at">res_units   =</span> <span class="fu">sum</span>(unitsres,   <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a>        <span class="at">max_floors  =</span> <span class="cf">if</span> (<span class="fu">all</span>(<span class="fu">is.na</span>(numfloors))) <span class="cn">NA_real_</span> <span class="cf">else</span> <span class="fu">max</span>(numfloors, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a>        <span class="at">.groups     =</span> <span class="st">"drop"</span></span>
+<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Quick sanity checks: run these and look at the numbers before moving on</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">check =</span> <span class="fu">c</span>(<span class="st">"Metros"</span>, <span class="st">"NYC tracts"</span>, <span class="st">"NTAs"</span>, <span class="st">"PLUTO lots"</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>              <span class="st">"PLUTO tracts matched to Census tracts"</span>),</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">value =</span> <span class="fu">c</span>(<span class="fu">nrow</span>(cbsa_pop), <span class="fu">nrow</span>(nyc_tracts), <span class="fu">nrow</span>(nyc_nta), <span class="fu">nrow</span>(pluto),</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>              <span class="fu">sum</span>(tract_buildings<span class="sc">$</span>GEOID <span class="sc">%in%</span> nyc_tracts<span class="sc">$</span>GEOID))</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="xczcvwephk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#xczcvwephk table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#xczcvwephk thead, #xczcvwephk tbody, #xczcvwephk tfoot, #xczcvwephk tr, #xczcvwephk td, #xczcvwephk th {
+  border-style: none;
+}
+
+#xczcvwephk p {
+  margin: 0;
+  padding: 0;
+}
+
+#xczcvwephk .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#xczcvwephk .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#xczcvwephk .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#xczcvwephk .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#xczcvwephk .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#xczcvwephk .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#xczcvwephk .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#xczcvwephk .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#xczcvwephk .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#xczcvwephk .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#xczcvwephk .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#xczcvwephk .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#xczcvwephk .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#xczcvwephk .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#xczcvwephk .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#xczcvwephk .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#xczcvwephk .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#xczcvwephk .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#xczcvwephk .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#xczcvwephk .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#xczcvwephk .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#xczcvwephk .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#xczcvwephk .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#xczcvwephk .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#xczcvwephk .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#xczcvwephk .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#xczcvwephk .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#xczcvwephk .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#xczcvwephk .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#xczcvwephk .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#xczcvwephk .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#xczcvwephk .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#xczcvwephk .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#xczcvwephk .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#xczcvwephk .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#xczcvwephk .gt_left {
+  text-align: left;
+}
+
+#xczcvwephk .gt_center {
+  text-align: center;
+}
+
+#xczcvwephk .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#xczcvwephk .gt_font_normal {
+  font-weight: normal;
+}
+
+#xczcvwephk .gt_font_bold {
+  font-weight: bold;
+}
+
+#xczcvwephk .gt_font_italic {
+  font-style: italic;
+}
+
+#xczcvwephk .gt_super {
+  font-size: 65%;
+}
+
+#xczcvwephk .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#xczcvwephk .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#xczcvwephk .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#xczcvwephk .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#xczcvwephk .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#xczcvwephk .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#xczcvwephk .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#xczcvwephk .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#xczcvwephk div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="check" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">check</th>
+<th id="value" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">value</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
 <tr class="odd">
-<td>title: “Mini-Project Placeholder”</td>
+<td class="gt_row gt_left" headers="check">Metros</td>
+<td class="gt_row gt_right" headers="value">935</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="check">NYC tracts</td>
+<td class="gt_row gt_right" headers="value">2327</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="check">NTAs</td>
+<td class="gt_row gt_right" headers="value">262</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="check">PLUTO lots</td>
+<td class="gt_row gt_right" headers="value">858284</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="check">PLUTO tracts matched to Census tracts</td>
+<td class="gt_row gt_right" headers="value">2322</td>
 </tr>
 </tbody>
 </table>
-<p>This is a placeholder for STA9750 Mini-Project 3. Check back soon for more!</p>
+
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="exploratory-data-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="exploratory-data-analysis">Exploratory Data Analysis</h2>
+<!-- TODO (write yourself): 2-3 sentences introducing this section. -->
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># One row per NYC tract: Census population + its NTA + PLUTO building totals</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>tract_lookup <span class="ot">&lt;-</span> tract_to_nta <span class="sc">|&gt;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_drop_geometry</span>() <span class="sc">|&gt;</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(GEOID, <span class="at">tract_name =</span> NAME, NTA2020, NTAName, BoroName,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">pop =</span> totalE, <span class="at">nepalese =</span> nepaleseE)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>tract_full <span class="ot">&lt;-</span> tract_lookup <span class="sc">|&gt;</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(tract_buildings, <span class="at">by =</span> <span class="st">"GEOID"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<section id="q1.-most-office-space" class="level3">
+<h3 class="anchored" data-anchor-id="q1.-most-office-space">Q1. Most Office Space</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>q1 <span class="ot">&lt;-</span> tract_full <span class="sc">|&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_max</span>(office_area, <span class="at">n =</span> <span class="dv">5</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(tract_name, NTAName, BoroName, office_area)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>top_office <span class="ot">&lt;-</span> q1 <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="dv">1</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>q1 <span class="sc">|&gt;</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cols_label</span>(<span class="at">tract_name =</span> <span class="st">"Census Tract"</span>, <span class="at">NTAName =</span> <span class="st">"Neighborhood"</span>,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">BoroName =</span> <span class="st">"Borough"</span>, <span class="at">office_area =</span> <span class="st">"Office Floor Area (sq ft)"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number</span>(office_area, <span class="at">decimals =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"NYC Tracts with the Most Office Space"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-q1-office" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-q1-office-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1
+</figcaption>
+<div aria-describedby="tbl-q1-office-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="yaymwmliyg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#yaymwmliyg table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#yaymwmliyg thead, #yaymwmliyg tbody, #yaymwmliyg tfoot, #yaymwmliyg tr, #yaymwmliyg td, #yaymwmliyg th {
+  border-style: none;
+}
+
+#yaymwmliyg p {
+  margin: 0;
+  padding: 0;
+}
+
+#yaymwmliyg .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#yaymwmliyg .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#yaymwmliyg .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#yaymwmliyg .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#yaymwmliyg .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#yaymwmliyg .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#yaymwmliyg .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#yaymwmliyg .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#yaymwmliyg .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#yaymwmliyg .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#yaymwmliyg .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#yaymwmliyg .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#yaymwmliyg .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#yaymwmliyg .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#yaymwmliyg .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#yaymwmliyg .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#yaymwmliyg .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#yaymwmliyg .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#yaymwmliyg .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#yaymwmliyg .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#yaymwmliyg .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#yaymwmliyg .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#yaymwmliyg .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#yaymwmliyg .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#yaymwmliyg .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#yaymwmliyg .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#yaymwmliyg .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#yaymwmliyg .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#yaymwmliyg .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#yaymwmliyg .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#yaymwmliyg .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#yaymwmliyg .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#yaymwmliyg .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#yaymwmliyg .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#yaymwmliyg .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#yaymwmliyg .gt_left {
+  text-align: left;
+}
+
+#yaymwmliyg .gt_center {
+  text-align: center;
+}
+
+#yaymwmliyg .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#yaymwmliyg .gt_font_normal {
+  font-weight: normal;
+}
+
+#yaymwmliyg .gt_font_bold {
+  font-weight: bold;
+}
+
+#yaymwmliyg .gt_font_italic {
+  font-style: italic;
+}
+
+#yaymwmliyg .gt_super {
+  font-size: 65%;
+}
+
+#yaymwmliyg .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#yaymwmliyg .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#yaymwmliyg .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#yaymwmliyg .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#yaymwmliyg .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#yaymwmliyg .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#yaymwmliyg .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#yaymwmliyg .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#yaymwmliyg div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<td colspan="4" class="gt_heading gt_title gt_font_normal gt_bottom_border">NYC Tracts with the Most Office Space</td>
+</tr>
+<tr class="gt_col_headings even">
+<th id="tract_name" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Census Tract</th>
+<th id="NTAName" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Neighborhood</th>
+<th id="BoroName" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Borough</th>
+<th id="office_area" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Office Floor Area (sq ft)</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="tract_name">Census Tract 9; New York County; New York</td>
+<td class="gt_row gt_left" headers="NTAName">Financial District-Battery Park City</td>
+<td class="gt_row gt_left" headers="BoroName">Manhattan</td>
+<td class="gt_row gt_right" headers="office_area">18,354,103</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="tract_name">Census Tract 13; New York County; New York</td>
+<td class="gt_row gt_left" headers="NTAName">Financial District-Battery Park City</td>
+<td class="gt_row gt_left" headers="BoroName">Manhattan</td>
+<td class="gt_row gt_right" headers="office_area">16,889,181</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="tract_name">Census Tract 113; New York County; New York</td>
+<td class="gt_row gt_left" headers="NTAName">Midtown-Times Square</td>
+<td class="gt_row gt_left" headers="BoroName">Manhattan</td>
+<td class="gt_row gt_right" headers="office_area">15,679,979</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="tract_name">Census Tract 94; New York County; New York</td>
+<td class="gt_row gt_left" headers="NTAName">Midtown-Times Square</td>
+<td class="gt_row gt_left" headers="BoroName">Manhattan</td>
+<td class="gt_row gt_right" headers="office_area">15,433,200</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="tract_name">Census Tract 7; New York County; New York</td>
+<td class="gt_row gt_left" headers="NTAName">Financial District-Battery Park City</td>
+<td class="gt_row gt_left" headers="BoroName">Manhattan</td>
+<td class="gt_row gt_right" headers="office_area">14,608,640</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<!-- TODO (write yourself). Inline values you can use:
+  Financial District-Battery Park City   18,354,103  -->
+</section>
+<section id="q2.-most-residential-units" class="level3">
+<h3 class="anchored" data-anchor-id="q2.-most-residential-units">Q2. Most Residential Units</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>nta_units <span class="ot">&lt;-</span> tract_full <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(NTA2020, NTAName, BoroName) <span class="sc">|&gt;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">res_units =</span> <span class="fu">sum</span>(res_units, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(res_units))</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>top_units_nta <span class="ot">&lt;-</span> nta_units <span class="sc">|&gt;</span> <span class="fu">slice</span>(<span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<!-- TODO (write yourself). Inline values:
+  Upper East Side-Lenox Hill-Roosevelt Island   Manhattan   60,306 -->
+</section>
+<section id="q3.-most-crowded-tracts" class="level3">
+<h3 class="anchored" data-anchor-id="q3.-most-crowded-tracts">Q3. Most Crowded Tracts</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Small denominators give silly results (e.g. a tract with 2 apartments and</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># a big dorm or prison), so only tracts with a real amount of housing count.</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>q3 <span class="ot">&lt;-</span> tract_full <span class="sc">|&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(pop <span class="sc">&gt;=</span> <span class="dv">500</span>, res_area <span class="sc">&gt;=</span> <span class="dv">50000</span>, res_units <span class="sc">&gt;=</span> <span class="dv">50</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">pop_per_1000_sqft =</span> pop <span class="sc">/</span> res_area <span class="sc">*</span> <span class="dv">1000</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">pop_per_unit      =</span> pop <span class="sc">/</span> res_units</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>q3_sqft <span class="ot">&lt;-</span> q3 <span class="sc">|&gt;</span> <span class="fu">slice_max</span>(pop_per_1000_sqft, <span class="at">n =</span> <span class="dv">5</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">measure =</span> <span class="st">"People per 1,000 sq ft of residential space"</span>)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>q3_unit <span class="ot">&lt;-</span> q3 <span class="sc">|&gt;</span> <span class="fu">slice_max</span>(pop_per_unit, <span class="at">n =</span> <span class="dv">5</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">measure =</span> <span class="st">"People per residential unit"</span>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>same_top_tract <span class="ot">&lt;-</span> q3_sqft<span class="sc">$</span>GEOID[<span class="dv">1</span>] <span class="sc">==</span> q3_unit<span class="sc">$</span>GEOID[<span class="dv">1</span>]</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_rows</span>(q3_sqft, q3_unit) <span class="sc">|&gt;</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(measure, tract_name, NTAName, pop, pop_per_1000_sqft, pop_per_unit) <span class="sc">|&gt;</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt</span>(<span class="at">groupname_col =</span> <span class="st">"measure"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cols_label</span>(<span class="at">tract_name =</span> <span class="st">"Census Tract"</span>, <span class="at">NTAName =</span> <span class="st">"Neighborhood"</span>,</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>               <span class="at">pop =</span> <span class="st">"Population"</span>, <span class="at">pop_per_1000_sqft =</span> <span class="st">"per 1,000 sq ft"</span>,</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>               <span class="at">pop_per_unit =</span> <span class="st">"per unit"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number</span>(pop, <span class="at">decimals =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number</span>(<span class="fu">c</span>(pop_per_1000_sqft, pop_per_unit), <span class="at">decimals =</span> <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"Most Densely Housed NYC Tracts, Two Ways"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-q3-density" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-q3-density-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2
+</figcaption>
+<div aria-describedby="tbl-q3-density-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="euaunhizuf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#euaunhizuf table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#euaunhizuf thead, #euaunhizuf tbody, #euaunhizuf tfoot, #euaunhizuf tr, #euaunhizuf td, #euaunhizuf th {
+  border-style: none;
+}
+
+#euaunhizuf p {
+  margin: 0;
+  padding: 0;
+}
+
+#euaunhizuf .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#euaunhizuf .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#euaunhizuf .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#euaunhizuf .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#euaunhizuf .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#euaunhizuf .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#euaunhizuf .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#euaunhizuf .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#euaunhizuf .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#euaunhizuf .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#euaunhizuf .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#euaunhizuf .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#euaunhizuf .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#euaunhizuf .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#euaunhizuf .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#euaunhizuf .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#euaunhizuf .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#euaunhizuf .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#euaunhizuf .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#euaunhizuf .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#euaunhizuf .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#euaunhizuf .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#euaunhizuf .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#euaunhizuf .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#euaunhizuf .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#euaunhizuf .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#euaunhizuf .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#euaunhizuf .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#euaunhizuf .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#euaunhizuf .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#euaunhizuf .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#euaunhizuf .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#euaunhizuf .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#euaunhizuf .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#euaunhizuf .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#euaunhizuf .gt_left {
+  text-align: left;
+}
+
+#euaunhizuf .gt_center {
+  text-align: center;
+}
+
+#euaunhizuf .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#euaunhizuf .gt_font_normal {
+  font-weight: normal;
+}
+
+#euaunhizuf .gt_font_bold {
+  font-weight: bold;
+}
+
+#euaunhizuf .gt_font_italic {
+  font-style: italic;
+}
+
+#euaunhizuf .gt_super {
+  font-size: 65%;
+}
+
+#euaunhizuf .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#euaunhizuf .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#euaunhizuf .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#euaunhizuf .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#euaunhizuf .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#euaunhizuf .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#euaunhizuf .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#euaunhizuf .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#euaunhizuf div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<td colspan="5" class="gt_heading gt_title gt_font_normal gt_bottom_border">Most Densely Housed NYC Tracts, Two Ways</td>
+</tr>
+<tr class="gt_col_headings even">
+<th id="tract_name" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Census Tract</th>
+<th id="NTAName" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Neighborhood</th>
+<th id="pop" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Population</th>
+<th id="pop_per_1000_sqft" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">per 1,000 sq ft</th>
+<th id="pop_per_unit" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">per unit</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="gt_group_heading_row odd">
+<th colspan="5" id="People-per-1,000-sq-ft-of-residential-space" class="gt_group_heading" data-quarto-table-cell-role="th" scope="colgroup">People per 1,000 sq ft of residential space</th>
+</tr>
+<tr class="gt_row_group_first even">
+<td class="gt_row gt_left" headers="People-per-1,000-sq-ft-of-residential-space  tract_name">Census Tract 462.03; Bronx County; New York</td>
+<td class="gt_row gt_left" headers="People-per-1,000-sq-ft-of-residential-space  NTAName">Co-op City</td>
+<td class="gt_row gt_right" headers="People-per-1,000-sq-ft-of-residential-space  pop">6,756</td>
+<td class="gt_row gt_right" headers="People-per-1,000-sq-ft-of-residential-space  pop_per_1000_sqft">23.41</td>
+<td class="gt_row gt_right" headers="People-per-1,000-sq-ft-of-residential-space  pop_per_unit">21.65</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="People-per-1,000-sq-ft-of-residential-space  tract_name">Census Tract 1208.02; Kings County; New York</td>
+<td class="gt_row gt_left" headers="People-per-1,000-sq-ft-of-residential-space  NTAName">East New York-City Line</td>
+<td class="gt_row gt_right" headers="People-per-1,000-sq-ft-of-residential-space  pop">5,247</td>
+<td class="gt_row gt_right" headers="People-per-1,000-sq-ft-of-residential-space  pop_per_1000_sqft">15.17</td>
+<td class="gt_row gt_right" headers="People-per-1,000-sq-ft-of-residential-space  pop_per_unit">16.45</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="People-per-1,000-sq-ft-of-residential-space  tract_name">Census Tract 223.02; New York County; New York</td>
+<td class="gt_row gt_left" headers="People-per-1,000-sq-ft-of-residential-space  NTAName">Manhattanville-West Harlem</td>
+<td class="gt_row gt_right" headers="People-per-1,000-sq-ft-of-residential-space  pop">2,870</td>
+<td class="gt_row gt_right" headers="People-per-1,000-sq-ft-of-residential-space  pop_per_1000_sqft">10.52</td>
+<td class="gt_row gt_right" headers="People-per-1,000-sq-ft-of-residential-space  pop_per_unit">7.99</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="People-per-1,000-sq-ft-of-residential-space  tract_name">Census Tract 29.01; New York County; New York</td>
+<td class="gt_row gt_left" headers="People-per-1,000-sq-ft-of-residential-space  NTAName">Tribeca-Civic Center</td>
+<td class="gt_row gt_right" headers="People-per-1,000-sq-ft-of-residential-space  pop">562</td>
+<td class="gt_row gt_right" headers="People-per-1,000-sq-ft-of-residential-space  pop_per_1000_sqft">9.90</td>
+<td class="gt_row gt_right" headers="People-per-1,000-sq-ft-of-residential-space  pop_per_unit">3.09</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="People-per-1,000-sq-ft-of-residential-space  tract_name">Census Tract 334.05; Queens County; New York</td>
+<td class="gt_row gt_left" headers="People-per-1,000-sq-ft-of-residential-space  NTAName">Springfield Gardens (North)-Rochdale Village</td>
+<td class="gt_row gt_right" headers="People-per-1,000-sq-ft-of-residential-space  pop">3,643</td>
+<td class="gt_row gt_right" headers="People-per-1,000-sq-ft-of-residential-space  pop_per_1000_sqft">8.51</td>
+<td class="gt_row gt_right" headers="People-per-1,000-sq-ft-of-residential-space  pop_per_unit">9.27</td>
+</tr>
+<tr class="gt_group_heading_row odd">
+<th colspan="5" id="People-per-residential-unit" class="gt_group_heading" data-quarto-table-cell-role="th" scope="colgroup">People per residential unit</th>
+</tr>
+<tr class="gt_row_group_first even">
+<td class="gt_row gt_left" headers="People-per-residential-unit  tract_name">Census Tract 462.03; Bronx County; New York</td>
+<td class="gt_row gt_left" headers="People-per-residential-unit  NTAName">Co-op City</td>
+<td class="gt_row gt_right" headers="People-per-residential-unit  pop">6,756</td>
+<td class="gt_row gt_right" headers="People-per-residential-unit  pop_per_1000_sqft">23.41</td>
+<td class="gt_row gt_right" headers="People-per-residential-unit  pop_per_unit">21.65</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="People-per-residential-unit  tract_name">Census Tract 1208.02; Kings County; New York</td>
+<td class="gt_row gt_left" headers="People-per-residential-unit  NTAName">East New York-City Line</td>
+<td class="gt_row gt_right" headers="People-per-residential-unit  pop">5,247</td>
+<td class="gt_row gt_right" headers="People-per-residential-unit  pop_per_1000_sqft">15.17</td>
+<td class="gt_row gt_right" headers="People-per-residential-unit  pop_per_unit">16.45</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="People-per-residential-unit  tract_name">Census Tract 334.05; Queens County; New York</td>
+<td class="gt_row gt_left" headers="People-per-residential-unit  NTAName">Springfield Gardens (North)-Rochdale Village</td>
+<td class="gt_row gt_right" headers="People-per-residential-unit  pop">3,643</td>
+<td class="gt_row gt_right" headers="People-per-residential-unit  pop_per_1000_sqft">8.51</td>
+<td class="gt_row gt_right" headers="People-per-residential-unit  pop_per_unit">9.27</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="People-per-residential-unit  tract_name">Census Tract 223.02; New York County; New York</td>
+<td class="gt_row gt_left" headers="People-per-residential-unit  NTAName">Manhattanville-West Harlem</td>
+<td class="gt_row gt_right" headers="People-per-residential-unit  pop">2,870</td>
+<td class="gt_row gt_right" headers="People-per-residential-unit  pop_per_1000_sqft">10.52</td>
+<td class="gt_row gt_right" headers="People-per-residential-unit  pop_per_unit">7.99</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="People-per-residential-unit  tract_name">Census Tract 531.02; Kings County; New York</td>
+<td class="gt_row gt_left" headers="People-per-residential-unit  NTAName">South Williamsburg</td>
+<td class="gt_row gt_right" headers="People-per-residential-unit  pop">7,846</td>
+<td class="gt_row gt_right" headers="People-per-residential-unit  pop_per_1000_sqft">5.30</td>
+<td class="gt_row gt_right" headers="People-per-residential-unit  pop_per_unit">7.39</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<!-- TODO (write yourself): does the answer change? TRUE is TRUE/FALSE -->
+</section>
+<section id="q4.-metros-with-the-highest-nepalese-share" class="level3">
+<h3 class="anchored" data-anchor-id="q4.-metros-with-the-highest-nepalese-share">Q4. Metros with the Highest Nepalese Share</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>q4 <span class="ot">&lt;-</span> cbsa_pop <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(NAME, <span class="st">"New York-Newark"</span>), <span class="sc">!</span><span class="fu">is.na</span>(nepaleseE)) <span class="sc">|&gt;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_max</span>(nepalese_share, <span class="at">n =</span> <span class="dv">5</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(NAME, totalE, nepaleseE, nepaleseM, nepalese_share)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>q4 <span class="sc">|&gt;</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cols_label</span>(<span class="at">NAME =</span> <span class="st">"Metro Area"</span>, <span class="at">totalE =</span> <span class="st">"Total Population"</span>,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">nepaleseE =</span> <span class="st">"Nepalese"</span>, <span class="at">nepaleseM =</span> <span class="st">"Margin of Error (±)"</span>,</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">nepalese_share =</span> <span class="st">"Nepalese Share"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number</span>(<span class="fu">c</span>(totalE, nepaleseE, nepaleseM), <span class="at">decimals =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_percent</span>(nepalese_share, <span class="at">decimals =</span> <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"Metros (Outside NYC) with the Largest Nepalese Share"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-q4-share" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-q4-share-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3
+</figcaption>
+<div aria-describedby="tbl-q4-share-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="vzbwvbfbtu" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#vzbwvbfbtu table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#vzbwvbfbtu thead, #vzbwvbfbtu tbody, #vzbwvbfbtu tfoot, #vzbwvbfbtu tr, #vzbwvbfbtu td, #vzbwvbfbtu th {
+  border-style: none;
+}
+
+#vzbwvbfbtu p {
+  margin: 0;
+  padding: 0;
+}
+
+#vzbwvbfbtu .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#vzbwvbfbtu .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#vzbwvbfbtu .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#vzbwvbfbtu .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#vzbwvbfbtu .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#vzbwvbfbtu .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vzbwvbfbtu .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#vzbwvbfbtu .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#vzbwvbfbtu .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#vzbwvbfbtu .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#vzbwvbfbtu .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#vzbwvbfbtu .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#vzbwvbfbtu .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#vzbwvbfbtu .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#vzbwvbfbtu .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#vzbwvbfbtu .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#vzbwvbfbtu .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#vzbwvbfbtu .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#vzbwvbfbtu .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vzbwvbfbtu .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#vzbwvbfbtu .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#vzbwvbfbtu .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#vzbwvbfbtu .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vzbwvbfbtu .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#vzbwvbfbtu .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#vzbwvbfbtu .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vzbwvbfbtu .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vzbwvbfbtu .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#vzbwvbfbtu .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vzbwvbfbtu .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#vzbwvbfbtu .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#vzbwvbfbtu .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#vzbwvbfbtu .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vzbwvbfbtu .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#vzbwvbfbtu .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#vzbwvbfbtu .gt_left {
+  text-align: left;
+}
+
+#vzbwvbfbtu .gt_center {
+  text-align: center;
+}
+
+#vzbwvbfbtu .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#vzbwvbfbtu .gt_font_normal {
+  font-weight: normal;
+}
+
+#vzbwvbfbtu .gt_font_bold {
+  font-weight: bold;
+}
+
+#vzbwvbfbtu .gt_font_italic {
+  font-style: italic;
+}
+
+#vzbwvbfbtu .gt_super {
+  font-size: 65%;
+}
+
+#vzbwvbfbtu .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#vzbwvbfbtu .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#vzbwvbfbtu .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#vzbwvbfbtu .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#vzbwvbfbtu .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#vzbwvbfbtu .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#vzbwvbfbtu .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#vzbwvbfbtu .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#vzbwvbfbtu div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<td colspan="5" class="gt_heading gt_title gt_font_normal gt_bottom_border">Metros (Outside NYC) with the Largest Nepalese Share</td>
+</tr>
+<tr class="gt_col_headings even">
+<th id="NAME" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Metro Area</th>
+<th id="totalE" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Total Population</th>
+<th id="nepaleseE" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Nepalese</th>
+<th id="nepaleseM" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Margin of Error (±)</th>
+<th id="nepalese_share" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Nepalese Share</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="NAME">Harrisburg-Carlisle, PA Metro Area</td>
+<td class="gt_row gt_right" headers="totalE">604,155</td>
+<td class="gt_row gt_right" headers="nepaleseE">5,786</td>
+<td class="gt_row gt_right" headers="nepaleseM">1,092</td>
+<td class="gt_row gt_right" headers="nepalese_share">0.96%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="NAME">Edwards, CO Micro Area</td>
+<td class="gt_row gt_right" headers="totalE">55,135</td>
+<td class="gt_row gt_right" headers="nepaleseE">409</td>
+<td class="gt_row gt_right" headers="nepaleseM">340</td>
+<td class="gt_row gt_right" headers="nepalese_share">0.74%</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="NAME">Akron, OH Metro Area</td>
+<td class="gt_row gt_right" headers="totalE">699,820</td>
+<td class="gt_row gt_right" headers="nepaleseE">5,093</td>
+<td class="gt_row gt_right" headers="nepaleseM">1,010</td>
+<td class="gt_row gt_right" headers="nepalese_share">0.73%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="NAME">Burlington-South Burlington, VT Metro Area</td>
+<td class="gt_row gt_right" headers="totalE">227,846</td>
+<td class="gt_row gt_right" headers="nepaleseE">1,513</td>
+<td class="gt_row gt_right" headers="nepaleseM">490</td>
+<td class="gt_row gt_right" headers="nepalese_share">0.66%</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="NAME">Carbondale, IL Micro Area</td>
+<td class="gt_row gt_right" headers="totalE">53,064</td>
+<td class="gt_row gt_right" headers="nepaleseE">324</td>
+<td class="gt_row gt_right" headers="nepaleseM">203</td>
+<td class="gt_row gt_right" headers="nepalese_share">0.61%</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<!-- Note for your text: ACS-1 margins of error are large for small groups. -->
+</section>
+<section id="q5.-asian-ancestry-mix-in-another-large-metro" class="level3">
+<h3 class="anchored" data-anchor-id="q5.-asian-ancestry-mix-in-another-large-metro">Q5. Asian Ancestry Mix in Another Large Metro</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Default: the non-NYC metro with the most Nepalese residents.</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># You can replace this with any metro name from cbsa_pop$NAME.</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>COMPARISON_METRO <span class="ot">&lt;-</span> cbsa_pop <span class="sc">|&gt;</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(NAME, <span class="st">"New York-Newark"</span>), <span class="sc">!</span><span class="fu">is.na</span>(nepaleseE)) <span class="sc">|&gt;</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_max</span>(nepaleseE, <span class="at">n =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pull</span>(NAME)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Turn labels like "Estimate!!Total Groups Tallied:!!South Asian:!!Nepalese"</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># into a broad region ("South Asian") and keep only the bottom-level rows,</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co"># so nothing is counted twice.</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>b02018_labels <span class="ot">&lt;-</span> acs1_vars <span class="sc">|&gt;</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="fu">str_starts</span>(name, <span class="st">"B02018_"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">transmute</span>(</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">variable =</span> name,</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">depth    =</span> <span class="fu">str_count</span>(label, <span class="st">"!!"</span>),</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">region   =</span> <span class="fu">str_remove</span>(<span class="fu">str_split_i</span>(label, <span class="st">"!!"</span>, <span class="dv">3</span>), <span class="st">":$"</span>),</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">is_header =</span> <span class="fu">str_ends</span>(label, <span class="st">":"</span>)</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(depth <span class="sc">&gt;=</span> <span class="dv">2</span>, <span class="sc">!</span>is_header)</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>q5 <span class="ot">&lt;-</span> cbsa_asian_groups <span class="sc">|&gt;</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(NAME <span class="sc">==</span> COMPARISON_METRO) <span class="sc">|&gt;</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">inner_join</span>(b02018_labels, <span class="at">by =</span> <span class="st">"variable"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(region) <span class="sc">|&gt;</span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">people =</span> <span class="fu">sum</span>(estimate, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(q5, <span class="fu">aes</span>(<span class="at">x =</span> people, <span class="at">y =</span> <span class="fu">fct_reorder</span>(region, people))) <span class="sc">+</span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#2a7f8f"</span>) <span class="sc">+</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> comma) <span class="sc">+</span></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">title    =</span> <span class="fu">paste</span>(<span class="st">"Asian Ancestry Groups in"</span>, COMPARISON_METRO),</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">subtitle =</span> <span class="st">"ACS 2024 5-year; people reporting more than one group are counted in each"</span>,</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">"People"</span>, <span class="at">y =</span> <span class="cn">NULL</span></span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-q5-ancestry" class="quarto-float quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-q5-ancestry-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="mp03_files/figure-html/fig-q5-ancestry-1.png" id="fig-q5-ancestry" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-q5-ancestry-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="q6.-where-us-nepalese-residents-live" class="level3">
+<h3 class="anchored" data-anchor-id="q6.-where-us-nepalese-residents-live">Q6. Where US Nepalese Residents Live</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>us_nepalese <span class="ot">&lt;-</span> us_pop<span class="sc">$</span>nepaleseE</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>q6 <span class="ot">&lt;-</span> cbsa_pop <span class="sc">|&gt;</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(nepaleseE)) <span class="sc">|&gt;</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_max</span>(nepaleseE, <span class="at">n =</span> <span class="dv">10</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">share_of_us =</span> nepaleseE <span class="sc">/</span> us_nepalese) <span class="sc">|&gt;</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(NAME, nepaleseE, share_of_us)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>ny_share    <span class="ot">&lt;-</span> q6 <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="fu">str_detect</span>(NAME, <span class="st">"New York-Newark"</span>)) <span class="sc">|&gt;</span> <span class="fu">pull</span>(share_of_us)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>top10_share <span class="ot">&lt;-</span> <span class="fu">sum</span>(q6<span class="sc">$</span>share_of_us)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>q6 <span class="sc">|&gt;</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cols_label</span>(<span class="at">NAME =</span> <span class="st">"Metro Area"</span>, <span class="at">nepaleseE =</span> <span class="st">"Nepalese Residents"</span>,</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>               <span class="at">share_of_us =</span> <span class="st">"Share of All US Nepalese"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number</span>(nepaleseE, <span class="at">decimals =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_percent</span>(share_of_us, <span class="at">decimals =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"Ten Metros with the Most Nepalese Residents"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-q6-us-share" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-q6-us-share-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4
+</figcaption>
+<div aria-describedby="tbl-q6-us-share-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="zdltqxfrnj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#zdltqxfrnj table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#zdltqxfrnj thead, #zdltqxfrnj tbody, #zdltqxfrnj tfoot, #zdltqxfrnj tr, #zdltqxfrnj td, #zdltqxfrnj th {
+  border-style: none;
+}
+
+#zdltqxfrnj p {
+  margin: 0;
+  padding: 0;
+}
+
+#zdltqxfrnj .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#zdltqxfrnj .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#zdltqxfrnj .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#zdltqxfrnj .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#zdltqxfrnj .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#zdltqxfrnj .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zdltqxfrnj .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#zdltqxfrnj .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#zdltqxfrnj .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#zdltqxfrnj .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#zdltqxfrnj .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#zdltqxfrnj .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#zdltqxfrnj .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#zdltqxfrnj .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#zdltqxfrnj .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#zdltqxfrnj .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#zdltqxfrnj .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#zdltqxfrnj .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#zdltqxfrnj .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zdltqxfrnj .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#zdltqxfrnj .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#zdltqxfrnj .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#zdltqxfrnj .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zdltqxfrnj .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#zdltqxfrnj .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#zdltqxfrnj .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zdltqxfrnj .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zdltqxfrnj .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#zdltqxfrnj .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zdltqxfrnj .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#zdltqxfrnj .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#zdltqxfrnj .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#zdltqxfrnj .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zdltqxfrnj .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#zdltqxfrnj .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#zdltqxfrnj .gt_left {
+  text-align: left;
+}
+
+#zdltqxfrnj .gt_center {
+  text-align: center;
+}
+
+#zdltqxfrnj .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#zdltqxfrnj .gt_font_normal {
+  font-weight: normal;
+}
+
+#zdltqxfrnj .gt_font_bold {
+  font-weight: bold;
+}
+
+#zdltqxfrnj .gt_font_italic {
+  font-style: italic;
+}
+
+#zdltqxfrnj .gt_super {
+  font-size: 65%;
+}
+
+#zdltqxfrnj .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#zdltqxfrnj .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#zdltqxfrnj .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#zdltqxfrnj .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#zdltqxfrnj .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#zdltqxfrnj .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#zdltqxfrnj .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#zdltqxfrnj .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#zdltqxfrnj div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<td colspan="3" class="gt_heading gt_title gt_font_normal gt_bottom_border">Ten Metros with the Most Nepalese Residents</td>
+</tr>
+<tr class="gt_col_headings even">
+<th id="NAME" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Metro Area</th>
+<th id="nepaleseE" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Nepalese Residents</th>
+<th id="share_of_us" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Share of All US Nepalese</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="NAME">Dallas-Fort Worth-Arlington, TX Metro Area</td>
+<td class="gt_row gt_right" headers="nepaleseE">23,162</td>
+<td class="gt_row gt_right" headers="share_of_us">9.6%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="NAME">New York-Newark-Jersey City, NY-NJ Metro Area</td>
+<td class="gt_row gt_right" headers="nepaleseE">21,021</td>
+<td class="gt_row gt_right" headers="share_of_us">8.7%</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="NAME">Washington-Arlington-Alexandria, DC-VA-MD-WV Metro Area</td>
+<td class="gt_row gt_right" headers="nepaleseE">15,261</td>
+<td class="gt_row gt_right" headers="share_of_us">6.3%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="NAME">Columbus, OH Metro Area</td>
+<td class="gt_row gt_right" headers="nepaleseE">11,749</td>
+<td class="gt_row gt_right" headers="share_of_us">4.9%</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="NAME">San Francisco-Oakland-Fremont, CA Metro Area</td>
+<td class="gt_row gt_right" headers="nepaleseE">7,796</td>
+<td class="gt_row gt_right" headers="share_of_us">3.2%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="NAME">Baltimore-Columbia-Towson, MD Metro Area</td>
+<td class="gt_row gt_right" headers="nepaleseE">7,133</td>
+<td class="gt_row gt_right" headers="share_of_us">3.0%</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="NAME">Boston-Cambridge-Newton, MA-NH Metro Area</td>
+<td class="gt_row gt_right" headers="nepaleseE">6,320</td>
+<td class="gt_row gt_right" headers="share_of_us">2.6%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="NAME">Austin-Round Rock-San Marcos, TX Metro Area</td>
+<td class="gt_row gt_right" headers="nepaleseE">6,004</td>
+<td class="gt_row gt_right" headers="share_of_us">2.5%</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="NAME">Harrisburg-Carlisle, PA Metro Area</td>
+<td class="gt_row gt_right" headers="nepaleseE">5,786</td>
+<td class="gt_row gt_right" headers="share_of_us">2.4%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="NAME">Houston-Pasadena-The Woodlands, TX Metro Area</td>
+<td class="gt_row gt_right" headers="nepaleseE">5,230</td>
+<td class="gt_row gt_right" headers="share_of_us">2.2%</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<!-- TODO (write yourself). Inline values:
+  US total 241,049, NY metro 8.7%,
+  top 10 combined 45.4% -->
+</section>
+<section id="q7.-population-vs.-housing" class="level3">
+<h3 class="anchored" data-anchor-id="q7.-population-vs.-housing">Q7. Population vs.&nbsp;Housing</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>q7 <span class="ot">&lt;-</span> tract_full <span class="sc">|&gt;</span> <span class="fu">filter</span>(pop <span class="sc">&gt;</span> <span class="dv">0</span>, res_units <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>pop_unit_cor <span class="ot">&lt;-</span> <span class="fu">cor</span>(q7<span class="sc">$</span>pop, q7<span class="sc">$</span>res_units)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(q7, <span class="fu">aes</span>(<span class="at">x =</span> res_units, <span class="at">y =</span> pop)) <span class="sc">+</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.25</span>, <span class="at">size =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">color =</span> <span class="st">"Straight line"</span>), <span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">color =</span> <span class="st">"Flexible curve"</span>), <span class="at">method =</span> <span class="st">"loess"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> comma) <span class="sc">+</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> comma) <span class="sc">+</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Straight line"</span> <span class="ot">=</span> <span class="st">"#d1495b"</span>,</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>                                  <span class="st">"Flexible curve"</span> <span class="ot">=</span> <span class="st">"#2a7f8f"</span>)) <span class="sc">+</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Population vs. Residential Units, NYC Census Tracts"</span>,</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"Residential units (PLUTO)"</span>, <span class="at">y =</span> <span class="st">"Population (ACS 2024 5-year)"</span>,</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">color =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-q7-pop-housing" class="quarto-float quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-q7-pop-housing-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="mp03_files/figure-html/fig-q7-pop-housing-1.png" id="fig-q7-pop-housing" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-q7-pop-housing-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<!-- TODO (write yourself). Correlation: 0.77 -->
+</section>
+<section id="q8.-neighborhoods-with-the-tallest-buildings" class="level3">
+<h3 class="anchored" data-anchor-id="q8.-neighborhoods-with-the-tallest-buildings">Q8. Neighborhoods with the Tallest Buildings</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>q8 <span class="ot">&lt;-</span> pluto <span class="sc">|&gt;</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(numfloors), numfloors <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">inner_join</span>(tract_lookup <span class="sc">|&gt;</span> <span class="fu">select</span>(GEOID, NTA2020, NTAName, BoroName),</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">by =</span> <span class="st">"GEOID"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(NTA2020, NTAName, BoroName) <span class="sc">|&gt;</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">max_floors    =</span> <span class="fu">max</span>(numfloors),</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">median_floors =</span> <span class="fu">median</span>(numfloors),</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_max</span>(max_floors, <span class="at">n =</span> <span class="dv">10</span>)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>q8 <span class="sc">|&gt;</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>NTA2020) <span class="sc">|&gt;</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cols_label</span>(<span class="at">NTAName =</span> <span class="st">"Neighborhood"</span>, <span class="at">BoroName =</span> <span class="st">"Borough"</span>,</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>               <span class="at">max_floors =</span> <span class="st">"Tallest Building (floors)"</span>,</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>               <span class="at">median_floors =</span> <span class="st">"Typical Building (median floors)"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number</span>(<span class="fu">c</span>(max_floors, median_floors), <span class="at">decimals =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"NYC Neighborhoods with the Tallest Buildings"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-q8-floors" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl quarto-uncaptioned" id="tbl-q8-floors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5
+</figcaption>
+<div aria-describedby="tbl-q8-floors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="rojaayvttj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#rojaayvttj table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#rojaayvttj thead, #rojaayvttj tbody, #rojaayvttj tfoot, #rojaayvttj tr, #rojaayvttj td, #rojaayvttj th {
+  border-style: none;
+}
+
+#rojaayvttj p {
+  margin: 0;
+  padding: 0;
+}
+
+#rojaayvttj .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#rojaayvttj .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#rojaayvttj .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#rojaayvttj .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#rojaayvttj .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#rojaayvttj .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rojaayvttj .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#rojaayvttj .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#rojaayvttj .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#rojaayvttj .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#rojaayvttj .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#rojaayvttj .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#rojaayvttj .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#rojaayvttj .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#rojaayvttj .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#rojaayvttj .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#rojaayvttj .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#rojaayvttj .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#rojaayvttj .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rojaayvttj .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#rojaayvttj .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#rojaayvttj .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#rojaayvttj .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rojaayvttj .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#rojaayvttj .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#rojaayvttj .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rojaayvttj .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rojaayvttj .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#rojaayvttj .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rojaayvttj .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#rojaayvttj .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rojaayvttj .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#rojaayvttj .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rojaayvttj .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#rojaayvttj .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rojaayvttj .gt_left {
+  text-align: left;
+}
+
+#rojaayvttj .gt_center {
+  text-align: center;
+}
+
+#rojaayvttj .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#rojaayvttj .gt_font_normal {
+  font-weight: normal;
+}
+
+#rojaayvttj .gt_font_bold {
+  font-weight: bold;
+}
+
+#rojaayvttj .gt_font_italic {
+  font-style: italic;
+}
+
+#rojaayvttj .gt_super {
+  font-size: 65%;
+}
+
+#rojaayvttj .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#rojaayvttj .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#rojaayvttj .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#rojaayvttj .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#rojaayvttj .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#rojaayvttj .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#rojaayvttj .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#rojaayvttj .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#rojaayvttj div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<td colspan="4" class="gt_heading gt_title gt_font_normal gt_bottom_border">NYC Neighborhoods with the Tallest Buildings</td>
+</tr>
+<tr class="gt_col_headings even">
+<th id="NTAName" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Neighborhood</th>
+<th id="BoroName" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Borough</th>
+<th id="max_floors" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Tallest Building (floors)</th>
+<th id="median_floors" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Typical Building (median floors)</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="NTAName">Borough Park</td>
+<td class="gt_row gt_left" headers="BoroName">Brooklyn</td>
+<td class="gt_row gt_right" headers="max_floors">343</td>
+<td class="gt_row gt_right" headers="median_floors">2</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="NTAName">Financial District-Battery Park City</td>
+<td class="gt_row gt_left" headers="BoroName">Manhattan</td>
+<td class="gt_row gt_right" headers="max_floors">104</td>
+<td class="gt_row gt_right" headers="median_floors">9</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="NTAName">Midtown South-Flatiron-Union Square</td>
+<td class="gt_row gt_left" headers="BoroName">Manhattan</td>
+<td class="gt_row gt_right" headers="max_floors">102</td>
+<td class="gt_row gt_right" headers="median_floors">7</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="NTAName">Midtown-Times Square</td>
+<td class="gt_row gt_left" headers="BoroName">Manhattan</td>
+<td class="gt_row gt_right" headers="max_floors">98</td>
+<td class="gt_row gt_right" headers="median_floors">12</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="NTAName">East Midtown-Turtle Bay</td>
+<td class="gt_row gt_left" headers="BoroName">Manhattan</td>
+<td class="gt_row gt_right" headers="max_floors">77</td>
+<td class="gt_row gt_right" headers="median_floors">5</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="NTAName">Downtown Brooklyn-DUMBO-Boerum Hill</td>
+<td class="gt_row gt_left" headers="BoroName">Brooklyn</td>
+<td class="gt_row gt_right" headers="max_floors">74</td>
+<td class="gt_row gt_right" headers="median_floors">3</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="NTAName">Chinatown-Two Bridges</td>
+<td class="gt_row gt_left" headers="BoroName">Manhattan</td>
+<td class="gt_row gt_right" headers="max_floors">72</td>
+<td class="gt_row gt_right" headers="median_floors">5</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="NTAName">Chelsea-Hudson Yards</td>
+<td class="gt_row gt_left" headers="BoroName">Manhattan</td>
+<td class="gt_row gt_right" headers="max_floors">71</td>
+<td class="gt_row gt_right" headers="median_floors">5</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="NTAName">Tribeca-Civic Center</td>
+<td class="gt_row gt_left" headers="BoroName">Manhattan</td>
+<td class="gt_row gt_right" headers="max_floors">70</td>
+<td class="gt_row gt_right" headers="median_floors">6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="NTAName">Long Island City-Hunters Point</td>
+<td class="gt_row gt_left" headers="BoroName">Queens</td>
+<td class="gt_row gt_right" headers="max_floors">69</td>
+<td class="gt_row gt_right" headers="median_floors">3</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="q9.-population-density-across-nyc" class="level3">
+<h3 class="anchored" data-anchor-id="q9.-population-density-across-nyc">Q9. Population Density Across NYC</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>tract_density <span class="ot">&lt;-</span> nyc_tracts <span class="sc">|&gt;</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">area_sqmi =</span> <span class="fu">as.numeric</span>(units<span class="sc">::</span><span class="fu">set_units</span>(<span class="fu">st_area</span>(geometry), <span class="st">"mi^2"</span>)),</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">density   =</span> <span class="fu">if_else</span>(totalE <span class="sc">&gt;</span> <span class="dv">0</span>, totalE <span class="sc">/</span> area_sqmi, <span class="cn">NA_real_</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tract_density) <span class="sc">+</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> density), <span class="at">color =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_viridis_c</span>(<span class="at">trans =</span> <span class="st">"log10"</span>, <span class="at">labels =</span> comma,</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>                         <span class="at">na.value =</span> <span class="st">"grey85"</span>, <span class="at">name =</span> <span class="st">"People per</span><span class="sc">\n</span><span class="st">sq mile"</span>) <span class="sc">+</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Population Density by Census Tract"</span>,</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">subtitle =</span> <span class="st">"ACS 2024 5-year; grey = no residents (parks, airports)"</span>) <span class="sc">+</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-q9-density-map" class="quarto-float quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-q9-density-map-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="mp03_files/figure-html/fig-q9-density-map-1.png" id="fig-q9-density-map" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-q9-density-map-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="q10.-new-yorkers-in-primarily-commercial-areas" class="level3">
+<h3 class="anchored" data-anchor-id="q10.-new-yorkers-in-primarily-commercial-areas">Q10. New Yorkers in Primarily Commercial Areas</h3>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># My definition (you decide!): a tract is "primarily commercial" if at least</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># half of its building floor area is commercial (PLUTO comarea / bldgarea).</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>COMMERCIAL_CUTOFF <span class="ot">&lt;-</span> <span class="fl">0.5</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>q10 <span class="ot">&lt;-</span> tract_full <span class="sc">|&gt;</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(bldg_area <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">com_share =</span> com_area <span class="sc">/</span> bldg_area,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">primarily_commercial =</span> com_share <span class="sc">&gt;=</span> COMMERCIAL_CUTOFF)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>commercial_tracts <span class="ot">&lt;-</span> <span class="fu">sum</span>(q10<span class="sc">$</span>primarily_commercial)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>commercial_pop    <span class="ot">&lt;-</span> <span class="fu">sum</span>(q10<span class="sc">$</span>pop[q10<span class="sc">$</span>primarily_commercial], <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>commercial_pct    <span class="ot">&lt;-</span> commercial_pop <span class="sc">/</span> <span class="fu">sum</span>(q10<span class="sc">$</span>pop, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<!-- TODO (write yourself). Inline values:
+  284 tracts, 536,242 people,
+  6.3% of New Yorkers -->
+</section>
+</section>
+<section id="atlas-entry" class="level2">
+<h2 class="anchored" data-anchor-id="atlas-entry">Atlas Entry</h2>
+<!-- TODO (write yourself): the 300+ word story, 4+ numbers, history.
+     Put the two maps below wherever they fit your story. -->
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(nta_data <span class="sc">|&gt;</span> <span class="fu">filter</span>(NTAType <span class="sc">==</span> <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> nepalese_share), <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_sf</span>(<span class="at">data =</span> nta_data <span class="sc">|&gt;</span> <span class="fu">filter</span>(NTAType <span class="sc">!=</span> <span class="dv">0</span>),</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">fill =</span> <span class="st">"grey90"</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_viridis_c</span>(<span class="at">option =</span> <span class="st">"magma"</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">labels =</span> percent, <span class="at">name =</span> <span class="st">"Nepalese</span><span class="sc">\n</span><span class="st">share"</span>) <span class="sc">+</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Nepalese Residents by NYC Neighborhood"</span>,</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">subtitle =</span> <span class="st">"ACS 2024 5-year; grey = parks, airports, cemeteries"</span>) <span class="sc">+</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-map-nyc-nepalese" class="quarto-float quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-map-nyc-nepalese-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="mp03_files/figure-html/fig-map-nyc-nepalese-1.png" id="fig-map-nyc-nepalese" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-map-nyc-nepalese-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Metro shapes (cached) + state outlines, with Alaska/Hawaii moved under the map</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>cbsa_geo <span class="ot">&lt;-</span> <span class="fu">get_acs_cached</span>(</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"cbsa_nepalese_acs5_geom"</span>,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">geography =</span> <span class="st">"cbsa"</span>,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">variables =</span> <span class="fu">c</span>(<span class="at">total =</span> <span class="st">"B01003_001"</span>, <span class="at">nepalese =</span> GROUP_VAR),</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">year      =</span> ACS_YEAR,</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">survey    =</span> <span class="st">"acs5"</span>,</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">output    =</span> <span class="st">"wide"</span>,</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">geometry  =</span> <span class="cn">TRUE</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(NAME, <span class="st">", PR"</span>), <span class="sc">!</span><span class="fu">is.na</span>(nepaleseE), nepaleseE <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    tigris<span class="sc">::</span><span class="fu">shift_geometry</span>() <span class="sc">|&gt;</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_centroid</span>()</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>us_states <span class="ot">&lt;-</span> tigris<span class="sc">::</span><span class="fu">states</span>(<span class="at">cb =</span> <span class="cn">TRUE</span>, <span class="at">resolution =</span> <span class="st">"20m"</span>, <span class="at">year =</span> ACS_YEAR) <span class="sc">|&gt;</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span>STUSPS <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"PR"</span>, <span class="st">"VI"</span>, <span class="st">"GU"</span>, <span class="st">"MP"</span>, <span class="st">"AS"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>    tigris<span class="sc">::</span><span class="fu">shift_geometry</span>()</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_sf</span>(<span class="at">data =</span> us_states, <span class="at">fill =</span> <span class="st">"grey95"</span>, <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_sf</span>(<span class="at">data =</span> cbsa_geo <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(nepaleseE)),</span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">size =</span> nepaleseE), <span class="at">color =</span> <span class="st">"#d1495b"</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_size_area</span>(<span class="at">max_size =</span> <span class="dv">14</span>, <span class="at">labels =</span> comma, <span class="at">name =</span> <span class="st">"Nepalese</span><span class="sc">\n</span><span class="st">residents"</span>) <span class="sc">+</span></span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Where Nepalese Americans Live"</span>,</span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>         <span class="at">subtitle =</span> <span class="st">"Metro areas, ACS 2024 5-year"</span>) <span class="sc">+</span></span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_void</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-map-us-metros" class="quarto-float quarto-figure quarto-figure-center anchored" width="672">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-map-us-metros-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="mp03_files/figure-html/fig-map-us-metros-1.png" id="fig-map-us-metros" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-map-us-metros-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="AI Usage Statement">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>AI Usage Statement
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>TODO (write yourself): describe how you used AI in this project.</p>
+</div>
+</div>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
