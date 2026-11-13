@@ -553,15 +553,53 @@ commercial_pct    <- commercial_pop / sum(q10$pop, na.rm = TRUE)
 
 ```{r}
 #| label: fig-map-nyc-nepalese
-ggplot(nta_data |> filter(NTAType == 0)) +
-    geom_sf(aes(fill = nepalese_share), color = "white", linewidth = 0.1) +
+# Extra Credit #1: interactive map + bar chart linked by data_id.
+# Hovering a neighborhood in either panel highlights it in both.
+library(ggiraph)
+library(patchwork)
+
+nta_res <- nta_data |>
+    filter(NTAType == 0) |>
+    mutate(tooltip = paste0(NTAName, " (", BoroName, ")\n",
+                            comma(nepalese), " Nepalese residents\n",
+                            percent(nepalese_share, 0.1), " of neighborhood"))
+
+nyc_map <- ggplot(nta_res) +
+    geom_sf_interactive(aes(fill = nepalese_share, tooltip = tooltip,
+                            data_id = NTA2020),
+                        color = "white", linewidth = 0.1) +
     geom_sf(data = nta_data |> filter(NTAType != 0),
             fill = "grey90", color = "white", linewidth = 0.1) +
     scale_fill_viridis_c(option = "magma", direction = -1,
                          labels = percent, name = "Nepalese\nshare") +
-    labs(title = "Nepalese Residents by NYC Neighborhood",
-         subtitle = "ACS 2024 5-year; grey = parks, airports, cemeteries") +
     theme_void()
+
+top_ntas <- nta_res |>
+    st_drop_geometry() |>
+    slice_max(nepalese, n = 15)
+
+nyc_bars <- ggplot(top_ntas,
+                   aes(x = nepalese, y = fct_reorder(NTAName, nepalese))) +
+    geom_col_interactive(aes(tooltip = tooltip, data_id = NTA2020),
+                         fill = "#7a2048") +
+    scale_x_continuous(labels = comma) +
+    labs(x = "Nepalese residents", y = NULL) +
+    theme_minimal(base_size = 9)
+
+girafe(
+    ggobj = (nyc_map | nyc_bars) +
+        plot_layout(widths = c(1.3, 1)) +
+        plot_annotation(
+            title    = "Nepalese Residents by NYC Neighborhood",
+            subtitle = "ACS 2024 5-year; hover to compare. Grey = parks, airports, cemeteries"
+        ),
+    width_svg = 10, height_svg = 5.5,
+    options = list(
+        opts_hover(css = "stroke:black;stroke-width:1.5px;"),
+        opts_hover_inv(css = "opacity:0.35;"),
+        opts_tooltip(css = "background:white;color:black;padding:6px;border-radius:4px;font-size:12px;")
+    )
+)
 ```
 
 ```{r}
@@ -584,14 +622,29 @@ us_states <- tigris::states(cb = TRUE, resolution = "20m", year = ACS_YEAR) |>
     filter(!STUSPS %in% c("PR", "VI", "GU", "MP", "AS")) |>
     tigris::shift_geometry()
 
-ggplot() +
+cbsa_geo <- cbsa_geo |>
+    arrange(desc(nepaleseE)) |>   # big bubbles drawn first, small ones on top
+    mutate(tooltip = paste0(NAME, "\n", comma(nepaleseE),
+                            " Nepalese residents (±", comma(nepaleseM), ")"))
+
+us_map <- ggplot() +
     geom_sf(data = us_states, fill = "grey95", color = "white") +
-    geom_sf(data = cbsa_geo |> arrange(desc(nepaleseE)),
-            aes(size = nepaleseE), color = "#d1495b", alpha = 0.6) +
+    geom_sf_interactive(data = cbsa_geo,
+                        aes(size = nepaleseE, tooltip = tooltip, data_id = GEOID),
+                        color = "#d1495b", alpha = 0.6) +
     scale_size_area(max_size = 14, labels = comma, name = "Nepalese\nresidents") +
     labs(title = "Where Nepalese Americans Live",
-         subtitle = "Metro areas, ACS 2024 5-year") +
+         subtitle = "Metro areas, ACS 2024 5-year; hover a bubble for details") +
     theme_void()
+
+girafe(
+    ggobj = us_map,
+    width_svg = 10, height_svg = 6,
+    options = list(
+        opts_hover(css = "fill:#7a2048;stroke:black;"),
+        opts_tooltip(css = "background:white;color:black;padding:6px;border-radius:4px;font-size:12px;")
+    )
+)
 ```
 
 ::: {.callout-note title="AI Usage Statement" collapse="true"}
