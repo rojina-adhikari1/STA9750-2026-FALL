@@ -1,0 +1,12 @@
+
+/* Report title */
+.quarto-title-block .title {
+  font-size: 1.65rem;
+  white-space: normal;
+}
+
+/* Report subtitle */
+.quarto-title-block .subtitle {
+  font-size: 1rem;
+  white-space: normal;
+}
