@@ -582,6 +582,8 @@ I defined a primarily commercial census tract as an area where at least 50% of t
 
 Beyond identifying where Nepalese Americans live, this section explores their birthplace and the income levels of the neighborhoods where they live. Birthplace data helps us understand how many Nepalese residents were born in Nepal, while neighborhood income data provides a general picture of the economic conditions in these areas. Together, these findings help us better understand the Nepalese community in New York City beyond population numbers alone.
 
+### Birthplace: How Many Nepalese Americans Are Immigrants?
+
 ```{r}
 #| label: ec2-nepal-born
 # Extra Credit #2a: how many people were born in Nepal (table B05006)?
@@ -630,7 +632,7 @@ birthplace_top5 |>
                subtitle = "ACS 2024 5-year. Approximate: the two tables count people differently.")
 ```
 
-Across the United States, approximately `r scales::percent(us_pct_born_nepal, accuracy = 0.1)` of people identifying as Nepalese were born in Nepal. This provides some insight into the community's immigrant background.
+The birthplace data shows that many people identifying as Nepalese in major US metro areas were born in Nepal. Among the five metro areas analyzed, `r birthplace_top5 |> slice_max(pct_born_nepal, n = 1, with_ties = FALSE) |> pull(NAME)` has the highest approximate birthplace ratio at `r scales::percent(max(birthplace_top5$pct_born_nepal, na.rm = TRUE), accuracy = 1)`, while `r birthplace_top5 |> slice_min(pct_born_nepal, n = 1, with_ties = FALSE) |> pull(NAME)` has the lowest at `r scales::percent(min(birthplace_top5$pct_born_nepal, na.rm = TRUE), accuracy = 1)`. Nationally, the ratio of Nepal-born residents to people identifying as Nepalese is approximately `r scales::percent(us_pct_born_nepal, accuracy = 0.1)`. These differences suggest that Nepalese communities may have different migration and settlement histories across US cities.
 
 ```{r}
 #| label: ec2-income
