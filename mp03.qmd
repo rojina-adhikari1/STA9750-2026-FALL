@@ -309,7 +309,7 @@ I checked the number of records in each dataset and compared the PLUTO census tr
 
 ## Exploratory Data Analysis
 
-This section explores population patterns, housing, and building characteristics across New York City, along with the distribution of Nepalese Americans throughout the United States. Using Census and PLUTO data, the analysis looks at how people and buildings are distributed across different neighborhoods and identifies patterns that may not be immediately obvious.
+This section explores population patterns, housing, and building characteristics across New York City, along with the distribution of Nepalese communities throughout the United States. Using tables, charts, and maps, different areas are compared and interesting patterns were highlighted. 
 
 ```{r}
 #| label: eda-prep
@@ -325,7 +325,7 @@ tract_full <- tract_lookup |>
     left_join(tract_buildings, by = "GEOID")
 ```
 
-### Q1. Most Office Space
+### Q1.Which NYC census tract has the most office floor area?
 
 ```{r}
 #| label: tbl-q1-office
@@ -343,8 +343,8 @@ q1 |>
     tab_header(title = "NYC Tracts with the Most Office Space")
 ```
 
-<!-- TODO (write yourself). Inline values you can use:
-  `r top_office$NTAName`   `r comma(top_office$office_area)`  -->
+According to PLUTO data, `r top_office$tract_name` in `r top_office$NTAName`, `r top_office$BoroName`, has the highest office floor area in New York City, with approximately `r scales::comma(round(top_office$office_area))` square feet. This may be because the area is a major business center with many large office buildings. The result shows how office space is concentrated in certain parts of the city.
+
 
 ### Q2. Most Residential Units
 
