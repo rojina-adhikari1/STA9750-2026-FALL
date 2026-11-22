@@ -580,7 +580,7 @@ I defined a primarily commercial census tract as an area where at least 50% of t
 
 ## Beyond Ancestry: Birthplace and Income
 
-<!-- TODO (write yourself): 1-2 sentences on why birthplace and income add to the story. -->
+Beyond identifying where Nepalese Americans live, this section explores their birthplace and the income levels of the neighborhoods where they live. Birthplace data helps us understand how many Nepalese residents were born in Nepal, while neighborhood income data provides a general picture of the economic conditions in these areas. Together, these findings help us better understand the Nepalese community in New York City beyond population numbers alone.
 
 ```{r}
 #| label: ec2-nepal-born
@@ -608,11 +608,17 @@ nepal_born_us <- get_acs_cached(
 
 us_pct_born_nepal <- nepal_born_us$nepal_bornE / us_pop$nepaleseE
 
-cbsa_pop |>
+birthplace_top5 <- cbsa_pop |>
     filter(!is.na(nepaleseE)) |>
     slice_max(nepaleseE, n = 5) |>
-    left_join(nepal_born_cbsa |> select(GEOID, nepal_bornE), by = "GEOID") |>
-    mutate(pct_born_nepal = nepal_bornE / nepaleseE) |>
+    left_join(
+        nepal_born_cbsa |> select(GEOID, nepal_bornE),
+        by = "GEOID"
+    ) |>
+    mutate(pct_born_nepal = nepal_bornE / nepaleseE)
+
+
+birthplace_top5 |>
     select(NAME, nepaleseE, nepal_bornE, pct_born_nepal) |>
     gt() |>
     cols_label(NAME = "Metro Area", nepaleseE = "Nepalese (ancestry)",
@@ -624,7 +630,7 @@ cbsa_pop |>
                subtitle = "ACS 2024 5-year. Approximate: the two tables count people differently.")
 ```
 
-<!-- TODO (write yourself). Inline value: nationally `r percent(us_pct_born_nepal)` -->
+Across the United States, approximately `r scales::percent(us_pct_born_nepal, accuracy = 0.1)` of people identifying as Nepalese were born in Nepal. This provides some insight into the community's immigrant background.
 
 ```{r}
 #| label: ec2-income
