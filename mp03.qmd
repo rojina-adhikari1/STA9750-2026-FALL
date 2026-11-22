@@ -325,7 +325,11 @@ tibble(
               sum(tract_buildings$GEOID %in% nyc_tracts$GEOID))
 ) |>
     gt() |>
+    tab_header(
+        title = "Data Validation and Quality Checks"
+    ) |>
     style_mp03_table()
+
 ```
 
 I checked the number of records in each dataset and compared the PLUTO census tract IDs with the Census data to find any missing or unmatched records before starting the analysis.
@@ -436,6 +440,9 @@ q4 |>
                nepalese_share = "Nepalese Share") |>
     fmt_number(c(totalE, nepaleseE, nepaleseM), decimals = 0) |>
     fmt_percent(nepalese_share, decimals = 2) |>
+    tab_header(
+    title = "Metro Areas with the Highest Nepalese Population Share"
+) |>
     style_mp03_table()
 ```
 
