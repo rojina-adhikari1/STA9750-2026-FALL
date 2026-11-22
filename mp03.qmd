@@ -364,7 +364,8 @@ q1 |>
     cols_label(tract_name = "Census Tract", NTAName = "Neighborhood",
                BoroName = "Borough", office_area = "Office Floor Area (sq ft)") |>
     fmt_number(office_area, decimals = 0) |>
-    tab_header(title = "NYC Tracts with the Most Office Space")
+    tab_header(title = "NYC Tracts with the Most Office Space") |>
+    style_mp03_table()
 ```
 
 According to PLUTO data, `r top_office$tract_name` in `r top_office$NTAName`, `r top_office$BoroName`, has the highest office floor area in New York City, with approximately `r scales::comma(round(top_office$office_area))` square feet. This may be because the area is a major business center with many large office buildings. The result shows how office space is concentrated in certain parts of the city.
@@ -412,7 +413,8 @@ bind_rows(q3_sqft, q3_unit) |>
                pop_per_unit = "per unit") |>
     fmt_number(pop, decimals = 0) |>
     fmt_number(c(pop_per_1000_sqft, pop_per_unit), decimals = 2) |>
-    tab_header(title = "Most Densely Housed NYC Tracts, Two Ways")
+    tab_header(title = "Most Densely Housed NYC Tracts, Two Ways")|>
+    style_mp03_table()
 ```
 
 I compared population density using two measures: people per 1,000 square feet of residential space and people per residential unit. The results `r if (same_top_tract) "identify the same census tract as the highest under both measures" else "identify different census tracts as the highest under each measure"`. I excluded tracts with fewer than 500 residents, 50 housing units, or 50,000 square feet of residential space to avoid misleading results from very small amounts of housing.
@@ -434,7 +436,7 @@ q4 |>
                nepalese_share = "Nepalese Share") |>
     fmt_number(c(totalE, nepaleseE, nepaleseM), decimals = 0) |>
     fmt_percent(nepalese_share, decimals = 2) |>
-    tab_header(title = "Metros (Outside NYC) with the Largest Nepalese Share")
+    style_mp03_table()
 ```
 
 The five areas with the highest estimated Nepalese population shares outside New York City are shown in the table. `r q4$NAME[1]` ranks first, with Nepalese residents making up approximately `r scales::percent(q4$nepalese_share[1], accuracy = 0.01)` of its population. This suggests that Nepalese communities may be particularly concentrated in some smaller urban areas. However, estimates for small populations can have large margins of error, so these rankings should be interpreted carefully.
@@ -504,7 +506,8 @@ q6 |>
                share_of_us = "Share of All US Nepalese") |>
     fmt_number(nepaleseE, decimals = 0) |>
     fmt_percent(share_of_us, decimals = 1) |>
-    tab_header(title = "Ten Metros with the Most Nepalese Residents")
+    tab_header(title = "Ten Metros with the Most Nepalese Residents")|>
+    style_mp03_table()
 ```
 
 According to the 2024 ACS 5-year estimates, approximately `r scales::comma(us_nepalese)` people identify as Nepalese across the United States. The New York–Newark metro area accounts for about `r scales::percent(ny_share, accuracy = 0.1)` of this population, while the ten largest Nepalese-population metro areas together account for `r scales::percent(top10_share, accuracy = 0.1)`. This shows how much of the Nepalese population is concentrated in major urban areas, while others live outside these leading metros.
@@ -556,7 +559,8 @@ q8 |>
                max_floors = "Tallest Building (floors)",
                median_floors = "Typical Building (median floors)") |>
     fmt_number(c(max_floors, median_floors), decimals = 0) |>
-    tab_header(title = "NYC Neighborhoods with the Tallest Buildings")
+    tab_header(title = "NYC Neighborhoods with the Tallest Buildings")|>
+    style_mp03_table()
 ```
 
 Based on PLUTO data, `r q8$NTAName[1]` in `r q8$BoroName[1]` has the tallest recorded building among the neighborhoods in the table, reaching `r scales::comma(q8$max_floors[1])` floors. Areas with very tall buildings may have more commercial activity or high-rise residential developments. However, the tallest building does not represent the typical building height in a neighborhood, so the table also includes median floors for comparison.
@@ -653,7 +657,8 @@ birthplace_top5 |>
     fmt_number(c(nepaleseE, nepal_bornE), decimals = 0) |>
     fmt_percent(pct_born_nepal, decimals = 0) |>
     tab_header(title = "How Many Nepalese Americans Are Immigrants?",
-               subtitle = "ACS 2024 5-year. Approximate: the two tables count people differently.")
+               subtitle = "ACS 2024 5-year. Approximate: the two tables count people differently.")|>
+    style_mp03_table()
 ```
 
 The birthplace data shows that many people identifying as Nepalese in major US metro areas were born in Nepal. Among the five metro areas analyzed, `r birthplace_top5 |> slice_max(pct_born_nepal, n = 1, with_ties = FALSE) |> pull(NAME)` has the highest approximate birthplace ratio at `r scales::percent(max(birthplace_top5$pct_born_nepal, na.rm = TRUE), accuracy = 1)`, while `r birthplace_top5 |> slice_min(pct_born_nepal, n = 1, with_ties = FALSE) |> pull(NAME)` has the lowest at `r scales::percent(min(birthplace_top5$pct_born_nepal, na.rm = TRUE), accuracy = 1)`. Nationally, the ratio of Nepal-born residents to people identifying as Nepalese is approximately `r scales::percent(us_pct_born_nepal, accuracy = 0.1)`. These differences suggest that Nepalese communities may have different migration and settlement histories across US cities.
@@ -690,7 +695,8 @@ tibble(
     cols_label(group = "", income = "Median Household Income of Home Tract") |>
     fmt_currency(income, decimals = 0) |>
     tab_header(title = "Neighborhood Income: Nepalese vs. All New Yorkers",
-               subtitle = "Population-weighted average of tract medians, ACS 2024 5-year")
+               subtitle = "Population-weighted average of tract medians, ACS 2024 5-year")|>
+    style_mp03_table()
 ```
 
 The income analysis shows that Nepalese New Yorkers live in neighborhoods with an estimated average tract median household income of `r scales::dollar(nepalese_tract_income, accuracy = 1)`, compared with `r scales::dollar(all_tract_income, accuracy = 1)` for New Yorkers overall. This is approximately `r scales::dollar(all_tract_income - nepalese_tract_income, accuracy = 1)` lower, representing a difference of `r scales::percent((all_tract_income - nepalese_tract_income) / all_tract_income, accuracy = 0.1)`. This suggests that Nepalese residents tend to live in neighborhoods with somewhat lower median household incomes than the citywide comparison. However, these figures describe neighborhood income levels, not the actual income of Nepalese households.
