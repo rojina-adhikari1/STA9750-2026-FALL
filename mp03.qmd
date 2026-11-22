@@ -392,7 +392,9 @@ bind_rows(q3_sqft, q3_unit) |>
 ```
 
 I compared population density using two measures: people per 1,000 square feet of residential space and people per residential unit. The results `r if (same_top_tract) "identify the same census tract as the highest under both measures" else "identify different census tracts as the highest under each measure"`. I excluded tracts with fewer than 500 residents, 50 housing units, or 50,000 square feet of residential space to avoid misleading results from very small amounts of housing.
-### Q4. Metros with the Highest Nepalese Share
+
+
+### Q4. Which five metro areas outside NYC have the highest Nepalese population share?
 
 ```{r}
 #| label: tbl-q4-share
@@ -411,9 +413,10 @@ q4 |>
     tab_header(title = "Metros (Outside NYC) with the Largest Nepalese Share")
 ```
 
-<!-- Note for your text: ACS-1 margins of error are large for small groups. -->
+The five areas with the highest estimated Nepalese population shares outside New York City are shown in the table. `r q4$NAME[1]` ranks first, with Nepalese residents making up approximately `r scales::percent(q4$nepalese_share[1], accuracy = 0.01)` of its population. This suggests that Nepalese communities may be particularly concentrated in some smaller urban areas. However, estimates for small populations can have large margins of error, so these rankings should be interpreted carefully.
 
-### Q5. Asian Ancestry Mix in Another Large Metro
+
+### Q5. What is the distribution of Asian ancestry groups in another large metro area?
 
 ```{r}
 #| label: fig-q5-ancestry
@@ -454,7 +457,9 @@ ggplot(q5, aes(x = people, y = fct_reorder(region, people))) +
     theme_minimal()
 ```
 
-### Q6. Where US Nepalese Residents Live
+I selected `r COMPARISON_METRO` to explore the distribution of Asian population groups outside New York City. The chart compares the estimated populations of different groups, with `r q5$region[which.max(q5$people)]` having the largest total among the categories displayed. This shows that Asian communities in the metro area come from different backgrounds and are not evenly distributed across groups. People reporting multiple identities may be counted in more than one category.
+
+### Q6. What share of Nepalese Americans live in New York and other major metro areas?
 
 ```{r}
 #| label: tbl-q6-us-share
@@ -478,11 +483,9 @@ q6 |>
     tab_header(title = "Ten Metros with the Most Nepalese Residents")
 ```
 
-<!-- TODO (write yourself). Inline values:
-  US total `r comma(us_nepalese)`, NY metro `r percent(ny_share, 0.1)`,
-  top 10 combined `r percent(top10_share, 0.1)` -->
+According to the 2024 ACS 5-year estimates, approximately `r scales::comma(us_nepalese)` people identify as Nepalese across the United States. The New York–Newark metro area accounts for about `r scales::percent(ny_share, accuracy = 0.1)` of this population, while the ten largest Nepalese-population metro areas together account for `r scales::percent(top10_share, accuracy = 0.1)`. This shows how much of the Nepalese population is concentrated in major urban areas, while others live outside these leading metros.
 
-### Q7. Population vs. Housing
+### Q7. Is there a relationship between population and housing?
 
 ```{r}
 #| label: fig-q7-pop-housing
@@ -504,9 +507,9 @@ ggplot(q7, aes(x = res_units, y = pop)) +
     theme(legend.position = "top")
 ```
 
-<!-- TODO (write yourself). Correlation: `r round(pop_unit_cor, 2)` -->
+The scatter plot shows how population changes with the number of residential units across NYC census tracts. The correlation is `r round(pop_unit_cor, 2)`, indicating `r if (pop_unit_cor >= 0.7) "a strong positive relationship" else if (pop_unit_cor >= 0.4) "a moderate positive relationship" else if (pop_unit_cor >= 0) "a weak positive relationship" else "a negative relationship"` between housing units and population. However, the points do not necessarily follow a perfect straight line because household sizes, building occupancy, and housing types vary across neighborhoods.
 
-### Q8. Neighborhoods with the Tallest Buildings
+### Q8. Which NTAs have the tallest buildings?
 
 ```{r}
 #| label: tbl-q8-floors
@@ -532,7 +535,9 @@ q8 |>
     tab_header(title = "NYC Neighborhoods with the Tallest Buildings")
 ```
 
-### Q9. Population Density Across NYC
+Based on PLUTO data, `r q8$NTAName[1]` in `r q8$BoroName[1]` has the tallest recorded building among the neighborhoods in the table, reaching `r scales::comma(q8$max_floors[1])` floors. Areas with very tall buildings may have more commercial activity or high-rise residential developments. However, the tallest building does not represent the typical building height in a neighborhood, so the table also includes median floors for comparison.
+
+### Q9. How does population density vary across NYC?
 
 ```{r}
 #| label: fig-q9-density-map
@@ -551,7 +556,9 @@ ggplot(tract_density) +
     theme_void()
 ```
 
-### Q10. New Yorkers in Primarily Commercial Areas
+The map shows how population density differs across New York City's census tracts, measured in people per square mile. Darker areas represent higher population density, while lighter areas have fewer people per square mile. These differences may reflect variations in housing, land use, and residential development. The map also helps identify areas where residents live close together compared with less densely populated parts of the city.
+
+### Q10. How many New Yorkers live in primarily commercial areas?
 
 ```{r}
 #| label: q10-commercial
@@ -569,9 +576,7 @@ commercial_pop    <- sum(q10$pop[q10$primarily_commercial], na.rm = TRUE)
 commercial_pct    <- commercial_pop / sum(q10$pop, na.rm = TRUE)
 ```
 
-<!-- TODO (write yourself). Inline values:
-  `r commercial_tracts` tracts, `r comma(commercial_pop)` people,
-  `r percent(commercial_pct, 0.1)` of New Yorkers -->
+I defined a primarily commercial census tract as an area where at least 50% of the building floor space is used for commercial purposes. Based on this definition, `r scales::comma(commercial_tracts)` census tracts are primarily commercial, with approximately `r scales::comma(commercial_pop)` residents, representing `r scales::percent(commercial_pct, accuracy = 0.1)` of the population in the analyzed tracts. However, some of these areas may also contain residential buildings, so this definition is only an approximate measure of commercial land use.
 
 ## Beyond Ancestry: Birthplace and Income
 
