@@ -346,7 +346,7 @@ q1 |>
 According to PLUTO data, `r top_office$tract_name` in `r top_office$NTAName`, `r top_office$BoroName`, has the highest office floor area in New York City, with approximately `r scales::comma(round(top_office$office_area))` square feet. This may be because the area is a major business center with many large office buildings. The result shows how office space is concentrated in certain parts of the city.
 
 
-### Q2. Most Residential Units
+### Q2. Which NYC NTA has the most residential units?
 
 ```{r}
 #| label: q2-units
@@ -360,7 +360,7 @@ top_units_nta <- nta_units |> slice(1)
 
 The neighborhood with the most residential units is `r top_units_nta$NTAName` in `r top_units_nta$BoroName`, with approximately `r scales::comma(round(top_units_nta$res_units))` units. This suggests that the area has a large amount of housing, possibly because of its size or the presence of apartment buildings. However, having more residential units does not necessarily mean having the highest population.
 
-### Q3. Most Crowded Tracts
+### Q3. Which census tract has the highest population per residential space?
 
 ```{r}
 #| label: tbl-q3-density
@@ -391,8 +391,7 @@ bind_rows(q3_sqft, q3_unit) |>
     tab_header(title = "Most Densely Housed NYC Tracts, Two Ways")
 ```
 
-<!-- TODO (write yourself): does the answer change? `r same_top_tract` is TRUE/FALSE -->
-
+I compared population density using two measures: people per 1,000 square feet of residential space and people per residential unit. The results `r if (same_top_tract) "identify the same census tract as the highest under both measures" else "identify different census tracts as the highest under each measure"`. I excluded tracts with fewer than 500 residents, 50 housing units, or 50,000 square feet of residential space to avoid misleading results from very small amounts of housing.
 ### Q4. Metros with the Highest Nepalese Share
 
 ```{r}
