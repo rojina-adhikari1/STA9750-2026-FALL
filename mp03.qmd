@@ -52,6 +52,27 @@ GROUP_VAR <- "B02018_024"
 ACS_YEAR  <- 2024
 ```
 
+
+```{r}
+style_mp03_table <- function(tbl) {
+  tbl |>
+    gt::tab_options(
+      table.width = gt::pct(100),
+      table.font.size = gt::px(13),
+      data_row.padding = gt::px(8),
+      heading.background.color = "#126E73",
+      heading.title.font.size = gt::px(19),
+      heading.subtitle.font.size = gt::px(12),
+      column_labels.font.weight = "bold",
+      row.striping.include_table_body = TRUE,
+      row.striping.background_color = "#F5F8F8"
+    )
+}
+```
+
+
+
+
 ```{r}
 #| label: acs-cache-helper
 #| include: false
@@ -292,16 +313,19 @@ PLUTO provides information about NYC properties, including residential units, of
 
 
 ## Data Validation and Quality Checks
+
 ```{r}
 #| label: data-check
-# Quick sanity checks: run these and look at the numbers before moving on
+
 tibble(
     check = c("Metros", "NYC tracts", "NTAs", "PLUTO lots",
               "PLUTO tracts matched to Census tracts"),
-    value = c(nrow(cbsa_pop), nrow(nyc_tracts), nrow(nyc_nta), nrow(pluto),
+    value = c(nrow(cbsa_pop), nrow(nyc_tracts), nrow(nyc_nta),
+              nrow(pluto),
               sum(tract_buildings$GEOID %in% nyc_tracts$GEOID))
 ) |>
-    gt()
+    gt() |>
+    style_mp03_table()
 ```
 
 I checked the number of records in each dataset and compared the PLUTO census tract IDs with the Census data to find any missing or unmatched records before starting the analysis.
@@ -580,7 +604,7 @@ I defined a primarily commercial census tract as an area where at least 50% of t
 
 ## Beyond Ancestry: Birthplace and Income
 
-Beyond identifying where Nepalese Americans live, this section explores their birthplace and the income levels of the neighborhoods where they live. Birthplace data helps us understand how many Nepalese residents were born in Nepal, while neighborhood income data provides a general picture of the economic conditions in these areas. Together, these findings help us better understand the Nepalese community in New York City beyond population numbers alone.
+Along with where Nepalese Americans live, this section explores their birthplace and the income levels of the neighborhoods where they live. Birthplace data helps us understand how many Nepalese residents were born in Nepal, while neighborhood income data provides a general picture of the economic conditions in these areas. Ultimately, these findings help us learn more about the Nepalese community in New York City beyond just population numbers.
 
 ### Birthplace: How Many Nepalese Americans Are Immigrants?
 
