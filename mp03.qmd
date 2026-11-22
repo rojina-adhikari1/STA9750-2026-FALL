@@ -358,8 +358,7 @@ nta_units <- tract_full |>
 top_units_nta <- nta_units |> slice(1)
 ```
 
-<!-- TODO (write yourself). Inline values:
-  `r top_units_nta$NTAName`   `r top_units_nta$BoroName`   `r comma(top_units_nta$res_units)` -->
+The neighborhood with the most residential units is `r top_units_nta$NTAName` in `r top_units_nta$BoroName`, with approximately `r scales::comma(round(top_units_nta$res_units))` units. This suggests that the area has a large amount of housing, possibly because of its size or the presence of apartment buildings. However, having more residential units does not necessarily mean having the highest population.
 
 ### Q3. Most Crowded Tracts
 
