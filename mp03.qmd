@@ -16,33 +16,26 @@ execute:
 
 ## Introduction
 
+Nepalese community in the United States continues to grow, with strong roots in Nepal- a South Asian Country known for the Himalayas and Mount Everest. In the United States, have built communities while keeping their language, culture, and traditions alive. New York City, especially Queens, has become an important place for this community.
 
+This atlas entry looks at where Nepalese Americans live, starting with neighborhoods in New York City and then looking at their presence across the United States.Using the 2024 American Community Survey (ACS) 5-year estimates, NYC neighborhood boundaries, and PLUTO building data, the report combines Census findings and interactive maps to tell the story of where Nepalese communities are concentrated, how they are distributed across different cities, and some unexpected patterns in their geographic distribution.
 
-Nepal, a South Asian Country
-known for the Himalayas and Mount Everest, is also home to people who have built new lives across the world. In the United States, Nepalese immigrants and their families have established communities while keeping their culture and traditions alive. New York City, especially Queens, has become an important place for this community.
-Nepalese Americans are a growing community in the United States, with roots in Nepal, a South Asian country known for its Himalayan mountains and rich cultural traditions. Over the years, many Nepalese people have moved to the US for education, employment, and better opportunities. They have built communities while maintaining connections to their language, culture, and traditions. New York City, particularly Queens, has become an important home for many Nepalese families.
-
-This report explores where Nepalese Americans live, starting with neighborhoods in New York City and then looking at their presence across the United States. It also highlights some unexpected patterns in where Nepalese communities are found. Using the 2024 American Community Survey (ACS) 5-year estimates, NYC neighborhood boundaries, and PLUTO building data, the report combines Census findings and interactive maps to tell their story.
-This atlas entry explores where Nepalese Americans live, both within New York City and across the United States. Using Census data, neighborhood information, and interactive maps, it highlights where Nepalese communities are concentrated, how they are distributed across different cities, and some surprising geographic patterns
-
-
-## Data and Methods
-
-This report uses data from the 2024 American Community Survey (ACS), New York City's Neighborhood Tabulation Areas (NTAs), and PLUTO building data.
-
-The ACS provides population estimates, including the number of people identifying as Nepalese. I initially considered the ACS 1-year estimates, but Nepalese population counts were suppressed for metropolitan areas. Therefore, I used the ACS 5-year estimates, which combine five years of survey responses and provide more reliable estimates for smaller communities.
-
-To study NYC in more detail, I used census tracts, which are small geographic areas used by the Census Bureau, and NTAs, which group neighborhoods for local analysis. PLUTO provides information about NYC buildings and properties, including residential units, office space, and building height.
-
-I also saved downloaded data locally to avoid repeated downloads, reduce processing time, and make the analysis easier to reproduce.
 
 ## Data Acquisition
 
-CHECK for CORRECTNESS
-The data for this project was collected from several public sources. I used the American Community Survey (ACS) to gather population and ancestry information across New York City and the United States. NYC neighborhood boundaries were used to identify different areas, while PLUTO data provided details about buildings, residential units, and commercial spaces. The datasets were downloaded and saved locally to avoid repeated downloads and make the analysis easier to reproduce.
+This report uses data from three public sources as follows:
+
+1. **American Community Survey (ACS):** The ACS provides populations estimates including Nepalese population. I initially explored the ACS 1-year estimates, but they did not provide the coverage needed for my metropolitan-area analysis. Therefore, I used the ACS 5-year estimates, which combine responses from 2020 to 2024 and are better suited for smaller population groups.
+
+2. **New York City's Neighborhood Tabulation Areas (NTAs): **To study NYC more closely, census tracts are used which are small geographic areas used by the Census Bureau, and NTAs, which group census tracts into larger areas for neighborhood-level analysis.
+
+3. **PLUTO building data:** PLUTO provides information about NYC properties, including residential units, office space, commercial space and building height.
+
+The datasets were downloaded and saved locally to avoid repeated downloads and make the analysis easier to reproduce.
 
 ```{r}
 #| label: setup
+#| include: false
 library(tidyverse)
 library(tidycensus)
 library(sf)
@@ -67,6 +60,7 @@ ACS_YEAR  <- 2024
 #| label: acs-cache-helper
 # Same caching idea as MP02: only hit the API if the file isn't saved yet.
 # To refresh (e.g. after adding variables), delete the matching .rds file.
+#| include: false
 get_acs_cached <- function(file_name, ...){
     file_path <- fs::path(DATA_DIR, paste0(file_name, ".rds"))
 
