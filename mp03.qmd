@@ -797,3 +797,9 @@ The 2015 earthquake in Nepal also affected Nepalese communities in America. Foll
 The two interactive maps show how Nepalese communities are distributed across New York City and the United States. The NYC map highlights differences between neighborhoods, showing where Nepalese residents are most concentrated and where they make up a larger share of the local population. The national map provides a broader view, showing how Nepalese communities are spread across metropolitan areas beyond New York.
 
 Both maps allow readers to hover over different locations to explore population estimates. Together, they show that Nepalese Americans have established communities in different parts of the country, while certain neighborhoods and cities remain important centers of settlement.
+
+## Conclusion
+
+This report highlights how Nepalese Americans have established communities in New York City and across the United States. Queens stands out as an important center for the community, while metropolitan areas such as Dallas show that Nepalese settlement extends well beyond New York. The birthplace analysis also suggests that migration continues to play an important role in shaping these communities.
+
+However, Census estimates have limitations, especially when studying smaller populations. The data shows where Nepalese Americans live but cannot fully explain their reasons for moving or their personal experiences. Despite these limitations, the maps and findings provide a clearer picture of the Nepalese American community and its geographic distribution.
