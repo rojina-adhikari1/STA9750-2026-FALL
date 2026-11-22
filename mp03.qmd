@@ -23,13 +23,9 @@ This atlas entry looks at where Nepalese Americans live, starting with neighborh
 
 ## Data Acquisition
 
-This report uses data from three public sources as follows:
+This report uses data from the 2024 American Community Survey (ACS), New York City's Neighborhood Tabulation Areas (NTAs), and PLUTO building data to explore population and geographic patterns. 
 
-1. **American Community Survey (ACS):** The ACS provides populations estimates including Nepalese population. I initially explored the ACS 1-year estimates, but they did not provide the coverage needed for my metropolitan-area analysis. Therefore, I used the ACS 5-year estimates, which combine responses from 2020 to 2024 and are better suited for smaller population groups.
-
-2. **New York City's Neighborhood Tabulation Areas (NTAs): **To study NYC more closely, census tracts are used which are small geographic areas used by the Census Bureau, and NTAs, which group census tracts into larger areas for neighborhood-level analysis.
-
-3. **PLUTO building data:** PLUTO provides information about NYC properties, including residential units, office space, commercial space and building height.
+The ACS provides populations estimates including Nepalese population.I used the ACS 5-year estimates from 2020 to 2024 instead of the 1-year estimates because they provide better coverage for studying smaller communities, including Nepalese Americans. 
 
 The datasets were downloaded and saved locally to avoid repeated downloads and make the analysis easier to reproduce.
 
@@ -58,9 +54,10 @@ ACS_YEAR  <- 2024
 
 ```{r}
 #| label: acs-cache-helper
+#| include: false
 # Same caching idea as MP02: only hit the API if the file isn't saved yet.
 # To refresh (e.g. after adding variables), delete the matching .rds file.
-#| include: false
+
 get_acs_cached <- function(file_name, ...){
     file_path <- fs::path(DATA_DIR, paste0(file_name, ".rds"))
 
@@ -115,6 +112,8 @@ us_pop <- get_acs_cached(
 )
 ```
 
+Core-Based Statistical Areas (CBSAs) are geographic regions that include cities and their surrounding areas to compare Nepalese population patterns across different areas of the United States.
+
 ### NYC Census Tract Population
 
 ```{r}
@@ -134,6 +133,8 @@ nyc_tracts <- get_acs_cached(
     geometry  = TRUE
 )
 ```
+
+Census tracts are small geographic areas defined by the US Census Bureau to study population patterns.Population data for census tracts were used across all five boroughs of New York City to identify where Nepalese residents live and how their population is distributed across different parts of the city.
 
 ### NYC Neighborhood Tabulation Areas
 
@@ -177,6 +178,9 @@ load_nyc_nta <- function(){
 nyc_nta <- load_nyc_nta()
 ```
 
+Neighborhood Tabulation Areas (NTAs) is used to study population patterns at the neighborhood level. These boundaries group smaller census tracts into larger neighborhoods, making it easier to compare different areas.
+
+
 ### Aggregating Tracts to Neighborhoods
 
 ```{r}
@@ -201,6 +205,8 @@ nta_data <- nyc_nta |>
     left_join(nta_pop, by = "NTA2020") |>
     mutate(nepalese_share = nepalese / total)
 ```
+
+I grouped census tracts into their matching NTAs and added up their population estimates. This helps me compare the total population and Nepalese population in different NYC neighborhoods.
 
 ### NYC PLUTO (Tax Lot Data)
 
@@ -282,6 +288,10 @@ tract_buildings <- pluto |>
     )
 ```
 
+PLUTO provides information about NYC properties, including residential units, office space, commercial space and building height. This information helps explore how housing and buildings relate to population patterns.
+
+
+## Data Validation and Quality Checks
 ```{r}
 #| label: data-check
 # Quick sanity checks: run these and look at the numbers before moving on
@@ -293,6 +303,9 @@ tibble(
 ) |>
     gt()
 ```
+
+I checked the number of records in each dataset and compared the PLUTO census tract IDs with the Census data to find any missing or unmatched records before starting the analysis.
+
 
 ## Exploratory Data Analysis
 
