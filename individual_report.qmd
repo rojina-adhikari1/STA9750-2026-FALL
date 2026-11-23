@@ -45,6 +45,24 @@ SUNY provides a useful comparison because both university systems operate within
 
 This analysis contributes to our overarching research question by examining whether CUNY's institutional response coincided with stronger adult enrollment recovery. Using enrollment trends, event-study models and robustness checks, I examine whether the evidence supports this expectation without assuming that Reconnect caused the observed changes.
 
+# Program Background and Prior Research
+
+## Institutional Recovery Initiatives
+
+CUNY introduced several initiatives to support students following the COVID-19 pandemic. In 2021, the [CUNY Comeback Program](https://www.cuny.edu/news/governor-cuomo-announces-sweeping-125-million-debt-relief-program-for-at-least-50000-students/) addressed financial barriers by clearing outstanding student balances accumulated during the pandemic.
+
+CUNY Reconnect followed in Fall 2022, focusing on bringing former students back to college. In Fall 2025, [New York State expanded free community college opportunities](https://hesc.ny.gov/about/news-releases/governor-hochul-welcomes-suny-and-cuny-reconnect-students-community-colleges) across both CUNY and SUNY for eligible adults aged 25–55 pursuing degrees in high-demand fields.
+
+Therefore, the main statistical analysis ends in 2024 to avoid overlapping with this new statewide initiative.
+
+## Prior Research and Research Gap
+
+A [2026 evaluation of Tennessee Reconnect](https://www.comptroller.tn.gov/office-functions/research-and-education-accountability1/collections/higher-ed-scholarships/tennessee-reconnect-grant-evaluation01.html) found that program participation fell from approximately 26,000 students in 2018–19 to 13,000 in 2022–23. More than 90% of potentially eligible students identified in the evaluation did not apply, highlighting the challenges of attracting adult learners.
+
+Similarly, the [National Student Clearinghouse's 2024 report](https://www.studentclearinghouse.org/news/more-than-36-million-adults-under-65-now-have-some-college-experience-but-no-earned-credential/) found that although more than 943,000 former students returned to college in 2022–23, they represented only 2.6% of the population with previous college experience but no credential.
+
+While these studies examine program participation and individual re-enrollment, my analysis takes an institution-level approach. Using publicly available enrollment data, I compare adult and younger student enrollment across CUNY and SUNY before and after 2022. This allows me to investigate whether CUNY experienced a distinct adult enrollment recovery rather than simply following broader recovery trends. However, the data cannot identify individual Reconnect participants.
+
 ```{r}
 #| label: sq3-setup
 #| include: false
