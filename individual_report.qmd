@@ -1,18 +1,49 @@
 ---
+title: "Did CUNY Reconnect Bring Adult Students Back?"
+subtitle: "A Comparative Analysis of CUNY and SUNY Enrollment Recovery, 2015–2024"
+author: "Rojina Adhikari"
+date: last-modified
 format:
   html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    number-sections: true
+    code-fold: true
+    code-tools: true
+    code-summary: "Show R code"
+    fig-cap-location: bottom
+    tbl-cap-location: top
     grid:
       body-width: 1100px
+execute:
+  echo: true
+  warning: false
+  message: false
 ---
 
-## SQ3: Institutional Recovery Programs
+# Introduction
 
-**After CUNY Reconnect launched in Fall 2022, did adult (25+) undergraduate
-enrollment at CUNY community colleges grow faster than younger enrollment —
-and faster than at SUNY community colleges, which had no equivalent program
-until Fall 2025?**
+In Fall 2022, CUNY launched [CUNY Reconnect](https://www.cuny.edu/news/council-speaker-adams-and-cuny-chancellor-matos-rodriguez-launch-program-to-re-engage-thousands-of-former-working-age-students-towards-gaining-degrees-that-increase-earning-potential/) to help former students return to college and complete their degrees. While the program aimed to support enrollment recovery, an important question remains: did adult enrollment recover more strongly at CUNY than at other public colleges in New York?
 
-<!-- 2–3 sentences of motivation -->
+Our team project addresses the following overarching question (OQ):
+
+**How have major disruptions since 2015 coincided with changes in CUNY enrollment, and which student populations and institutions have experienced the greatest declines and recoveries?**
+
+My individual analysis focuses on adult learners aged 25 and older, who may face additional challenges when returning to college, such as work, financial and family responsibilities.
+
+## Specific Research Question
+
+::: {.callout-note icon=false}
+**SQ3: Institutional Recovery Programs**
+
+After CUNY Reconnect launched in Fall 2022, did adult (25+) undergraduate enrollment at CUNY community colleges grow faster than younger enrollment — and faster than at SUNY community colleges, which had no equivalent program until Fall 2025?
+:::
+
+SUNY provides a useful comparison because both university systems operate within New York State and experienced the pandemic, although their local conditions may differ. Community colleges are the primary focus, while four-year colleges provide an additional comparison.
+
+This analysis contributes to our overarching research question by examining whether CUNY's institutional response coincided with stronger adult enrollment recovery. Using enrollment trends, event-study models and robustness checks, I examine whether the evidence supports this expectation without assuming that Reconnect caused the observed changes.
 
 ```{r}
 #| label: sq3-setup
