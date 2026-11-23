@@ -840,3 +840,11 @@ Both maps allow readers to hover over different locations to explore population 
 This report highlights how Nepalese Americans have established communities in New York City and across the United States. Queens stands out as an important center for the community, while metropolitan areas such as Dallas show that Nepalese settlement extends well beyond New York. The birthplace analysis also suggests that migration continues to play an important role in shaping these communities.
 
 However, Census estimates have limitations, especially when studying smaller populations. The data shows where Nepalese Americans live but cannot fully explain their reasons for moving or their personal experiences. Despite these limitations, the maps and findings provide a clearer picture of the Nepalese American community and its geographic distribution.
+
+## AI Usage Statement
+
+::: {.callout-note title="AI Usage Statement" collapse="true"}
+
+I used ChatGPT (OpenAI) to assist with this mini-project. It helped me understand R code, troubleshoot errors, improve table formatting,improving visualizations, and use inline R expressions to keep numerical results updated. I  used it to organize my writing into specific format and get suggestions on what information to include in different sections of the report. It also helped me review my writing to check whether the explanations were clear, complete, and sufficient to meet the assignment requirements.
+
+:::
