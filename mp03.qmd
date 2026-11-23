@@ -712,7 +712,7 @@ The income analysis shows that Nepalese New Yorkers live in neighborhoods with a
 
 ### A Little Nepal in New York City
 
-New York City has become an important home for Nepalese Americans, especially in Queens. Neighborhoods such as Jackson Heights and Elmhurst are known for their South Asian communities, where visitors can find Nepali restaurants, grocery stores, and businesses that reflect the community's culture.
+New York City has become an important home for Nepalese Americans, especially in Queens. Cities such as Jackson Heights and Elmhurst are popular for their South Asian communities, where people can find Nepali restaurants, typical grocery stores, and businesses that reflect the community's life style and culture.
 
 According to the 2024 ACS 5-year estimates, `r nta_data |> filter(NTAType == 0) |> st_drop_geometry() |> slice_max(nepalese, n = 1, with_ties = FALSE) |> pull(NTAName)` has the largest estimated Nepalese population among NYC's residential Neighborhood Tabulation Areas, with approximately `r nta_data |> filter(NTAType == 0) |> st_drop_geometry() |> summarize(n = max(nepalese, na.rm = TRUE)) |> pull(n) |> scales::comma()` residents identifying as Nepalese. The interactive NYC map below helps show how the community is distributed across different neighborhoods.
 
@@ -769,9 +769,9 @@ girafe(
 
 ### Beyond New York: Nepalese Communities Across America
 
-Although New York City is an important center for Nepalese Americans, the community extends well beyond the city. According to the 2024 ACS 5-year estimates, approximately `r scales::comma(us_nepalese)` people across the United States identify as Nepalese. The New York metropolitan area accounts for about `r scales::percent(ny_share, accuracy = 0.1)` of this population, while the ten metro areas with the largest Nepalese populations together account for `r scales::percent(top10_share, accuracy = 0.1)`.
+Not just the New York City is a heart to Nepalese Americans, the community extends across America. According to the 2024 ACS 5-year estimates, approximately `r scales::comma(us_nepalese)` people across the United States identify as Nepalese. The New York metropolitan area accounts for about `r scales::percent(ny_share, accuracy = 0.1)` of this population, while the ten metro areas with the largest Nepalese populations together account for `r scales::percent(top10_share, accuracy = 0.1)`.
 
-One interesting finding is the presence of a large Nepalese community in the Dallas metropolitan area, showing that Nepalese settlement is not limited to traditional immigrant destinations like New York. Opportunities for employment, education, and family connections may help explain why Nepalese communities have developed in different parts of the country.
+One surprising finding is the large Nepalese community in the Dallas metropolitan area. This shows that Nepalese settlement is not limited to major cities like New York but also in other parts os the country. Job opportunities, education, and family connections may be the reason why Nepalese communities have developed in different parts of the country.
 
 The interactive US map below shows these patterns, with larger circles representing metro areas with more Nepalese residents. Readers can hover over each circle to explore the estimated population.
 
@@ -823,11 +823,11 @@ girafe(
 
 ### From Nepal to America: A Story of Migration
 
-Nepalese migration to the United States was relatively small before the 2000s but grew significantly in the following decades. Many Nepalese people moved to America in search of education, employment, and better opportunities. According to a [2024 study published in *Genealogy*](https://www.mdpi.com/2313-5778/8/2/42), Nepalese immigration increased considerably after 2000, helping communities develop in different parts of the country.
+Nepalese migration to the United States was relatively small before the 2000s but increased rapidly in the years that followed. Many Nepalese people moved to America in search of education, employment, and better opportunities. According to a [2024 study published in *Genealogy*](https://www.mdpi.com/2313-5778/8/2/42), Nepalese immigration increased considerably after 2000, and begun building communities in different parts of the country.
 
-Another important chapter began in 2008, when Bhutanese refugees who had been living in camps in Nepal started arriving in the United States through resettlement programs. As reported by the [United Nations High Commissioner for Refugees (UNHCR)](https://www.unhcr.org/news/briefing-notes/nepal-large-scale-resettlement-refugees-bhutan), many of these refugees had spent years in Nepal before moving abroad. Although many shared Nepalese language and cultural traditions, they originally came from Bhutan. 
+Another important event took place in 2008, when Bhutanese refugees began relocating from camps in Nepal to the United States through resettlement programs. As reported by the [United Nations High Commissioner for Refugees (UNHCR)](https://www.unhcr.org/news/briefing-notes/nepal-large-scale-resettlement-refugees-bhutan), many of these refugees had spent years in Nepal before moving abroad. Although many shared Nepalese language and cultural traditions, they were originally from Bhutan. 
 
-The 2015 earthquake in Nepal also affected Nepalese communities in America. Following the disaster, the [US Department of Homeland Security](https://www.govinfo.gov/app/details/FR-2015-06-24/2015-15576) designated Nepal for Temporary Protected Status (TPS), allowing eligible Nepalese nationals already living in the United States to remain and work temporarily.
+The 2015 earthquake in Nepal also had an impact on  Nepalese communities in America. After the disaster, the [US Department of Homeland Security](https://www.govinfo.gov/app/details/FR-2015-06-24/2015-15576) designated Nepal for Temporary Protected Status (TPS), allowing eligible Nepalese nationals already in the United States to stay and work in the US temporarily.
 
 ### What the Maps Reveal
 
