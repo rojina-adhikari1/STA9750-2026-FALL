@@ -231,7 +231,14 @@ read_cuny_age <- function(yy){
   raw |>
     filter(college != "Total", databook_sector != "University Total") |>
     mutate(across(c(under25, age25plus, total), readr::parse_number),
+           
+           # Audit of 2022–2025 exports identified six missing values,
+           # all in Journalism and Law School.
+           # No community college enrollment values were missing.
+           # Missing Journalism counts are treated as zero, an assumption
+           # that may affect Graduate Center totals but not community colleges.
            across(c(under25, age25plus, total), ~ replace_na(.x, 0)),
+           
            year = yy)
 }
 
