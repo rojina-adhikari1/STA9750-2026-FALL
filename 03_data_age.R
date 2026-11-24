@@ -134,6 +134,13 @@ CC_TOTAL <- IPEDS |>
 # ===== CHUNK 7: Coverage by year ===========================================
 # A year is usable for a group if >= 90% of its colleges reported age that
 # year (age is optional in even years).
+
+# Coverage audit: Finger Lakes Community College (191199) has
+# undergraduate enrollment in EF A for 2020 but no records in
+# the downloaded EF B age data for that year.
+# The missing observation is retained as a gap rather than imputed.
+# SUNY community colleges still meet the 90% coverage threshold.
+
 AGE_COVERAGE <- AGE_CC |>
   count(year, system, sector, name = "n_reporting") |>
   left_join(CC_TOTAL |>
