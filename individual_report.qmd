@@ -104,6 +104,270 @@ PROGRAMS <- tibble(
 SYS_COLORS <- c(CUNY = "#1f5aa6", SUNY = "#c8781e")
 ```
 
+# Data Cleaning and Quality Control
+
+Combining enrollment data from different sources requires careful validation to ensure that differences in reporting
+practices do not distort the analysis. I conducted several quality checks covering institutional classification,
+missing values, reporting completeness, cross-source agreement, and final dataset integrity.
+
+## Final Dataset Integrity
+
+```{r}
+#| label: tbl-data-integrity
+#| tbl-cap: "Final enrollment dataset integrity checks"
+#| echo: false
+
+INTEGRITY_CHECKS <- AGE_PANEL |>
+  summarize(
+    duplicate_records = n() -
+      n_distinct(institution_id, year),
+    missing_total = sum(is.na(total)),
+    missing_under25 = sum(is.na(under25)),
+    missing_adults = sum(is.na(age25plus)),
+    nonfinite_counts = sum(
+      !is.finite(total) |
+      !is.finite(under25) |
+      !is.finite(age25plus)
+    ),
+    negative_counts = sum(
+      total < 0 | under25 < 0 | age25plus < 0,
+      na.rm = TRUE
+    ),
+    invalid_shares = sum(
+      share_25plus < 0 | share_25plus > 1,
+      na.rm = TRUE
+    )
+  ) |>
+  pivot_longer(
+    everything(),
+    names_to = "check",
+    values_to = "issues"
+  ) |>
+  mutate(
+    check = recode(
+      check,
+      duplicate_records = "Duplicate college-year records",
+      missing_total = "Missing total enrollment",
+      missing_under25 = "Missing Under 25 enrollment",
+      missing_adults = "Missing adult enrollment",
+      nonfinite_counts = "Non-finite enrollment counts",
+      negative_counts = "Negative enrollment counts",
+      invalid_shares = "Invalid adult enrollment shares"
+    ),
+    status = if_else(issues == 0, "Pass", "Review")
+  )
+
+INTEGRITY_CHECKS |>
+  gt::gt() |>
+  gt::cols_label(
+    check = "Quality Check",
+    issues = "Issues Detected",
+    status = "Status"
+  ) |>
+  gt::tab_style(
+    style = gt::cell_text(
+      color = "#16794B",
+      weight = "bold"
+    ),
+    locations = gt::cells_body(
+      columns = status,
+      rows = status == "Pass"
+    )
+  ) |>
+  gt::cols_align(
+    align = "center",
+    columns = c(issues, status)
+  ) |>
+  gt::tab_options(
+    table.width = gt::pct(100)
+  )
+```
+
+The final dataset contains `r scales::comma(nrow(AGE_PANEL))`college-year observations across `r n_distinct(AGE_PANEL$institution_id)` institutions. As shown in @tbl-data-integrity, the dataset passed `r sum(INTEGRITY_CHECKS$status == "Pass")` of `r nrow(INTEGRITY_CHECKS)` integrity checks.
+
+These checks confirm the structural consistency of the final dataset. However, they do not guarantee the
+completeness or accuracy of the original source records. Additional source-level validation is therefore necessary.
+
+
+## Institutional Coverage and Missing Data
+
+IPEDS age reporting is optional in even-numbered years, resulting in gaps in institutional coverage. To maintain
+consistent coverage, I retain IPEDS records only when at least 90% of institutions within each university system
+and college sector meet the reporting criterion.
+
+
+```{r}
+#| label: tbl-institutional-coverage
+#| tbl-cap: "Institutional coverage by university system and college sector"
+#| echo: false
+
+COVERAGE_TABLE <- AGE_PANEL |>
+  count(year, system, sector, name = "colleges") |>
+  mutate(group = paste(system, sector)) |>
+  select(year, group, colleges) |>
+  pivot_wider(
+    names_from = group,
+    values_from = colleges,
+    values_fill = 0
+  ) |>
+  arrange(year)
+
+COVERAGE_TABLE |>
+  gt::gt() |>
+  gt::tab_spanner(
+    label = "CUNY",
+    columns = c(`CUNY Community`, `CUNY Four-year`)
+  ) |>
+  gt::tab_spanner(
+    label = "SUNY",
+    columns = c(`SUNY Community`, `SUNY Four-year`)
+  ) |>
+  gt::cols_label(
+    year = "Year",
+    `CUNY Community` = "Community",
+    `CUNY Four-year` = "Four-year",
+    `SUNY Community` = "Community",
+    `SUNY Four-year` = "Four-year"
+  ) |>
+  gt::cols_align(align = "center") |>
+  gt::tab_style(
+    style = gt::cell_fill(color = "#E2E8F0"),
+    locations = gt::cells_body(
+      rows = year == 2022
+    )
+  ) |>
+  gt::tab_source_note(
+    source_note = "Zero indicates no retained institutional records, not zero enrollment."
+  ) |>
+  gt::tab_source_note(
+    source_note = "Shaded row indicates the launch year of CUNY Reconnect."
+  ) |>
+  gt::tab_options(
+    table.width = gt::pct(100)
+  )
+```
+
+
+As shown in @tbl-institutional-coverage, community college enrollment data are available for both university systems in `r sum(COVERAGE_TABLE[["CUNY Community"]] > 0 & COVERAGE_TABLE[["SUNY Community"]] > 0)` years. The years 2016 and 2018 are excluded from the main comparison because community college data are unavailable for one of the two systems. The 2025 records are used only for supplementary CUNY analysis.
+
+A closer investigation of the 2020 records identified Finger Lakes Community College as the only missing SUNY
+community college that year. Although IPEDS EF A reported `r scales::comma(CC_TOTAL |> filter(institution_id == 191199, year == 2020) |> pull(total))` undergraduate students, no corresponding records were found in the downloaded EF B age dataset.
+
+Despite this missing observation, SUNY community college coverage remained at `r scales::percent(AGE_COVERAGE |> filter(year == 2020, system == "SUNY", sector == "Community") |> pull(pct_reporting), accuracy = 0.1)`, exceeding the required 90% threshold. I therefore retain 2020 without imputing the missing enrollment counts.
+
+## Cross-Source Validation and Splicing
+
+Before combining the two data sources, I compare enrollment counts from IPEDS and the CUNY Data Book using 2023 as the reference year. This year provides overlapping records and allows me to evaluate differences in reporting definitions. For each institution and age category, I calculate an adjustment ratio by dividing IPEDS enrollment by the corresponding Data Book enrollment.
+
+$$
+\text{Adjustment Ratio} =
+\frac{\text{IPEDS Enrollment}_{2023}}
+{\text{Data Book Enrollment}_{2023}}
+$$
+
+A ratio close to 1 indicates strong agreement between the two sources. These institution-specific ratios are then applied to supplementary Data Book records to align them more closely with the IPEDS reporting definition.
+
+```{r}
+#| label: tbl-splice-validation
+#| tbl-cap: "Cross-source enrollment adjustment ratios by college sector, 2023"
+#| echo: false
+
+SPLICE_SUMMARY <- SPLICE_RATIOS |>
+  left_join(
+    NY_PUBLIC |>
+      select(institution_id, sector),
+    by = "institution_id"
+  ) |>
+  pivot_longer(
+    cols = c(r_total, r_u25, r_25p),
+    names_to = "category",
+    values_to = "ratio"
+  ) |>
+  mutate(
+    category = recode(
+      category,
+      r_total = "Total enrollment",
+      r_u25 = "Under 25",
+      r_25p = "Adults (25+)"
+    ),
+    category = factor(
+      category,
+      levels = c(
+        "Total enrollment",
+        "Under 25",
+        "Adults (25+)"
+      )
+    )
+  ) |>
+  group_by(sector, category) |>
+  summarize(
+    colleges = n_distinct(institution_id),
+    minimum = min(ratio, na.rm = TRUE),
+    median = median(ratio, na.rm = TRUE),
+    maximum = max(ratio, na.rm = TRUE),
+    invalid = sum(!is.finite(ratio) | ratio <= 0),
+    .groups = "drop"
+  )
+
+SPLICE_SUMMARY |>
+  gt::gt(groupname_col = "sector") |>
+  gt::cols_label(
+    category = "Enrollment Category",
+    colleges = "Colleges",
+    minimum = "Minimum",
+    median = "Median",
+    maximum = "Maximum",
+    invalid = "Invalid Ratios"
+  ) |>
+  gt::fmt_number(
+    columns = c(minimum, median, maximum),
+    decimals = 3
+  ) |>
+  gt::tab_style(
+    style = gt::cell_fill(color = "#E2F0E9"),
+    locations = gt::cells_body(
+      columns = c(minimum, median, maximum),
+      rows = category == "Adults (25+)"
+    )
+  ) |>
+  gt::cols_align(
+    align = "center",
+    columns = -category
+  ) |>
+  gt::tab_source_note(
+    source_note = "A ratio of 1.000 indicates identical enrollment counts."
+  ) |>
+  gt::tab_options(
+    table.width = gt::pct(100),
+    row_group.font.weight = "bold"
+  )
+```
+
+As shown in @tbl-splice-validation, the two sources show particularly strong agreement across the `r n_distinct(SPLICE_RATIOS$institution_id)` matched CUNY institutions.
+
+Among community colleges, the median adult enrollment adjustment ratio is `r sprintf("%.3f", SPLICE_SUMMARY |> filter(sector == "Community", category == "Adults (25+)") |> pull(median))`, indicating nearly identical enrollment counts.
+
+Larger differences occur among four-year colleges. The largest downward adjustment to adult enrollment is `r scales::percent(1 - min(SPLICE_RATIOS$r_25p), accuracy = 0.1)`, observed at the `r NY_PUBLIC |> inner_join(SPLICE_RATIOS, by = "institution_id") |> slice_min(r_25p, n = 1, with_ties = FALSE) |> pull(institution_name)`.
+
+All adjustment ratios are positive and finite. The strong agreement among community colleges supports using the
+Data Book to supplement missing IPEDS records in the primary analysis. However, this approach assumes that differences in reporting definitions remain relatively stable over time. I examine this assumption further through sensitivity analysis.
+
+
+## Missing Values and Institutional Harmonization
+
+Institution names and reporting structures differ between IPEDS and the CUNY Data Book. To ensure consistent institutional comparisons, I map Data Book institution names to their corresponding IPEDS identifiers and aggregate separately reported sub-schools into their parent institutions.
+
+An audit of the original 2022–2025 Data Book exports identified six missing enrollment values, all associated
+with the Journalism and Law schools. No missing enrollment values were identified among community colleges.
+
+Missing values are replaced with zero during data processing. While this treatment may affect Graduate Center enrollment totals, it does not directly affect the primary community college analysis. This assumption
+should be considered when interpreting the supplementary four-year college results.
+
+An additional check of the processed IPEDS data confirmed that all `r nrow(AGE_CC)` available college-year records
+contain both age categories. No missing Under 25 or adult enrollment values were detected at this processing stage.
+Therefore, the remaining coverage gaps reflect missing institutional records rather than missing age fields
+within the available records.
+
 ### Exploratory analysis
 
 ### DELETE THIS IF NOT REQUIRED
