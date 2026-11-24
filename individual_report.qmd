@@ -63,6 +63,30 @@ Similarly, the [National Student Clearinghouse's 2024 report](https://www.studen
 
 While these studies examine program participation and individual re-enrollment, my analysis takes an institution-level approach. Using publicly available enrollment data, I compare adult and younger student enrollment across CUNY and SUNY before and after 2022. This allows me to investigate whether CUNY experienced a distinct adult enrollment recovery rather than simply following broader recovery trends. However, the data cannot identify individual Reconnect participants.
 
+# Data Sources and Acquisition
+
+This analysis combines two publicly available data sources to examine undergraduate enrollment by age across CUNY and SUNY institutions.
+
+## Integrated Postsecondary Education Data System (IPEDS)
+
+The primary data source is the [Integrated Postsecondary Education Data System (IPEDS)](https://nces.ed.gov/ipeds/), maintained by the National Center for Education Statistics (NCES). Three components of IPEDS are used in this analysis:
+
+- **Fall Enrollment Part B (EF B):** Provides undergraduate enrollment counts by age group.
+- **Fall Enrollment Part A (EF A):** Provides overall undergraduate enrollment counts for validating age-specific records.
+- **Institutional Characteristics Directory (HD):** Provides institutional identifiers, university system affiliations, and college classifications.
+
+The data acquisition process is automated through reusable R functions. The scripts construct year-specific download URLs, store downloaded files locally, and prioritize revised data files when available. The age-data acquisition function attempts two alternative download locations to accommodate differences in the IPEDS website structure. A manually downloaded 2024 EF A file is retained as a fallback.
+
+Although IPEDS provides a standardized basis for comparing CUNY and SUNY, age reporting is optional in even-numbered years, resulting in gaps in institutional coverage.
+
+## CUNY Student Data Book
+
+To supplement missing IPEDS age records, I use the [CUNY Student Data Book](https://insights.cuny.edu/), which provides institution-level enrollment statistics.
+
+Age-specific enrollment data for Fall 2022 through Fall 2025 were manually exported from the interactive dashboard and stored in the `data_manual/` directory. A reusable R function imports these files, handles their UTF-16 encoding, and converts formatted enrollment values into numeric counts.
+
+While the Data Book provides more recent and detailed CUNY enrollment information, differences in institutional reporting definitions require validation before combining it with IPEDS. Its CUNY-only coverage also limits direct comparisons with SUNY.
+
 ```{r}
 #| label: sq3-setup
 #| include: false
