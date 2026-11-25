@@ -368,24 +368,29 @@ contain both age categories. No missing Under 25 or adult enrollment values were
 Therefore, the remaining coverage gaps reflect missing institutional records rather than missing age fields
 within the available records.
 
-### Exploratory analysis
+# Exploratory Data Analysis
 
-### DELETE THIS IF NOT REQUIRED
-
+## Changes in Student Age Composition
+<!-- Supporting calculations for the adult enrollment share visualization. -->
 ```{r}
-#| label: fig-sq3-adult-share-communityVS4-yearcolleges
+#| label: sq3-adult-share-setup
+#| include: false
+#| fig-cap: "Adult undergraduate enrollment shares across CUNY and SUNY by college sector, 2015–2025."
 #| fig-width: 13
 #| fig-height: 6
+#| out-width: "100%"
 #| code-fold: true
 #| message: false
 
 # Load SQ3 data and colors if they are not in memory yet
-if (!exists("AGE_PANEL"))  source("03_data_age.R")
-if (!exists("SYS_COLORS")) SYS_COLORS <- c(CUNY = "#1f5aa6", SUNY = "#c8781e")
+if (!exists("AGE_PANEL")) source("03_data_age.R")
+if (!exists("SYS_COLORS")) {
+  SYS_COLORS <- c(CUNY = "#1f5aa6", SUNY = "#c8781e")
+}
 
-# Program dates (context lines, not tested effects); short labels for narrow panels
+# Program dates (context lines, not tested effects)
 EVENT_LINES_2 <- tibble(
-  year  = c(2021, 2022, 2025),
+  year = c(2021, 2022, 2025),
   label = c("Comeback", "Reconnect", "Free CC"),
   hjust = c(1.05, -0.05, 1.05)
 )
@@ -393,41 +398,92 @@ EVENT_LINES_2 <- tibble(
 # Share of adults (25+) per system x sector x year
 SHARE_SECTORS <- AGE_PANEL |>
   group_by(system, sector, year) |>
-  summarize(share  = sum(age25plus) / sum(total),
-            source = first(source),
-            .groups = "drop") |>
-  complete(system, sector, year = 2015:2025) |>   # missing years -> NA -> line breaks
-  mutate(source = if_else(str_detect(coalesce(source, ""), "Data Book"),
-                          "CUNY Data Book (spliced)", "IPEDS"))
+  summarize(
+    share = sum(age25plus) / sum(total),
+    source = first(source),
+    .groups = "drop"
+  ) |>
+  complete(system, sector, year = 2015:2025) |>
+  mutate(
+    source = if_else(
+      str_detect(coalesce(source, ""), "Data Book"),
+      "CUNY Data Book (spliced)",
+      "IPEDS"
+    )
+  )
 
-p_sectors <- ggplot(SHARE_SECTORS, aes(year, share, color = system)) +
-  geom_vline(data = EVENT_LINES_2, aes(xintercept = year),
-             linetype = "dotted", color = "grey45") +
-  geom_text(data = EVENT_LINES_2,
-            aes(x = year, y = Inf, label = label, hjust = hjust),
-            inherit.aes = FALSE, vjust = 1.6, size = 3.2, color = "grey30") +
-  geom_line(linewidth = 1.1, na.rm = TRUE) +
-  geom_point(aes(shape = source), size = 2.8, stroke = 1.2,
-             fill = "white", na.rm = TRUE) +
-  scale_shape_manual(values = c("IPEDS" = 16, "CUNY Data Book (spliced)" = 21),
-                     name = NULL) +
-  scale_color_manual(values = SYS_COLORS, name = NULL) +
-  scale_y_continuous(labels = scales::percent_format(accuracy = 1),
-                     expand = expansion(mult = c(0.05, 0.18))) +
-  scale_x_continuous(breaks = seq(2015, 2025, 2)) +
-  facet_wrap(~ sector,
-             labeller = as_labeller(c(Community   = "Community colleges",
-                                      `Four-year` = "Four-year colleges"))) +
-  labs(title = "Adult Enrollment Shares Differed Between CUNY and SUNY",
-  subtitle = "Undergraduates aged 25+, by college sector, Fall 2015–2025",
-       x = NULL, y = "Share of adults (25+)",
-       caption  = paste0(
-         "Sources: IPEDS Fall Enrollment Part B; CUNY Student Data Book ",
-         "(2022, 2024, 2025, spliced to IPEDS using 2023 ratios).\n",
-         "Gaps = years not reported or < 90% of colleges reporting. ",
-         "SUNY 2025 not available (IPEDS not yet released). Dotted lines mark dates, not effects. ",
-         "Free CC = free community college for ages 25–55 (CUNY + SUNY).")) +
-    theme_minimal(base_size = 13) +
+# Adult enrollment share visualization
+p_sectors <- ggplot(
+  SHARE_SECTORS,
+  aes(year, share, color = system)
+) +
+  geom_vline(
+    data = EVENT_LINES_2,
+    aes(xintercept = year),
+    linetype = "dotted",
+    color = "grey45"
+  ) +
+  geom_text(
+    data = EVENT_LINES_2,
+    aes(x = year, y = Inf, label = label, hjust = hjust),
+    inherit.aes = FALSE,
+    vjust = 1.6,
+    size = 3.2,
+    color = "grey30"
+  ) +
+  geom_line(
+    linewidth = 1.1,
+    na.rm = TRUE
+  ) +
+  geom_point(
+    aes(shape = source),
+    size = 2.8,
+    stroke = 1.2,
+    fill = "white",
+    na.rm = TRUE
+  ) +
+  scale_shape_manual(
+    values = c(
+      "IPEDS" = 16,
+      "CUNY Data Book (spliced)" = 21
+    ),
+    name = NULL
+  ) +
+  scale_color_manual(
+    values = SYS_COLORS,
+    name = NULL
+  ) +
+  scale_y_continuous(
+    labels = scales::percent_format(accuracy = 1),
+    expand = expansion(mult = c(0.05, 0.18))
+  ) +
+  scale_x_continuous(
+    breaks = seq(2015, 2025, 2)
+  ) +
+  facet_wrap(
+    ~ sector,
+    labeller = as_labeller(
+      c(
+        Community = "Community colleges",
+        `Four-year` = "Four-year colleges"
+      )
+    )
+  ) +
+  labs(
+    title = "Adult Enrollment Shares Differed Between CUNY and SUNY",
+    subtitle = "Undergraduates aged 25+, by college sector, Fall 2015–2025",
+    x = NULL,
+    y = "Share of adults (25+)",
+    caption = paste0(
+      "Sources: IPEDS Fall Enrollment Part B and CUNY Student Data Book.\n",
+      "Hollow markers indicate adjusted Data Book records (2022, 2024, 2025).\n",
+      "Gaps indicate unavailable or insufficient institutional coverage. ",
+      "SUNY 2025 data are unavailable.\n",
+      "Free CC = free community college for eligible adults aged 25–55 at CUNY and SUNY.\n",
+      "Vertical dotted lines mark program dates, not estimated program effects."
+    )
+  ) +
+  theme_minimal(base_size = 13) +
   theme(
     legend.position = "bottom",
     panel.grid.minor = element_blank(),
@@ -435,27 +491,151 @@ p_sectors <- ggplot(SHARE_SECTORS, aes(year, share, color = system)) +
     plot.title.position = "plot",
     plot.title = element_text(face = "bold", size = 17),
     plot.subtitle = element_text(size = 11, color = "#64748B"),
-    plot.caption = element_text(hjust = 0, color = "grey40", size = 9),
+    plot.caption = element_text(
+      hjust = 0,
+      color = "grey40",
+      size = 9
+    ),
     strip.text = element_text(face = "bold", size = 13)
   )
+
 p_sectors
 
-# Quick check: the numbers behind the chart
-SHARE_SECTORS |>
-  filter(!is.na(share), year %in% c(2019, 2021, 2023, 2024, 2025)) |>
-  mutate(share = scales::percent(share, accuracy = 0.1)) |>
-  select(sector, system, year, share) |>
-  pivot_wider(names_from = year, values_from = share) |>
-  print()
+# Supporting enrollment shares for interpretation
+SHARE_SUMMARY <- SHARE_SECTORS |>
+  filter(
+    !is.na(share),
+    year %in% c(2019, 2021, 2022, 2023, 2024, 2025)
+  ) |>
+  select(sector, system, year, share)
 
+# Save visualization
 dir.create("figures", showWarnings = FALSE)
-ggsave("figures/sq3_adult_share_sectors.png", p_sectors,
-       width = 13, height = 6, dpi = 300, bg = "white")
+
+ggsave(
+  "figures/sq3_adult_share_sectors.png",
+  p_sectors,
+  width = 13,
+  height = 6,
+  dpi = 300,
+  bg = "white"
+)
 ```
 
 
-### Age counts
-### THIS code is required to build fig-sq3-age-counts-full
+```{r}
+#| label: fig-sq3-adult-share-bar
+#| fig-cap: "Adult undergraduate enrollment shares at CUNY and SUNY by college sector in selected years."
+#| fig-width: 13
+#| fig-height: 7
+#| out-width: "100%"
+#| code-fold: true
+#| message: false
+
+# Prepare selected years for comparison
+SHARE_BAR_DATA <- SHARE_SUMMARY |>
+  complete(system, sector, year) |>
+  mutate(
+    year = factor(year, levels = sort(unique(year), decreasing = TRUE))
+  )
+
+# Consistent positioning for bars and labels
+bar_position <- position_dodge(
+  width = 0.85,
+  reverse = TRUE
+)
+
+p_sectors_bar <- ggplot(
+  SHARE_BAR_DATA,
+  aes(x = year, y = share, fill = system)
+) +
+  geom_hline(
+    yintercept = 0,
+    color = "grey70"
+  ) +
+  geom_vline(
+    xintercept = 4.5,
+    linetype = "dashed",
+    color = "grey50"
+  ) +
+  geom_col(
+    position = bar_position,
+    width = 0.75,
+    na.rm = TRUE
+  ) +
+  geom_text(
+    aes(label = scales::percent(share, accuracy = 0.1)),
+    position = bar_position,
+    hjust = -0.15,
+    size = 3.5,
+    na.rm = TRUE
+  ) +
+  scale_fill_manual(
+    values = SYS_COLORS,
+    name = NULL
+  ) +
+  scale_y_continuous(
+    labels = scales::percent_format(accuracy = 1),
+    expand = expansion(mult = c(0, 0.20))
+  ) +
+  facet_wrap(
+    ~ sector,
+    labeller = as_labeller(
+      c(
+        Community = "Community colleges",
+        `Four-year` = "Four-year colleges"
+      )
+    )
+  ) +
+  coord_flip() +
+  labs(
+    title = "CUNY Experienced a Steeper Decline in Adult Enrollment Share",
+   subtitle = "Undergraduates aged 25+ in selected years, 2019–2025",
+    x = NULL,
+    y = "Share of adults (25+)",
+    caption = paste0(
+      "Sources: IPEDS Fall Enrollment Part B and CUNY Student Data Book.\n",
+      "CUNY 2022, 2024 and 2025 use adjusted Data Book records.\n",
+      "SUNY 2025 data are unavailable.\n",
+      "The dashed line separates pre-Reconnect years from 2022 onward.\n",
+      "Comeback launched in 2021, Reconnect in 2022, and Free CC in 2025.\n",
+      "Free CC = free community college for eligible adults aged 25–55 at CUNY and SUNY."
+    )
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    legend.position = "bottom",
+    panel.grid.minor = element_blank(),
+    panel.grid.major.y = element_blank(),
+    panel.spacing = unit(2, "lines"),
+    plot.title.position = "plot",
+    plot.title = element_text(face = "bold", size = 17),
+    plot.subtitle = element_text(size = 11, color = "#64748B"),
+    plot.caption = element_text(hjust = 0, color = "grey40", size = 9),
+    strip.text = element_text(face = "bold", size = 13)
+  )
+
+p_sectors_bar
+
+ggsave(
+  "figures/sq3_adult_share_sectors_bar.png",
+  p_sectors_bar,
+  width = 13,
+  height = 7,
+  dpi = 300,
+  bg = "white"
+)
+```
+
+Before Reconnect, CUNY community colleges had a higher share of adult students than SUNY. In 2021, adults made up `r scales::percent(SHARE_SUMMARY |> filter(system == "CUNY", sector == "Community", year == 2021) |> pull(share), accuracy = 0.1)` of CUNY's community college enrollment, compared with `r scales::percent(SHARE_SUMMARY |> filter(system == "SUNY", sector == "Community", year == 2021) |> pull(share), accuracy = 0.1)` at SUNY. Both systems saw a decline in 2022, but the drop was larger at CUNY.
+
+CUNY community colleges showed some improvement after 2023, with the adult share reaching `r scales::percent(SHARE_SUMMARY |> filter(system == "CUNY", sector == "Community", year == 2025) |> pull(share), accuracy = 0.1)` in 2025. However, it remained below its 2019 level. The pattern was different at CUNY's four-year colleges, where the adult share continued to decline through 2025. Since SUNY's 2025 data are unavailable, a direct comparison for that year is not possible.
+
+These findings raise an important question: did fewer adults return to college, or did younger student enrollment recover faster? Enrollment shares alone cannot answer this question. To understand what happened, the next section examines changes in actual enrollment counts relative to 2019.
+
+
+## Enrollment Recovery Relative to 2019
+<!-- Supporting calculations and base chart for the indexed enrollment visualization. -->
 ```{r}
 #| label: fig-sq3-age-counts
 #| fig-width: 12
@@ -467,126 +647,242 @@ ggsave("figures/sq3_adult_share_sectors.png", p_sectors,
 # Load SQ3 data if it is not in memory yet
 if (!exists("AGE_PANEL")) source("03_data_age.R")
 
-# Program dates (context lines, not tested effects)
-EVENT_LINES_3 <- tibble(
-  system = c("CUNY",     "CUNY",      "CUNY",    "SUNY"),
-  year   = c(2021,       2022,        2025,      2025),
-  label  = c("Comeback", "Reconnect", "Free CC", "Free CC"),
-  hjust  = c(1.05,       -0.05,       1.05,      1.05)
+# Consistent colors for student age groups
+AGE_COLORS <- c(
+  "Adults (25+)" = "#7b3294",
+  "Under 25" = "#008837"
 )
 
-# Community colleges: adults vs under 25, counts indexed to Fall 2019 = 100
+# Program dates (context lines, not tested effects)
+EVENT_LINES_3 <- tibble(
+  system = c("CUNY", "CUNY", "CUNY", "SUNY"),
+  year = c(2021, 2022, 2025, 2025),
+  label = c("Comeback", "Reconnect", "Free CC", "Free CC"),
+  hjust = c(1.05, -0.05, 1.05, 1.05)
+)
+
+# Community college enrollment indexed to Fall 2019 = 100
 COUNT_DATA <- AGE_PANEL |>
   filter(sector == "Community") |>
   group_by(system, year) |>
-  summarize(n_colleges = n(),
-            age25plus  = sum(age25plus),
-            under25    = sum(under25),
-            source     = first(source),
-            .groups = "drop") |>
+  summarize(
+    n_colleges = n(),
+    age25plus = sum(age25plus),
+    under25 = sum(under25),
+    source = first(source),
+    .groups = "drop"
+  ) |>
   group_by(system) |>
-  filter(n_colleges == max(n_colleges)) |>   # only years where ALL colleges reported
+  filter(n_colleges == max(n_colleges)) |>
   ungroup() |>
-  pivot_longer(c(age25plus, under25), names_to = "group", values_to = "students") |>
+  pivot_longer(
+    c(age25plus, under25),
+    names_to = "group",
+    values_to = "students"
+  ) |>
   group_by(system, group) |>
   mutate(index = students / students[year == 2019] * 100) |>
   ungroup() |>
-  complete(system, group, year = 2015:2025) |>   # missing years -> line breaks
-  mutate(group  = recode(group, age25plus = "Adults (25+)", under25 = "Under 25"),
-         source = if_else(str_detect(coalesce(source, ""), "Data Book"),
-                          "CUNY Data Book (spliced)", "IPEDS"))
+  complete(system, group, year = 2015:2025) |>
+  mutate(
+    group = recode(
+      group,
+      age25plus = "Adults (25+)",
+      under25 = "Under 25"
+    ),
+    source = if_else(
+      str_detect(coalesce(source, ""), "Data Book"),
+      "CUNY Data Book (spliced)",
+      "IPEDS"
+    )
+  )
 
-p_counts <- ggplot(COUNT_DATA, aes(year, index, color = group)) +
-  geom_hline(yintercept = 100, color = "grey70") +
-  geom_vline(data = EVENT_LINES_3, aes(xintercept = year),
-             linetype = "dotted", color = "grey45") +
-  geom_text(data = EVENT_LINES_3,
-            aes(x = year, y = Inf, label = label, hjust = hjust),
-            inherit.aes = FALSE, vjust = 1.6, size = 3.4, color = "grey30") +
-  geom_line(linewidth = 1.1, na.rm = TRUE) +
-  geom_point(aes(shape = source), size = 2.8, stroke = 1.2,
-             fill = "white", na.rm = TRUE) +
-  scale_color_manual(values = c("Adults (25+)" = "#7b3294", "Under 25" = "#008837"),
-                     name = NULL) +
-  scale_shape_manual(values = c("IPEDS" = 16, "CUNY Data Book (spliced)" = 17),
-  name = NULL) +
-  scale_y_continuous(expand = expansion(mult = c(0.05, 0.18))) +
-  scale_x_continuous(breaks = seq(2015, 2025, 2)) +
-  facet_wrap(~ system,
-             labeller = as_labeller(c(CUNY = "CUNY community colleges",
-                                      SUNY = "SUNY community colleges"))) +
-  labs(title    = "Adult Enrollment Recovered More Slowly Than Younger Enrollment at Both CUNY and SUNY",
-       subtitle = "Undergraduate enrollment by age group, indexed to Fall 2019 = 100, 2015–2025.",
-       x = NULL, y = "Index (Fall 2019 = 100)",
-       caption  = paste0(
-         "Sources: IPEDS Fall Enrollment Part B; CUNY Student Data Book ",
-         "(2022, 2024, 2025, spliced to IPEDS using 2023 ratios).\n",
-         "Only years where every community college in the system reported age. ",
-         "SUNY 2025 not available (IPEDS not yet released). Dotted lines mark dates, not effects. ",
-         "Free CC = free community college for ages 25–55 (CUNY + SUNY).")) +
-  theme_minimal(base_size = 13) +
-  theme(legend.position  = "bottom",
-        panel.grid.minor = element_blank(),
-        panel.spacing    = unit(2, "lines"),
-        plot.caption     = element_text(hjust = 0, color = "grey40", size = 9),
-        strip.text = element_text(
-        face = "bold",
-        hjust = 0,
-        size = 13,
-        color = "#17324D",
-        margin = margin(6, 6, 6, 6)
-        ),
-        strip.background = element_rect(
-        fill = "#F3F4F6",
-        color = NA
-        )
+# Base enrollment recovery chart
+p_counts <- ggplot(
+  COUNT_DATA,
+  aes(year, index, color = group)
+) +
+  geom_hline(
+    yintercept = 100,
+    color = "grey70"
+  ) +
+  geom_vline(
+    data = EVENT_LINES_3,
+    aes(xintercept = year),
+    linetype = "dotted",
+    color = "grey45"
+  ) +
+  geom_text(
+    data = EVENT_LINES_3,
+    aes(
+      x = year,
+      y = Inf,
+      label = label,
+      hjust = hjust
+    ),
+    inherit.aes = FALSE,
+    vjust = 1.6,
+    size = 3.4,
+    color = "grey30"
+  ) +
+  geom_line(
+    linewidth = 1.1,
+    na.rm = TRUE
+  ) +
+  geom_point(
+    aes(shape = source),
+    size = 2.8,
+    stroke = 1.2,
+    fill = "white",
+    na.rm = TRUE
+  ) +
+  scale_color_manual(
+    values = AGE_COLORS,
+    name = NULL
+  ) +
+  scale_shape_manual(
+    values = c(
+      "IPEDS" = 16,
+      "CUNY Data Book (spliced)" = 21
+    ),
+    name = NULL
+  ) +
+  scale_y_continuous(
+    expand = expansion(mult = c(0.05, 0.18))
+  ) +
+  scale_x_continuous(
+    breaks = 2015:2025
+  ) +
+  facet_wrap(
+    ~ system,
+    labeller = as_labeller(
+      c(
+        CUNY = "CUNY community colleges",
+        SUNY = "SUNY community colleges"
       )
+    )
+  ) +
+  labs(
+    title = "Adult Enrollment Remained Further Below 2019 Levels Than Younger Enrollment",
+    subtitle = "Undergraduate enrollment relative to Fall 2019, 2015–2025",
+    x = NULL,
+    y = "Index (Fall 2019 = 100)"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    legend.position = "bottom",
+    panel.grid.minor = element_blank(),
+    panel.spacing = unit(2, "lines"),
+    plot.title.position = "plot",
+    plot.title = element_text(
+      face = "bold",
+      size = 17,
+      color = "#17324D"
+    ),
+    plot.subtitle = element_text(
+      size = 11,
+      color = "#64748B"
+    ),
+    plot.caption = element_text(
+      hjust = 0,
+      color = "grey40",
+      size = 9
+    ),
+    strip.text = element_text(
+      face = "bold",
+      hjust = 0,
+      size = 13,
+      color = "#17324D",
+      margin = margin(6, 6, 6, 6)
+    ),
+    strip.background = element_rect(
+      fill = "#F3F4F6",
+      color = NA
+    )
+  )
 
-  p_counts
-
-# Numbers behind the chart
-COUNT_DATA |>
-  filter(!is.na(index), year %in% c(2019, 2021, 2022, 2023, 2024, 2025)) |>
-  mutate(index = round(index, 1)) |>
-  select(system, group, year, index) |>
-  pivot_wider(names_from = year, values_from = index) |>
-  print()
+# Supporting enrollment values for interpretation
+COUNT_SUMMARY <- COUNT_DATA |>
+  filter(
+    !is.na(index),
+    year %in% c(2019, 2021, 2022, 2023, 2024, 2025)
+  ) |>
+  select(system, group, year, students, index)
 
 dir.create("figures", showWarnings = FALSE)
-ggsave("figures/sq3_age_counts.png", p_counts,
-       width = 12, height = 6, dpi = 300, bg = "white")
 ```
+
+To make enrollment counts comparable over time, this analysis includes only years with full community college coverage within each system in our dataset. This avoids showing an artificial decline simply because a college did not report its enrollment by age. Enrollment in 2019 is set to 100, providing a common starting point for comparing recovery across both systems and age groups.
 
 ```{r}
 #| label: fig-sq3-age-counts-full
-#| fig-width: 12
+#| fig-cap: "Adult and younger student enrollment at CUNY and SUNY community colleges relative to Fall 2019."
+#| fig-width: 13
 #| fig-height: 6
+#| out-width: "100%"
 #| code-fold: true
 #| message: false
 
-# Full 2015-2025 chart: dashed lines bridge years with incomplete reporting
+# Identify gaps between available enrollment observations
+COUNT_GAPS <- COUNT_DATA |>
+  filter(!is.na(index)) |>
+  group_by(system, group) |>
+  arrange(year, .by_group = TRUE) |>
+  mutate(
+    next_year = lead(year),
+    next_index = lead(index)
+  ) |>
+  filter(next_year - year > 1) |>
+  ungroup()
+
+# Add dashed lines only across missing years
 p_counts_full <- p_counts +
-  geom_line(data = filter(COUNT_DATA, !is.na(index)),
-            aes(year, index, color = group),
-            inherit.aes = FALSE, linetype = "dashed", linewidth = 0.5) +
-  scale_x_continuous(breaks = 2015:2025) +
-  labs(caption = paste0(
-    "Sources: IPEDS Fall Enrollment Part B; CUNY Student Data Book ",
-    "(2022, 2024, 2025, spliced to IPEDS using 2023 ratios).\n",
-    "Solid = consecutive years with every college reporting; dashed = bridges ",
-    "a missing year (not every college reported age).\n",
-    "SUNY 2025 not available (IPEDS not yet released). Dotted lines mark dates, not effects. ",
-    "Free CC = free community college for ages 25–55 (CUNY + SUNY)."))
+  geom_segment(
+    data = COUNT_GAPS,
+    aes(
+      x = year,
+      xend = next_year,
+      y = index,
+      yend = next_index,
+      color = group
+    ),
+    inherit.aes = FALSE,
+    linetype = "dashed",
+    linewidth = 0.7
+  ) +
+  labs(
+    caption = paste0(
+      "Sources: IPEDS Fall Enrollment Part B and CUNY Student Data Book.\n",
+      "Hollow markers indicate adjusted Data Book records (2022, 2024, 2025).\n",
+      "Solid lines connect consecutive years with full college coverage within the dataset.\n",
+      "Dashed lines bridge missing years and do not represent observed enrollment.\n",
+      "SUNY 2025 data are unavailable. Dotted vertical lines mark program dates, not estimated effects.\n",
+      "Free CC = free community college for eligible adults aged 25–55 at CUNY and SUNY."
+    )
+  )
 
 p_counts_full
 
-ggsave("figures/sq3_age_counts_full.png", p_counts_full,
-       width = 12, height = 6, dpi = 300, bg = "white")
+ggsave(
+  "figures/sq3_age_counts_full.png",
+  p_counts_full,
+  width = 13,
+  height = 6,
+  dpi = 300,
+  bg = "white"
+)
 ```
 
 
-## Main analysis: event-study model
-## Did CUNY adult enrollment change faster than SUNY's after 2022?
+
+Adult enrollment at CUNY community colleges fell sharply between 2021 and 2022 but started to recover in the following years. By 2024, adult enrollment had reached `r round(COUNT_SUMMARY |> filter(system == "CUNY", group == "Adults (25+)", year == 2024) |> pull(index), 1)`% of its 2019 level, while younger student enrollment had reached `r round(COUNT_SUMMARY |> filter(system == "CUNY", group == "Under 25", year == 2024) |> pull(index), 1)`%. This helps explain why the adult enrollment share remained low even as more adults returned to college.
+
+SUNY also showed signs of recovery. By 2024, its adult enrollment had reached `r round(COUNT_SUMMARY |> filter(system == "SUNY", group == "Adults (25+)", year == 2024) |> pull(index), 1)`% of its 2019 level. Although CUNY made more progress in index points between 2022 and 2024, its adult enrollment was still further below its pre-pandemic level than SUNY's.
+
+CUNY's recovery continued in 2025, but without SUNY data for that year, we cannot make a direct comparison. These patterns show some encouraging signs for CUNY, but they are not enough to conclude that Reconnect caused the recovery.
+
+# Main analysis: event-study model
+# Did CUNY adult enrollment change faster than SUNY's after 2022?
 
 ```{r}
 #| label: sq3-model
