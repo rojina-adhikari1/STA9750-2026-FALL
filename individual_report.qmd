@@ -1296,8 +1296,8 @@ event_plot <- function(data, facet_col, ylim, ylab) {
 #| fig-width: 12
 #| fig-height: 6
 #| out-width: "100%"
-#| fig-cap: "CUNY–SUNY differences in the adult (25+) vs. under 25 enrollment gap since 2019. Lines show 95% confidence intervals; hollow circles mark the baseline. No estimates for 2016 or 2018."
-
+#| fig-cap: "Relative changes in the adult-to-younger enrollment ratio at CUNY compared with SUNY, using 2019 as the baseline. Vertical lines represent 95% confidence intervals; hollow circles mark the reference year. Estimates are unavailable for community colleges in 2016 and for both college sectors in 2018."
+#| 
 PLOT_DATA <- EVENT_FINAL |>
   filter(outcome == "adult_gap", baseline == 2019) |>
   mutate(sector = factor(sector, levels = c("Community", "Four-year"),
@@ -1305,15 +1305,16 @@ PLOT_DATA <- EVENT_FINAL |>
                                     "Four-year colleges (side check)")))
 
 p_event <- event_plot(PLOT_DATA, "sector", ylim = c(-40, 32),
-                      ylab = "CUNY vs SUNY: adult-to-under 25 gap\n(% difference since 2019)") +
+                      ylab = "CUNY vs SUNY: adult-to-younger enrollment ratio\n(% relative change since 2019)") +
     labs(
-    title = "Adult Enrollment Gap Shows Different Patterns Across College Types",
+    title = "Adult-to-Younger Enrollment Ratios Show Different Patterns Across College Types",
     subtitle = "Community colleges are the main comparison; four-year colleges are a side check"
   )
 p_event
 ggsave("figures/sq3_event_adult_gap.png", p_event, width = 10, height = 4.8, dpi = 200)
 ```
 
+Figure 3 shows no clear improvement in CUNY's adult-to-younger enrollment ratio relative to SUNY after Reconnect. At community colleges, the estimated relative change was `r sprintf("%+.1f%%", EVENT_FINAL |> filter(sector == "Community", outcome == "adult_gap", baseline == 2019, year == 2022) |> pull(estimate))` in 2022, followed by negative estimates in 2023 and 2024. However, all three confidence intervals include zero. Four-year colleges show a stronger negative pattern, with statistically significant differences in all three years. Given the pre-existing enrollment differences identified earlier, these results should not be interpreted as causal effects of Reconnect.
 
 
 ```{r}
@@ -1507,7 +1508,6 @@ The animation reveals each year's estimates and 95% confidence intervals, using 
 :::
 
 
-
 ```{r}
 #| label: sq3-table-helper
 #| code-fold: true
@@ -1542,7 +1542,7 @@ make_results_table <- function(sector_name, base) {
     gt() |>
     cols_hide(c(sig_adults, sig_young, sig_gap, is_post, is_baseline)) |>
     cols_label(year = "Year", Adults = "Adults (25+)",
-               Under25 = "Under 25", AdultGap = "Adult gap") |>
+           Under25 = "Under 25", AdultGap = "Adult-to-younger ratio") |>
     cols_align("center", columns = c(Adults, Under25, AdultGap)) |>
     # explicit fill on EVERY row
     tab_style(cell_fill(color = "#ffffff"), cells_body(rows = !is_post)) |>
@@ -1578,29 +1578,38 @@ make_results_table <- function(sector_name, base) {
 </style>
 ```
 
+
+**Reading the results:** All estimates represent percentage changes at CUNY relative to SUNY, measured against the specified baseline year. Values in brackets are 95% confidence intervals. Bold estimates indicate statistically significant differences at the 5% level.
+
 ```{r}
 #| label: tbl-sq3-community-main
 #| code-fold: true
-#| tbl-cap: "WRITE YOUR TABLE CAPTION HERE"
+#| tbl-cap: "Community college enrollment changes: CUNY versus SUNY (2019 baseline)"
 
 # MAIN RESULT: community colleges, 2019 baseline
 make_results_table("Community", 2019)
 ```
 
+Although the adult-to-younger enrollment ratio shows no statistically significant differences after Reconnect, the separate adult enrollment model reveals a clearer pattern. By 2024, adult enrollment at CUNY community colleges had changed by `r sprintf("%.1f%%", EVENT_FINAL |> filter(sector == "Community", outcome == "log_adults", baseline == 2019, year == 2024) |> pull(estimate))` relative to SUNY since 2019. The adult enrollment estimates are significantly negative in all three post-Reconnect years. This does not mean that adult enrollment declined in absolute terms, but rather that CUNY's recovery remained weaker relative to SUNY.
+
+
 ```{r}
 #| label: tbl-sq3-community-robust
 #| code-fold: true
-#| tbl-cap: "WRITE YOUR TABLE CAPTION HERE"
-
+#| tbl-cap: "Baseline sensitivity analysis for community colleges (2021 baseline)"
 # ROBUSTNESS: community colleges, 2021 baseline
 make_results_table("Community", 2021)
 ```
 
+Using 2021 instead of 2019 as the baseline produces more negative estimates for the adult-to-younger enrollment ratio, with statistically significant differences in 2023 and 2024. By 2024, the estimated relative change was `r sprintf("%.1f%%", EVENT_FINAL |> filter(sector == "Community", outcome == "adult_gap", baseline == 2021, year == 2024) |> pull(estimate))`. Although the magnitude and statistical significance depend on the reference year, neither baseline provides convincing evidence that CUNY experienced a stronger relative adult enrollment recovery after Reconnect.
+
 ```{r}
 #| label: tbl-sq3-fouryear
 #| code-fold: true
-#| tbl-cap: "WRITE YOUR TABLE CAPTION HERE"
+#| tbl-cap: "Four-year college enrollment changes: CUNY versus SUNY (2019 baseline)"
 
 # SIDE CHECK: four-year colleges, 2019 baseline
 make_results_table("Four-year", 2019)
 ```
+
+Four-year colleges show a more pronounced negative pattern than community colleges. By 2024, CUNY's adult-to-younger enrollment ratio had changed by `r sprintf("%.1f%%", EVENT_FINAL |> filter(sector == "Four-year", outcome == "adult_gap", baseline == 2019, year == 2024) |> pull(estimate))` relative to SUNY since 2019. The differences are statistically significant in all three post-Reconnect years. This suggests that adult enrollment challenges extended beyond community colleges, although the comparison cannot establish whether Reconnect helped reduce these challenges.
