@@ -881,8 +881,9 @@ SUNY also showed signs of recovery. By 2024, its adult enrollment had reached `r
 
 CUNY's recovery continued in 2025, but without SUNY data for that year, we cannot make a direct comparison. These patterns show some encouraging signs for CUNY, but they are not enough to conclude that Reconnect caused the recovery.
 
-# Main analysis: event-study model
-# Did CUNY adult enrollment change faster than SUNY's after 2022?
+# Main Analysis: Event-Study Model
+
+## Did CUNY adult enrollment change faster than SUNY's after 2022?
 
 ```{r}
 #| label: sq3-model
@@ -954,6 +955,226 @@ EVENT_FINAL <- expand_grid(outcome     = c("adult_gap", "log_adults", "log_young
                         outcome, sector_name, base))) |>
   bind_rows()
 ```
+
+
+```{r}
+#| label: sq3-model-sample-summary
+#| include: false
+
+MODEL_SAMPLE_SUMMARY <- bind_rows(
+  MODEL_DATA |>
+    mutate(sample = "Before exclusion"),
+  MODEL_DATA_NG |>
+    mutate(sample = "After exclusion")
+) |>
+  group_by(sample, sector, system) |>
+  summarize(
+    colleges = n_distinct(institution_id),
+    observations = n(),
+    years = n_distinct(year),
+    .groups = "drop"
+  )
+
+MODEL_YEAR_COVERAGE <- MODEL_DATA_NG |>
+  group_by(year, sector, system) |>
+  summarize(
+    colleges = n_distinct(institution_id),
+    .groups = "drop"
+  ) |>
+  pivot_wider(
+    names_from = c(sector, system),
+    values_from = colleges,
+    values_fill = 0
+  ) |>
+  arrange(year)
+
+COMMON_CC_YEARS <- MODEL_YEAR_COVERAGE |>
+  filter(Community_CUNY > 0, Community_SUNY > 0) |>
+  pull(year)
+```
+
+```{r}
+#| label: tbl-sq3-model-sample
+#| tbl-cap: "Event-study sample before and after small-college exclusion."
+#| code-fold: true
+
+MODEL_SAMPLE_TABLE <- MODEL_SAMPLE_SUMMARY |>
+  select(-years) |>
+  mutate(
+    sample = recode(
+      sample,
+      "Before exclusion" = "before",
+      "After exclusion" = "after"
+    )
+  ) |>
+  pivot_wider(
+    names_from = sample,
+    values_from = c(colleges, observations)
+  ) |>
+  mutate(
+    sector = factor(
+      sector,
+      levels = c("Community", "Four-year"),
+      labels = c(
+        "Community colleges — Main analysis",
+        "Four-year colleges — Secondary analysis"
+      )
+    )
+  ) |>
+  arrange(sector, system)
+
+MODEL_SAMPLE_TABLE |>
+  gt::gt(
+    groupname_col = "sector",
+    rowname_col = "system"
+  ) |>
+  gt::tab_header(
+    title = gt::md("**Event-Study Model Sample**"),
+    subtitle = "College and observation counts before and after exclusion"
+  ) |>
+  gt::tab_spanner(
+    label = "Before exclusion",
+    columns = c(colleges_before, observations_before)
+  ) |>
+  gt::tab_spanner(
+    label = "After exclusion",
+    columns = c(colleges_after, observations_after)
+  ) |>
+  gt::cols_move_to_start(
+    columns = c(colleges_before, observations_before)
+  ) |>
+  gt::cols_label(
+    colleges_before = "Colleges",
+    observations_before = "Observations",
+    colleges_after = "Colleges",
+    observations_after = "Observations"
+  ) |>
+  gt::fmt_number(
+    columns = where(is.numeric),
+    decimals = 0
+  ) |>
+  gt::summary_rows(
+    groups = TRUE,
+    columns = where(is.numeric),
+    fns = list(Subtotal = ~sum(.))
+  ) |>
+  gt::grand_summary_rows(
+    columns = where(is.numeric),
+    fns = list(Total = ~sum(.))
+  ) |>
+  gt::tab_style(
+    style = list(
+      gt::cell_fill(color = "#17324D"),
+      gt::cell_text(color = "white", weight = "bold")
+    ),
+    locations = gt::cells_row_groups()
+  ) |>
+  gt::tab_style(
+    style = gt::cell_text(
+      color = "#1f5aa6",
+      weight = "bold"
+    ),
+    locations = gt::cells_stub(rows = system == "CUNY")
+  ) |>
+  gt::tab_style(
+    style = gt::cell_text(
+      color = "#c8781e",
+      weight = "bold"
+    ),
+    locations = gt::cells_stub(rows = system == "SUNY")
+  ) |>
+  gt::tab_style(
+    style = gt::cell_fill(color = "#F3F4F6"),
+    locations = gt::cells_body(
+      columns = c(colleges_after, observations_after)
+    )
+  ) |>
+  gt::tab_source_note(
+    source_note = paste(
+      "Observations represent college-year records.",
+      "Colleges with fewer than 100 adult students",
+      "in any observed model year are excluded."
+    )
+  ) |>
+  gt::tab_source_note(
+    source_note = paste(
+      "Source: IPEDS and adjusted CUNY",
+      "Student Data Book records, 2015–2024."
+    )
+  ) |>
+  gt::tab_options(
+    table.width = gt::pct(100),
+    table.font.size = gt::px(14),
+    heading.align = "left",
+    data_row.padding = gt::px(7)
+  )
+```
+
+The model uses college-level enrollment data from 2015 to 2024. Records with zero adult or younger student enrollment are excluded because the model uses logarithms. Colleges with fewer than 100 adult students in any remaining year are also excluded because small enrollment counts can lead to unusually large percentage changes.
+
+This rule removes `r nrow(SMALL_COLLEGES)` colleges, including Guttman Community College and `r nrow(SMALL_COLLEGES) - 1` SUNY four-year colleges. The main analysis includes `r n_distinct(MODEL_DATA_NG$institution_id[MODEL_DATA_NG$sector == "Community"])` community colleges and `r sum(MODEL_DATA_NG$sector == "Community")` college-year observations. The four-year college analysis includes `r n_distinct(MODEL_DATA_NG$institution_id[MODEL_DATA_NG$sector == "Four-year"])` colleges and `r sum(MODEL_DATA_NG$sector == "Four-year")` observations.
+
+Although the model covers 2015 to 2024, both community college systems have enrollment data in only `r length(COMMON_CC_YEARS)` years. However, all retained community colleges have data from 2021 through 2024, covering the year before Reconnect and the first three years of the program.
+
+The exclusion rule affects CUNY and SUNY differently. Therefore, the robustness analysis will examine whether including these smaller colleges changes the findings.
+
+
+```{r}
+#| label: sq3-comparable-year-check
+#| include: false
+
+# Restrict the community college sample to years
+# with observations from both systems
+MODEL_CC_COMMON <- MODEL_DATA_NG |>
+  filter(
+    sector == "Community",
+    year %in% COMMON_CC_YEARS
+  )
+
+# Re-estimate the primary adult-gap model
+COMMON_YEAR_RESULTS <- event_table3(
+  run_event3(
+    MODEL_CC_COMMON,
+    "adult_gap",
+    "Community",
+    2019
+  ),
+  "adult_gap",
+  "Community",
+  2019
+)
+
+# Compare estimates and confidence intervals
+COMMON_YEAR_COMPARISON <- EVENT_FINAL |>
+  filter(
+    sector == "Community",
+    outcome == "adult_gap",
+    baseline == 2019
+  ) |>
+  select(
+    year,
+    original = estimate,
+    original_lo = lo,
+    original_hi = hi
+  ) |>
+  left_join(
+    COMMON_YEAR_RESULTS |>
+      select(
+        year,
+        restricted = estimate,
+        restricted_lo = lo,
+        restricted_hi = hi
+      ),
+    by = "year"
+  ) |>
+  mutate(
+    difference = restricted - original,
+    original_significant = original_lo > 0 | original_hi < 0,
+    restricted_significant = restricted_lo > 0 | restricted_hi < 0
+  )
+```
+
+To check whether missing years influenced the results, the community college adult-gap model with the 2019 baseline was estimated again using only the `r length(COMMON_CC_YEARS)` years with data from both systems. The largest difference between the original and restricted estimates was only `r round(max(abs(COMMON_YEAR_COMPARISON$difference)), 2)` percentage points. The post-Reconnect estimates remained virtually unchanged, and the statistical conclusions were the same. This suggests that including years with data from only one system is not driving the findings of this model.
 
 
 ```{r}
