@@ -1208,6 +1208,67 @@ BASELINE_COMPARISON <- EVENT_FINAL |>
 
 
 ```{r}
+#| label: sq3-pretrend-tests
+#| include: false
+
+# Retrieve the primary community college model
+PRETREND_MODEL <- run_event3(
+  MODEL_DATA_NG,
+  "adult_gap",
+  "Community",
+  2019
+)
+
+# Test pre-Reconnect coefficients jointly
+PRETREND_ALL <- fixest::wald(
+  PRETREND_MODEL,
+  keep = "^year::(2015|2017|2020|2021):cuny$",
+  print = FALSE
+)
+
+PRETREND_EARLY <- fixest::wald(
+  PRETREND_MODEL,
+  keep = "^year::(2015|2017):cuny$",
+  print = FALSE
+)
+
+PRETREND_RECENT <- fixest::wald(
+  PRETREND_MODEL,
+  keep = "^year::(2020|2021):cuny$",
+  print = FALSE
+)
+
+# Combine test results for reporting
+PRETREND_SUMMARY <- tibble(
+  period = c(
+    "Overall pre-Reconnect",
+    "Pre-pandemic",
+    "Recent pre-Reconnect"
+  ),
+  years = c(
+    "2015, 2017, 2020, 2021",
+    "2015, 2017",
+    "2020, 2021"
+  ),
+  statistic = c(
+    PRETREND_ALL$stat,
+    PRETREND_EARLY$stat,
+    PRETREND_RECENT$stat
+  ),
+  p_value = c(
+    PRETREND_ALL$p,
+    PRETREND_EARLY$p,
+    PRETREND_RECENT$p
+  )
+) |>
+  mutate(
+    significant = p_value < 0.05
+  )
+```
+
+Joint Wald tests identify significant differences in enrollment patterns before Reconnect (`r ifelse(PRETREND_ALL$p < 0.001, "p < 0.001", paste0("p = ", round(PRETREND_ALL$p, 3)))`), including before the pandemic. However, the differences in 2020 and 2021 relative to 2019 are not statistically significant (p = `r round(PRETREND_RECENT$p, 3)`). These findings suggest that SUNY is an imperfect comparison group. Therefore, the event-study results should be interpreted as relative enrollment changes rather than causal effects of Reconnect.
+
+```{r}
 #| label: sq3-event-plot-helper
 #| code-fold: true
 
