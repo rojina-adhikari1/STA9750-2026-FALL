@@ -883,6 +883,18 @@ CUNY's recovery continued in 2025, but without SUNY data for that year, we canno
 
 # Main Analysis: Event-Study Model
 
+## Analytical Approach
+
+The exploratory analysis showed that adult enrollment started recovering after 2022 at both CUNY and SUNY. To understand whether CUNY experienced a stronger recovery, this study uses an event-study model to compare enrollment changes across the two systems over time.
+
+The model accounts for stable differences between colleges and changes common to colleges in each year. Standard errors are clustered by college because enrollment observations from the same institution may be related over time.
+
+The primary outcome is the ratio of adult to younger student enrollment, measured on a logarithmic scale. Separate models for adult and younger student enrollment help explain whether changes in this ratio reflect adult enrollment recovery or changes in younger enrollment.
+
+The main analysis uses 2019 as the reference year because it represents enrollment before the COVID-19 pandemic. The models are also estimated using 2021, the year immediately before Reconnect, to check whether the findings depend on the choice of baseline.
+
+Community colleges are the main focus, while four-year colleges provide an additional comparison. Since other changes may have occurred around the same time as Reconnect, the model identifies relative enrollment patterns rather than proving that the program caused them.
+
 ## Did CUNY adult enrollment change faster than SUNY's after 2022?
 
 ```{r}
@@ -1175,6 +1187,24 @@ COMMON_YEAR_COMPARISON <- EVENT_FINAL |>
 ```
 
 To check whether missing years influenced the results, the community college adult-gap model with the 2019 baseline was estimated again using only the `r length(COMMON_CC_YEARS)` years with data from both systems. The largest difference between the original and restricted estimates was only `r round(max(abs(COMMON_YEAR_COMPARISON$difference)), 2)` percentage points. The post-Reconnect estimates remained virtually unchanged, and the statistical conclusions were the same. This suggests that including years with data from only one system is not driving the findings of this model.
+
+
+```{r}
+#| label: sq3-baseline-comparison
+#| include: false
+
+BASELINE_COMPARISON <- EVENT_FINAL |>
+  filter(
+    sector == "Community",
+    outcome == "adult_gap",
+    year >= 2022
+  ) |>
+  select(year, baseline, estimate, lo, hi) |>
+  mutate(
+    significant = lo > 0 | hi < 0
+  ) |>
+  arrange(year, baseline)
+```
 
 
 ```{r}
