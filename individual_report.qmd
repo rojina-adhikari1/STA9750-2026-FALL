@@ -1183,6 +1183,19 @@ To check whether missing years influenced the results, the community college adu
 
 
 ```{r}
+#| label: sq3-small-college-check
+#| include: false
+
+ROBUST_ALL <- event_table3(
+  run_event3(MODEL_DATA, "adult_gap", "Community", 2019),
+  "adult_gap", "Community", 2019
+)
+```
+
+Including Guttman Community College substantially changes the estimated recovery pattern. The 2024 estimate shifts from `r sprintf("%+.1f%%", EVENT_FINAL |> filter(outcome == "adult_gap", sector == "Community", baseline == 2019, year == 2024) |> pull(estimate))` to `r sprintf("%+.1f%%", ROBUST_ALL |> filter(year == 2024) |> pull(estimate))`. Guttman's small adult student population makes its percentage growth particularly sensitive to changes in enrollment. However, all post-Reconnect confidence intervals still include zero when Guttman is included. This suggests that the direction and magnitude of the estimates are sensitive to college selection, while the lack of statistically significant evidence remains unchanged.
+
+
+```{r}
 #| label: sq3-pretrend-tests
 #| include: false
 
