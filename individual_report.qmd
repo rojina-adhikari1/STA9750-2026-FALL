@@ -1317,193 +1317,290 @@ ggsave("figures/sq3_event_adult_gap.png", p_event, width = 10, height = 4.8, dpi
 Figure 3 shows no clear improvement in CUNY's adult-to-younger enrollment ratio relative to SUNY after Reconnect. At community colleges, the estimated relative change was `r sprintf("%+.1f%%", EVENT_FINAL |> filter(sector == "Community", outcome == "adult_gap", baseline == 2019, year == 2022) |> pull(estimate))` in 2022, followed by negative estimates in 2023 and 2024. However, all three confidence intervals include zero. Four-year colleges show a stronger negative pattern, with statistically significant differences in all three years. Given the pre-existing enrollment differences identified earlier, these results should not be interpreted as causal effects of Reconnect.
 
 
+## Interactive Figure 4: Enrollment Changes by Age Group
+
+Explore how adult and younger student enrollment changed at CUNY relative to SUNY across college sectors and reference years.
+
 ```{r}
-#| label: fig-sq3-event-animation
+#| label: fig-sq3-event-interactive
+#| fig-cap: "Relative enrollment changes at CUNY compared with SUNY by age group, college sector, and reference year."
 #| code-fold: true
 #| message: false
 #| warning: false
-#| echo: false
-#| eval: false
 
-library(gganimate)
-library(gifski)
+library(plotly)
 
-# Use consistent wording in Figure 4
-levels(PLOT_DATA2$outcome)[
-  levels(PLOT_DATA2$outcome) == "Under-25"
-] <- "Under 25"
+REC_YEAR <- 2022
+SYS_BLUE <- "#008F8C"
+PRE_COL <- "#C46A45"
 
-# Build cumulative frames from 2015 to 2024
-ANIM_DATA <- tidyr::expand_grid(
-  frame_year = 2015:2024,
-  PLOT_DATA2
-) |>
-  dplyr::filter(year <= frame_year)
-
-# Prepare cumulative observations for each animation frame
-ANIM_POINTS <- ANIM_DATA |>
-  dplyr::mutate(
-    period = if_else(year >= REC_YEAR, "post", "pre"),
-    is_base = year == 2019
-  )
-# Show the Reconnect annotation from 2022 onward
-ANIM_LABEL <- tibble::tibble(
-  frame_year = 2022:2024,
-  outcome = factor(
-    "Adults (25+)",
-    levels = levels(PLOT_DATA2$outcome)
-  ),
-  year = 2022,
-  estimate = 27,
-  label = "CUNY Reconnect\n(Fall 2022)"
-)
-# Create a separate animated version of Figure 4
-# Build animated Figure 4 from cumulative data
-p_event2_anim <- ggplot(
-  ANIM_POINTS,
-  aes(x = year, y = estimate)
-) +
-  annotate(
-    "rect",
-    xmin = 2021.5, xmax = 2024.5,
-    ymin = -Inf, ymax = Inf,
-    fill = SYS_BLUE, alpha = 0.07
-  ) +
-  geom_hline(yintercept = 0, color = "#64748B") +
-  geom_vline(
-    xintercept = 2021.5,
-    linetype = "dashed",
-    color = "grey35"
-  ) +
-  geom_text(
-  data = ANIM_LABEL,
-  aes(x = year, y = estimate, label = label),
-  inherit.aes = FALSE,
-  hjust = 0,
-  size = 3.2,
-  color = SYS_BLUE,
-  fontface = "bold"
-  ) +
-  geom_line(
-  data = ANIM_POINTS,
-  aes(group = interaction(outcome, frame_year)),
-  color = "#17324D",
-  linewidth = 0.8
-  ) +
-  geom_linerange(
-    aes(ymin = lo, ymax = hi, color = period),
-    linewidth = 1.2,
-    alpha = 0.45
-  ) +
-  geom_point(
-    aes(color = period),
-    size = 3.6
-  ) +
-  geom_point(
-    data = dplyr::filter(ANIM_POINTS, is_base),
-    shape = 21,
-    fill = "white",
-    color = "grey35",
-    size = 3.6,
-    stroke = 1.2
-  ) +
-  geom_text(
-  data = dplyr::filter(ANIM_POINTS, period == "post"),
-  aes(
-    y = hi,
-    label = sprintf("%+.0f%%", estimate),
-    color = period
-  ),
-  vjust = -0.7,
-  size = 3.3,
-  fontface = "bold",
-  show.legend = FALSE
-) +
-  scale_color_manual(
-    values = c(pre = PRE_COL, post = SYS_BLUE),
-    breaks = c("pre", "post"),
-    labels = c("Before Reconnect", "After Reconnect"),
-    name = NULL
-  ) +
-  facet_wrap(~ outcome) +
-  scale_x_continuous(breaks = 2015:2024) +
-  scale_y_continuous(
-  labels = scales::label_number(suffix = "%")
-) +
-coord_cartesian(ylim = c(-35, 32)) +
-  labs(
-  title = "Adult Enrollment Recovery Differs Between CUNY and SUNY",
-    subtitle = "Community colleges: adults (25+) and under 25 enrollment relative to 2019 | Through {current_frame}",
-  x = NULL,
-  y = "CUNY–SUNY relative enrollment\ndifference (%)",
-  caption = paste(
-  "Burnt orange: before Reconnect | Teal: after Reconnect.",
-  "Vertical bars: 95% confidence intervals; navy lines connect estimates.",
-  "Hollow circles: 2019 baseline. No estimates for 2016 or 2018.",
-  sep = "\n"
+# Reuse existing event-study estimates
+INTERACTIVE_DATA <- EVENT_FINAL |>
+  filter(outcome %in% c("log_adults", "log_young")) |>
+  mutate(
+    outcome = recode(outcome,
+      log_adults = "Adults (25+)",
+      log_young = "Under 25"
+    ),
+    is_base = year == baseline,
+    period = if_else(year >= REC_YEAR,
+                     "After Reconnect", "Before Reconnect"),
+    significance = case_when(
+      is_base ~ "Reference year",
+      lo > 0 | hi < 0 ~ "Statistically significant",
+      TRUE ~ "Not statistically significant"
+    ),
+    tooltip = if_else(
+      is_base,
+      paste0(outcome, "<br>Year: ", year,
+             "<br>Reference year (0% by construction)"),
+      paste0(
+        outcome,
+        "<br>Year: ", year,
+        "<br>Baseline: ", baseline,
+        "<br>Relative change: ", sprintf("%+.1f%%", estimate),
+        "<br>95% CI: [", sprintf("%.1f%%", lo),
+        ", ", sprintf("%.1f%%", hi), "]",
+        "<br>", significance,
+        "<br>", period
+      )
     )
-  ) +
-  theme_minimal(base_size = 12) +
-  theme(
-    panel.grid.minor = element_blank(),
-    panel.grid.major.x = element_blank(),
-    panel.spacing.x = unit(1.2, "lines"),
-    strip.background = element_rect(fill = "grey95", color = NA),
-    strip.text = element_text(
-    axis.text.x = element_text(size = 12),
-    axis.text.y = element_text(size = 12),
-    face = "bold",
-    hjust = 0,
-    size = 16,
-    color = "#17324D",
-    margin = margin(6, 6, 6, 6)
-    ),
-    plot.title.position = "plot",
-    plot.title = element_text(
-    face = "bold",
-    size = 24
-    ),
-    plot.subtitle = element_text(
-    size = 15,
-    color = "#475569"
-    ),
-  plot.caption = element_text(
-  hjust = 0,
-  size = 10,
-  color = "#475569",
-  margin = margin(t = 30)
-),
-plot.caption.position = "plot",
-plot.margin = margin(15, 20, 25, 35)
-  ) +
-  gganimate::transition_manual(
-  factor(frame_year, levels = 2015:2024),
-  cumulative = FALSE
   )
-# Generate and save the updated Figure 4 animation
-dir.create("figures", showWarnings = FALSE)
 
-fig4_gif <- gganimate::animate(
-  p_event2_anim,
-  nframes = 40,
-  fps = 5,
-  end_pause = 15,
-  width = 1000,
-  height = 500,
-  renderer = gganimate::gifski_renderer()
+# Common scale across all selections
+EVENT_RANGE <- c(
+  min(INTERACTIVE_DATA$lo) - 5,
+  max(INTERACTIVE_DATA$hi) + 5
 )
 
-gganimate::anim_save(
-  "figures/sq3_figure4_final_corrected.gif",
-  animation = fig4_gif
+EVENT_OPTIONS <- tidyr::expand_grid(
+  sector = c("Community", "Four-year"),
+  baseline = c(2019, 2021)
 )
+
+# Reusable interactive panel
+interactive_panel <- function(age_group) {
+
+  p <- plotly::plot_ly()
+
+  for (i in seq_len(nrow(EVENT_OPTIONS))) {
+
+    d <- INTERACTIVE_DATA |>
+      filter(
+        outcome == age_group,
+        sector == EVENT_OPTIONS$sector[i],
+        baseline == EVENT_OPTIONS$baseline[i]
+      ) |>
+      select(year, estimate, lo, hi, is_base, tooltip) |>
+      tidyr::complete(year = 2015:2024) |>
+      arrange(year)
+
+    p <- p |>
+      add_trace(
+        data = d,
+        x = ~year,
+        y = ~estimate,
+        type = "scatter",
+        mode = "lines+markers",
+        connectgaps = FALSE,
+        line = list(color = "#17324D", width = 2),
+        marker = list(
+          size = 9,
+          color = ifelse(d$is_base, "white",
+                         ifelse(d$year >= REC_YEAR,
+                                SYS_BLUE, PRE_COL)),
+          line = list(
+            color = ifelse(d$year >= REC_YEAR,
+                           SYS_BLUE, PRE_COL),
+            width = 1.5
+          )
+        ),
+        error_y = list(
+          type = "data",
+          symmetric = FALSE,
+          array = d$hi - d$estimate,
+          arrayminus = d$estimate - d$lo,
+          color = "#94A3B8",
+          thickness = 1.5,
+          width = 4
+        ),
+        text = ~tooltip,
+        hoverinfo = "text",
+        visible = i == 1,
+        showlegend = FALSE
+      )
+  }
+
+  p |>
+    layout(
+      xaxis = list(
+        title = "",
+        tickmode = "linear",
+        tick0 = 2015,
+        dtick = 1,
+        range = c(2014.5, 2024.5),
+        showgrid = FALSE
+      ),
+      yaxis = list(
+        title = "",
+        ticksuffix = "%",
+        range = EVENT_RANGE,
+        zeroline = TRUE,
+        zerolinecolor = "#64748B",
+        gridcolor = "#E5E7EB"
+      )
+    )
+}
+
+# Combine the two age-group panels
+p_interactive <- subplot(
+  interactive_panel("Adults (25+)"),
+  interactive_panel("Under 25"),
+  nrows = 1,
+  shareY = TRUE,
+  margin = 0.05
+)
+p_interactive$height <- 650
+
+# Dropdown switches both panels simultaneously
+# Dropdown switches both panels simultaneously
+EVENT_BUTTONS <- lapply(
+  seq_len(nrow(EVENT_OPTIONS)),
+  function(i) {
+
+    active <- seq_len(nrow(EVENT_OPTIONS)) == i
+
+    list(
+      method = "restyle",
+      args = list("visible", c(active, active)),
+      label = paste0(
+        EVENT_OPTIONS$sector[i], " colleges — ",
+        EVENT_OPTIONS$baseline[i], " baseline"
+      )
+    )
+  }
+)
+
+# Reconnect shading and intervention marker
+# Reconnect shading and intervention marker
+EVENT_SHAPES <- do.call(c, lapply(c("x", "x2"), function(axis) {
+  list(
+    list(
+      type = "rect",
+      xref = axis, yref = "paper",
+      x0 = REC_YEAR - 0.5, x1 = 2024.5,
+      y0 = 0, y1 = 1,
+      fillcolor = SYS_BLUE,
+      opacity = 0.09,
+      line = list(width = 0),
+      layer = "below"
+    ),
+    list(
+      type = "line",
+      xref = axis, yref = "paper",
+      x0 = REC_YEAR - 0.5,
+      x1 = REC_YEAR - 0.5,
+      y0 = 0, y1 = 1,
+      line = list(
+        color = SYS_BLUE,
+        dash = "dash",
+        width = 1.5
+      )
+    )
+  )
+}))
+
+p_final <- p_interactive |>
+  layout(
+    title = list(
+      text = paste0(
+        "<b>Enrollment Recovery by Age Group</b>",
+        "<br><sup>CUNY relative to SUNY, 2015–2024</sup>"
+      ),
+      x = 0.02,
+      y = 0.98,
+      font = list(size = 20)
+    ),
+    font = list(
+      family = "Arial",
+      color = "#17324D"
+    ),
+    annotations = list(
+      list(
+        text = "<b>Adults (25+)</b>",
+        x = 0.23, y = 1.04,
+        xref = "paper", yref = "paper",
+        showarrow = FALSE,
+        font = list(size = 14)
+      ),
+      list(
+        text = "<b>Under 25</b>",
+        x = 0.77, y = 1.04,
+        xref = "paper", yref = "paper",
+        showarrow = FALSE,
+        font = list(size = 14)
+      ),
+      list(
+        text = "<b>CUNY Reconnect<br>(Fall 2022)</b>",
+        x = REC_YEAR - 0.4, y = 0.98,
+        xref = "x", yref = "paper",
+        xanchor = "left",
+        yanchor = "top",
+        showarrow = FALSE,
+        font = list(color = SYS_BLUE, size = 10)
+      ),
+      list(
+        text = paste0(
+          "<span style='color:", PRE_COL,
+          "'>● Before Reconnect</span>",
+          " &nbsp;&nbsp; ",
+          "<span style='color:", SYS_BLUE,
+          "'>● After Reconnect</span>",
+          " &nbsp;&nbsp; ○ Reference year",
+          " &nbsp;&nbsp; │ 95% CI"
+        ),
+        x = 0.5, y = -0.12,
+        xref = "paper", yref = "paper",
+        showarrow = FALSE,
+        font = list(size = 12)
+      )
+    ),
+    updatemenus = list(
+      list(
+        type = "dropdown",
+        active = 0,
+        buttons = EVENT_BUTTONS,
+        x = 0, y = 1.18,
+        xanchor = "left",
+        yanchor = "top"
+      )
+    ),
+    shapes = EVENT_SHAPES,
+    yaxis = list(
+      title = "CUNY–SUNY relative enrollment difference (%)"
+    ),
+    margin = list(l = 85, r = 25, t = 165, b = 90),
+    height = 650,
+    hovermode = "closest",
+    paper_bgcolor = "white",
+    plot_bgcolor = "white"
+  ) |>
+  config(
+    displaylogo = FALSE,
+    responsive = TRUE
+  )
+p_final <- plotly::plotly_build(p_final)
+p_final$x$layout$shapes <- EVENT_SHAPES
+
+p_final
 ```
 
-::: {.callout-note title="Animated Figure 4: Enrollment Changes Over Time" collapse="true"}
 
-The animation reveals each year's estimates and 95% confidence intervals, using 2019 as the reference year.
+Use the dropdown to compare community and four-year colleges using either 2019 or 2021 as the reference year. Hover over each point to explore the estimated relative change, 95% confidence interval, and statistical significance.
 
-![](figures/sq3_figure4_final_corrected.gif){width=100%}
+Burnt orange represents the period before Reconnect, while teal represents the period after its launch in Fall 2022. Hollow circles indicate the selected reference year. Gaps in the lines indicate unavailable model estimates. Both panels use the same vertical scale to support direct comparisons.
+
+The estimates represent relative enrollment changes at CUNY compared with SUNY, rather than causal effects of Reconnect.
 
 :::
 
